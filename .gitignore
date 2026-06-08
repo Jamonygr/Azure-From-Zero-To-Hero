@@ -1,0 +1,23 @@
+# Terraform runtime data
+**/.terraform/*
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Local values and overrides
+terraform.tfvars
+*.auto.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Local editor and OS noise
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+

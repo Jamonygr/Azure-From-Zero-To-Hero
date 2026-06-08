@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+  <title id="title">Bastion RDP access</title>
+  <desc id="desc">Browser-based RDP reaches a private Windows VM through Azure Bastion.</desc>
+  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#7c3aed;stroke-width:3}.priv{fill:#ede9fe}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#7c3aed;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7c3aed"/></marker></defs>
+  <rect class="bg" width="1100" height="430" rx="18"/>
+  <text class="text" x="40" y="55">Private RDP Through Azure Bastion</text>
+  <rect class="box" x="90" y="150" width="210" height="120" rx="12"/><text class="text" x="122" y="200">Azure Portal</text><text class="small" x="118" y="232">browser session</text>
+  <line class="arrow" x1="320" y1="210" x2="435" y2="210"/>
+  <rect class="box priv" x="460" y="120" width="230" height="180" rx="12"/><text class="text" x="505" y="190">Bastion</text><text class="small" x="498" y="225">dedicated subnet</text>
+  <line class="arrow" x1="710" y1="210" x2="825" y2="210"/>
+  <rect class="box" x="850" y="120" width="200" height="180" rx="12"/><text class="text" x="890" y="190">Private</text><text class="text" x="910" y="225">VM</text>
+</svg>
+

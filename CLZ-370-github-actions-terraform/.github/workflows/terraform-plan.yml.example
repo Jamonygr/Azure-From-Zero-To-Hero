@@ -1,0 +1,39 @@
+name: terraform-plan
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "Chriz Labz/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: "Chriz Labz/CLZ-370-github-actions-terraform"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -input=false
+

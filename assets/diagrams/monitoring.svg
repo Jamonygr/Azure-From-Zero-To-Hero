@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+  <title id="title">Monitoring foundation</title>
+  <desc id="desc">Azure resources send operational signals to Log Analytics and alert routing.</desc>
+  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#ca8a04;stroke-width:3}.log{fill:#fef3c7}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#ca8a04;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#ca8a04"/></marker></defs>
+  <rect class="bg" width="1100" height="430" rx="18"/>
+  <text class="text" x="40" y="55">Observability Foundation</text>
+  <rect class="box" x="95" y="155" width="220" height="120" rx="12"/><text class="text" x="145" y="205">Azure</text><text class="small" x="135" y="238">resource signals</text>
+  <line class="arrow" x1="335" y1="215" x2="455" y2="215"/>
+  <rect class="box log" x="480" y="125" width="240" height="180" rx="12"/><text class="text" x="522" y="195">Log Analytics</text><text class="small" x="535" y="230">query + retention</text>
+  <line class="arrow" x1="740" y1="215" x2="860" y2="215"/>
+  <rect class="box" x="885" y="155" width="175" height="120" rx="12"/><text class="text" x="925" y="205">Alerts</text><text class="small" x="915" y="238">action group</text>
+</svg>
+

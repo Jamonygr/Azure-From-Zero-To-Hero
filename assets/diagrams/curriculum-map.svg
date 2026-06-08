@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Chriz Labz curriculum map</title>
+  <desc id="desc">The curriculum progresses from foundations to network, Windows compute, state, security, automation, data, and capstone.</desc>
+  <style>.bg{fill:#f8fafc}.lane{fill:#fff;stroke:#cbd5e1;stroke-width:2}.step{fill:#dbeafe;stroke:#2563eb;stroke-width:3}.adv{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 23px Arial,sans-serif;fill:#111827}.small{font:17px Arial,sans-serif;fill:#374151}</style>
+  <rect class="bg" width="1200" height="520" rx="18"/>
+  <text class="text" x="40" y="55">30-Lesson Learning Path</text>
+  <rect class="lane" x="60" y="95" width="1080" height="360" rx="16"/>
+  <g transform="translate(95 135)">
+    <rect class="step" width="180" height="95" rx="12"/><text class="text" x="36" y="42">100-160</text><text class="small" x="30" y="70">foundations</text>
+    <rect class="step" x="210" width="180" height="95" rx="12"/><text class="text" x="247" y="42">170-180</text><text class="small" x="258" y="70">network</text>
+    <rect class="step" x="420" width="180" height="95" rx="12"/><text class="text" x="457" y="42">190-270</text><text class="small" x="462" y="70">Windows</text>
+    <rect class="adv" x="630" width="180" height="95" rx="12"/><text class="text" x="667" y="42">280-350</text><text class="small" x="665" y="70">platform</text>
+    <rect class="adv" x="840" width="180" height="95" rx="12"/><text class="text" x="877" y="42">360-390</text><text class="small" x="875" y="70">operate</text>
+  </g>
+  <text class="small" x="115" y="330">The lessons are deployable one at a time. Later lessons intentionally reuse patterns from earlier labs.</text>
+</svg>
+

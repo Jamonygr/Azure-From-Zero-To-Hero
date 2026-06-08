@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Capstone Windows reference architecture</title>
+  <desc id="desc">The capstone combines network, Windows VMSS, load balancing, Bastion, Key Vault, and monitoring.</desc>
+  <style>.bg{fill:#f8fafc}.vnet{fill:#fff;stroke:#2563eb;stroke-width:4}.box{fill:#fff;stroke:#0f766e;stroke-width:3}.sec{fill:#ffe4e6;stroke:#be123c;stroke-width:3}.obs{fill:#fef3c7;stroke:#ca8a04;stroke-width:3}.net{fill:#dbeafe;stroke:#2563eb;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
+  <rect class="bg" width="1200" height="620" rx="18"/>
+  <text class="text" x="40" y="55">CLZ-390 Windows Reference Architecture</text>
+  <rect class="vnet" x="70" y="95" width="1060" height="410" rx="18"/>
+  <text class="small" x="100" y="130">Chriz Labz VNet</text>
+  <rect class="net" x="120" y="165" width="220" height="120" rx="12"/><text class="text" x="165" y="215">Bastion</text><text class="small" x="150" y="248">private RDP path</text>
+  <rect class="box" x="455" y="145" width="260" height="160" rx="12"/><text class="text" x="497" y="205">Standard LB</text><text class="small" x="505" y="240">HTTP frontend</text>
+  <line class="arrow" x1="735" y1="225" x2="815" y2="225"/>
+  <rect class="box" x="835" y="135" width="240" height="180" rx="12"/><text class="text" x="884" y="200">Windows</text><text class="text" x="882" y="235">IIS VMSS</text>
+  <rect class="sec" x="120" y="340" width="260" height="110" rx="12"/><text class="text" x="165" y="405">Key Vault</text>
+  <rect class="obs" x="455" y="340" width="260" height="110" rx="12"/><text class="text" x="498" y="405">Monitoring</text>
+  <rect class="net" x="835" y="340" width="240" height="110" rx="12"/><text class="text" x="880" y="405">Modules</text>
+</svg>
+

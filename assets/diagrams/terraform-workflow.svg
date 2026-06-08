@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="420" viewBox="0 0 1100 420" role="img" aria-labelledby="title desc">
+  <title id="title">Terraform workflow</title>
+  <desc id="desc">A visual flow from authoring Terraform files to initialization, validation, planning, applying, and cleanup.</desc>
+  <style>.bg{fill:#f7fafc}.box{fill:#ffffff;stroke:#1f6feb;stroke-width:3}.accent{fill:#dbeafe}.text{font:600 24px Arial,sans-serif;fill:#111827}.small{font:17px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
+  <rect class="bg" width="1100" height="420" rx="18"/>
+  <text class="text" x="40" y="55">Chriz Labz Terraform Workflow</text>
+  <g transform="translate(55 115)">
+    <rect class="box" width="160" height="110" rx="12"/><text class="text" x="32" y="45">Write</text><text class="small" x="24" y="78">.tf files</text>
+    <line class="arrow" x1="180" y1="55" x2="245" y2="55"/>
+    <rect class="box accent" x="270" width="160" height="110" rx="12"/><text class="text" x="318" y="45">Init</text><text class="small" x="300" y="78">providers</text>
+    <line class="arrow" x1="450" y1="55" x2="515" y2="55"/>
+    <rect class="box" x="540" width="160" height="110" rx="12"/><text class="text" x="574" y="45">Check</text><text class="small" x="568" y="78">fmt + validate</text>
+    <line class="arrow" x1="720" y1="55" x2="785" y2="55"/>
+    <rect class="box accent" x="810" width="160" height="110" rx="12"/><text class="text" x="860" y="45">Plan</text><text class="small" x="840" y="78">review change</text>
+  </g>
+  <g transform="translate(225 285)">
+    <rect class="box" width="220" height="80" rx="12"/><text class="text" x="75" y="50">Apply</text>
+    <line class="arrow" x1="245" y1="40" x2="365" y2="40"/>
+    <rect class="box accent" x="390" width="220" height="80" rx="12"/><text class="text" x="452" y="50">Destroy</text>
+  </g>
+</svg>
+

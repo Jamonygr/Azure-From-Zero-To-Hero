@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="470" viewBox="0 0 1100 470" role="img" aria-labelledby="title desc">
+  <title id="title">Private endpoint service access</title>
+  <desc id="desc">Private DNS resolves a platform service to a private endpoint inside the VNet.</desc>
+  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#0e7490;stroke-width:3}.zone{fill:#cffafe}.svc{fill:#ecfeff}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#0e7490;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0e7490"/></marker></defs>
+  <rect class="bg" width="1100" height="470" rx="18"/>
+  <text class="text" x="40" y="55">Private Endpoint And Private DNS</text>
+  <rect class="box" x="80" y="160" width="210" height="120" rx="12"/><text class="text" x="125" y="212">Workload</text><text class="small" x="120" y="245">inside VNet</text>
+  <line class="arrow" x1="310" y1="220" x2="430" y2="220"/>
+  <rect class="box zone" x="455" y="95" width="230" height="110" rx="12"/><text class="text" x="500" y="150">Private DNS</text>
+  <rect class="box" x="455" y="255" width="230" height="110" rx="12"/><text class="text" x="500" y="313">Endpoint</text>
+  <line class="arrow" x1="705" y1="310" x2="825" y2="310"/>
+  <rect class="box svc" x="850" y="230" width="200" height="160" rx="12"/><text class="text" x="905" y="295">Azure</text><text class="text" x="885" y="330">Service</text>
+</svg>
+

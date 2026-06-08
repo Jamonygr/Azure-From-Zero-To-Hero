@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+  <title id="title">Windows IIS VM</title>
+  <desc id="desc">A Windows Server VM with IIS installed by PowerShell and reachable through HTTP.</desc>
+  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#2563eb;stroke-width:3}.win{fill:#dbeafe}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
+  <rect class="bg" width="1100" height="430" rx="18"/>
+  <text class="text" x="40" y="55">Windows VM With IIS Bootstrap</text>
+  <rect class="box" x="90" y="145" width="180" height="115" rx="12"/><text class="text" x="130" y="195">Internet</text><text class="small" x="132" y="225">HTTP 80</text>
+  <line class="arrow" x1="290" y1="202" x2="405" y2="202"/>
+  <rect class="box" x="430" y="125" width="210" height="155" rx="12"/><text class="text" x="478" y="182">Public IP</text><text class="small" x="485" y="216">Standard SKU</text>
+  <line class="arrow" x1="660" y1="202" x2="775" y2="202"/>
+  <rect class="box win" x="800" y="95" width="230" height="215" rx="12"/><text class="text" x="845" y="160">Windows</text><text class="text" x="875" y="195">Server</text><text class="small" x="848" y="235">IIS via PowerShell</text>
+</svg>
+

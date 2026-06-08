@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+  <title id="title">Remote state storage</title>
+  <desc id="desc">Terraform stores shared state in an Azure Storage account and reads outputs from later environments.</desc>
+  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#1d4ed8;stroke-width:3}.state{fill:#dbeafe}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#1d4ed8;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1d4ed8"/></marker></defs>
+  <rect class="bg" width="1100" height="430" rx="18"/>
+  <text class="text" x="40" y="55">Remote State And Shared Outputs</text>
+  <rect class="box" x="90" y="150" width="220" height="120" rx="12"/><text class="text" x="145" y="202">Lab A</text><text class="small" x="125" y="235">writes outputs</text>
+  <line class="arrow" x1="330" y1="210" x2="450" y2="210"/>
+  <rect class="box state" x="475" y="120" width="250" height="180" rx="12"/><text class="text" x="515" y="190">Azure Storage</text><text class="small" x="535" y="225">state container</text>
+  <line class="arrow" x1="745" y1="210" x2="865" y2="210"/>
+  <rect class="box" x="890" y="150" width="170" height="120" rx="12"/><text class="text" x="935" y="202">Lab B</text><text class="small" x="918" y="235">reads outputs</text>
+</svg>
+

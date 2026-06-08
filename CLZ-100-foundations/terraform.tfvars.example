@@ -1,0 +1,21 @@
+# Copy to terraform.tfvars for local runs. Keep real values out of commits.
+environment     = "dev"
+location        = "eastus2"
+lab_id          = "CLZ-100"
+name_prefix     = "clz"
+admin_username  = "clzadmin"
+admin_cidr      = "203.0.113.10/32"
+instance_count  = 2
+subscription_id = null
+
+# Optional examples used by selected lessons.
+create_public_dns_zone             = false
+dns_zone_name                      = "example.com"
+primary_endpoint_fqdn              = "primary.example.com"
+secondary_endpoint_fqdn            = "secondary.example.com"
+remote_state_resource_group_name   = "clz-dev-clz310-rg"
+remote_state_storage_account_name  = "replacewithstateaccount"
+remote_state_container_name        = "tfstate"
+remote_state_key                   = "clz-dev.tfstate"
+sql_admin_login                    = "clzsqladmin"
+

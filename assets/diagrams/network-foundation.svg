@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="460" viewBox="0 0 1100 460" role="img" aria-labelledby="title desc">
+  <title id="title">Network foundation</title>
+  <desc id="desc">A VNet with web, app, data, and management subnets.</desc>
+  <style>.bg{fill:#f8fafc}.vnet{fill:#ffffff;stroke:#2563eb;stroke-width:4}.snet{fill:#e0f2fe;stroke:#0284c7;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}</style>
+  <rect class="bg" width="1100" height="460" rx="18"/>
+  <text class="text" x="40" y="55">CLZ Network Foundation</text>
+  <rect class="vnet" x="85" y="95" width="930" height="300" rx="18"/>
+  <text class="small" x="115" y="132">VNet 10.40.0.0/16</text>
+  <rect class="snet" x="140" y="165" width="180" height="145" rx="12"/><text class="text" x="188" y="225">web</text><text class="small" x="170" y="258">10.40.1.0/24</text>
+  <rect class="snet" x="350" y="165" width="180" height="145" rx="12"/><text class="text" x="404" y="225">app</text><text class="small" x="380" y="258">10.40.2.0/24</text>
+  <rect class="snet" x="560" y="165" width="180" height="145" rx="12"/><text class="text" x="610" y="225">data</text><text class="small" x="590" y="258">10.40.3.0/24</text>
+  <rect class="snet" x="770" y="165" width="180" height="145" rx="12"/><text class="text" x="825" y="225">mgmt</text><text class="small" x="798" y="258">10.40.10.0/24</text>
+</svg>
+

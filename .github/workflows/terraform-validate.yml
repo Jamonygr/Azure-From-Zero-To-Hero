@@ -1,0 +1,40 @@
+name: terraform-validate
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Format
+        run: terraform fmt -check -recursive
+
+      - name: Validate lesson folders
+        run: |
+          $folders = Get-ChildItem -Directory -Filter "CLZ-*"
+          foreach ($folder in $folders) {
+            Push-Location $folder.FullName
+            try {
+              terraform init -backend=false -input=false
+              terraform validate
+            }
+            finally {
+              Pop-Location
+            }
+          }
+
