@@ -1,0 +1,3 @@
+workstation_os  = "Windows"
+preferred_shell = "PowerShell"
+editor          = "Visual Studio Code"

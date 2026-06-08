@@ -2,7 +2,7 @@ param()
 
 $ErrorActionPreference = "Stop"
 
-$tools = @("terraform", "az", "git")
+$tools = @("pwsh", "terraform", "az", "git", "code")
 foreach ($tool in $tools) {
   $cmd = Get-Command $tool -ErrorAction SilentlyContinue
   if (-not $cmd) {
@@ -14,4 +14,6 @@ foreach ($tool in $tools) {
 terraform version
 az version --output table
 git --version
+pwsh --version
+code --version
 

@@ -333,6 +333,7 @@ Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts
 
 | Phase | Lessons | Outcome |
 |---|---:|---|
+| Optional setup | 090 | VS Code, Terraform, Azure CLI, Git, and PowerShell workstation readiness |
 | Foundations | 100-160 | Terraform workflow, providers, naming, variables, state basics |
 | Network | 170-180 | VNet, subnets, NSGs, address planning |
 | Windows Compute | 190-270 | Windows VM, IIS, Bastion, Load Balancer, VMSS, autoscale |
@@ -350,6 +351,14 @@ Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts
 
 ## Curriculum
 
+### Optional Pre-Lab
+
+| Lesson | Link | Name | Topic |
+|---:|---|---|---|
+| 0 | [CLZ-090](CLZ-090-optional-vscode-terraform-powershell-setup/README.md) | Optional VS Code Terraform PowerShell Setup | VS Code, Terraform, Azure CLI, Git, and PowerShell readiness |
+
+### Core Lessons
+
 | Lesson | Link | Name | Topic |
 |---:|---|---|---|
 {{LESSON_ROWS}}
@@ -359,6 +368,7 @@ Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts
 | Pattern | Diagram |
 |---|---|
 | Terraform workflow | ![Terraform workflow](assets/diagrams/terraform-workflow.svg) |
+| Workstation toolchain | ![Windows workstation toolchain](assets/diagrams/workstation-toolchain.svg) |
 | Network foundation | ![Network foundation](assets/diagrams/network-foundation.svg) |
 | Windows IIS VM | ![Windows IIS VM](assets/diagrams/windows-iis-vm.svg) |
 | Bastion RDP | ![Bastion RDP](assets/diagrams/bastion-rdp.svg) |
@@ -390,6 +400,7 @@ Many lessons create paid Azure resources. Use a small `instance_count`, keep the
 
 ## References
 - [Terraform core concepts](wiki/terraform-core-concepts.md)
+- [Windows workstation tooling](wiki/windows-workstation-tooling.md)
 - [Azure networking glossary](wiki/azure-networking-glossary.md)
 - [Windows VM and VMSS notes](wiki/windows-vm-and-vmss-notes.md)
 - [State backend and locking](wiki/state-backend-and-locking.md)
@@ -675,6 +686,7 @@ This folder contains original SVG diagrams used by the Chriz Labz README files a
 | Diagram | Used for |
 |---|---|
 | `curriculum-map.svg` | Root curriculum overview |
+| `workstation-toolchain.svg` | Optional workstation setup path |
 | `terraform-workflow.svg` | Terraform command sequence |
 | `resource-naming.svg` | Naming and tagging standards |
 | `network-foundation.svg` | VNet and subnet model |

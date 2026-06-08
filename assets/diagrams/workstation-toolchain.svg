@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Windows workstation toolchain</title>
+  <desc id="desc">A Windows workstation setup flow for VS Code, PowerShell, Terraform, Azure CLI, Git, and Chriz Labz validation.</desc>
+  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#2563eb;stroke-width:3}.tool{fill:#dbeafe}.check{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
+  <rect class="bg" width="1200" height="520" rx="18"/>
+  <text class="text" x="40" y="55">Optional Windows Workstation Toolchain</text>
+  <g transform="translate(65 110)">
+    <rect class="box tool" width="180" height="110" rx="12"/><text class="text" x="44" y="46">WinGet</text><text class="small" x="35" y="78">package install</text>
+    <line class="arrow" x1="200" y1="55" x2="265" y2="55"/>
+    <rect class="box" x="290" width="180" height="110" rx="12"/><text class="text" x="337" y="46">VS Code</text><text class="small" x="325" y="78">editor + path</text>
+    <line class="arrow" x1="490" y1="55" x2="555" y2="55"/>
+    <rect class="box tool" x="580" width="180" height="110" rx="12"/><text class="text" x="620" y="46">Tools</text><text class="small" x="603" y="78">tf + az + git</text>
+    <line class="arrow" x1="780" y1="55" x2="845" y2="55"/>
+    <rect class="box" x="870" width="210" height="110" rx="12"/><text class="text" x="915" y="46">PowerShell</text><text class="small" x="920" y="78">terminal profile</text>
+  </g>
+  <g transform="translate(170 300)">
+    <rect class="box" width="260" height="110" rx="12"/><text class="text" x="54" y="47">Extensions</text><text class="small" x="44" y="80">Terraform + Azure</text>
+    <line class="arrow" x1="285" y1="55" x2="415" y2="55"/>
+    <rect class="box check" x="440" width="310" height="110" rx="12"/><text class="text" x="520" y="47">Validate</text><text class="small" x="480" y="80">versions, auth, formatting</text>
+  </g>
+</svg>

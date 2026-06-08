@@ -2,7 +2,7 @@
 
 ![Chriz Labz curriculum map](assets/diagrams/curriculum-map.svg)
 
-Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts with the Terraform workflow, then builds Azure networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a capstone reference architecture.
+Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts with an optional workstation setup lab, then moves into the Terraform workflow, Azure networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a capstone reference architecture.
 
 ## What Makes This Lab Set Different
 - Windows-only implementation path using PowerShell and Windows Server 2022.
@@ -15,6 +15,7 @@ Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts
 
 | Phase | Lessons | Outcome |
 |---|---:|---|
+| Optional setup | 090 | VS Code, Terraform, Azure CLI, Git, and PowerShell workstation readiness |
 | Foundations | 100-160 | Terraform workflow, providers, naming, variables, state basics |
 | Network | 170-180 | VNet, subnets, NSGs, address planning |
 | Windows Compute | 190-270 | Windows VM, IIS, Bastion, Load Balancer, VMSS, autoscale |
@@ -31,6 +32,14 @@ Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts
 - Admin path: Azure Bastion RDP after the Bastion lesson
 
 ## Curriculum
+
+### Optional Pre-Lab
+
+| Lesson | Link | Name | Topic |
+|---:|---|---|---|
+| 0 | [CLZ-090](CLZ-090-optional-vscode-terraform-powershell-setup/README.md) | Optional VS Code Terraform PowerShell Setup | VS Code, Terraform, Azure CLI, Git, and PowerShell readiness |
+
+### Core Lessons
 
 | Lesson | Link | Name | Topic |
 |---:|---|---|---|
@@ -70,6 +79,7 @@ Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts
 | Pattern | Diagram |
 |---|---|
 | Terraform workflow | ![Terraform workflow](assets/diagrams/terraform-workflow.svg) |
+| Workstation toolchain | ![Windows workstation toolchain](assets/diagrams/workstation-toolchain.svg) |
 | Network foundation | ![Network foundation](assets/diagrams/network-foundation.svg) |
 | Windows IIS VM | ![Windows IIS VM](assets/diagrams/windows-iis-vm.svg) |
 | Bastion RDP | ![Bastion RDP](assets/diagrams/bastion-rdp.svg) |
@@ -101,6 +111,7 @@ Many lessons create paid Azure resources. Use a small `instance_count`, keep the
 
 ## References
 - [Terraform core concepts](wiki/terraform-core-concepts.md)
+- [Windows workstation tooling](wiki/windows-workstation-tooling.md)
 - [Azure networking glossary](wiki/azure-networking-glossary.md)
 - [Windows VM and VMSS notes](wiki/windows-vm-and-vmss-notes.md)
 - [State backend and locking](wiki/state-backend-and-locking.md)

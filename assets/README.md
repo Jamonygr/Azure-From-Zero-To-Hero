@@ -6,6 +6,7 @@ This folder contains original SVG diagrams used by the Chriz Labz README files a
 | Diagram | Used for |
 |---|---|
 | `curriculum-map.svg` | Root curriculum overview |
+| `workstation-toolchain.svg` | Optional workstation setup path |
 | `terraform-workflow.svg` | Terraform command sequence |
 | `resource-naming.svg` | Naming and tagging standards |
 | `network-foundation.svg` | VNet and subnet model |
