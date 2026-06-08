@@ -15,6 +15,11 @@ function Write-LabFile {
     New-Item -ItemType Directory -Path $parent | Out-Null
   }
 
+  if ($RelativePath -like "wiki/*" -and (Test-Path -LiteralPath $target)) {
+    Write-Host "Preserving hand-written wiki page: $RelativePath"
+    return
+  }
+
   $normalized = $Content.TrimStart("`r", "`n").TrimEnd() + "`r`n"
   Set-Content -LiteralPath $target -Value $normalized -Encoding utf8
 }
