@@ -5,6 +5,7 @@ This folder contains original SVG diagrams used by the Azure From Zero To Hero R
 ## Diagram Index
 | Diagram | Used for |
 |---|---|
+| `images/azure-from-zero-to-hero-roadmap.png` | Root README hero image |
 | `curriculum-map.svg` | Root curriculum overview |
 | `workstation-toolchain.svg` | Optional workstation setup path |
 | `terraform-workflow.svg` | Terraform command sequence |

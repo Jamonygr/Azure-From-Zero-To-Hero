@@ -1,6 +1,6 @@
 # Azure From Zero To Hero
 
-![Azure From Zero To Hero curriculum map](assets/diagrams/curriculum-map.svg)
+![From Zero To Hero with Terraform and Azure roadmap](assets/images/azure-from-zero-to-hero-roadmap.png)
 
 Azure From Zero To Hero is an original Windows-focused Azure Terraform lab library. It starts with an optional workstation setup lab, then moves into the Terraform workflow, Azure networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a capstone reference architecture.
 
@@ -12,6 +12,8 @@ Azure From Zero To Hero is an original Windows-focused Azure Terraform lab libra
 - The later lessons move from direct public access toward Bastion, Key Vault, and private endpoints.
 
 ## Visual Learning Path
+
+![Azure From Zero To Hero curriculum map](assets/diagrams/curriculum-map.svg)
 
 | Phase | Lessons | Outcome |
 |---|---:|---|
