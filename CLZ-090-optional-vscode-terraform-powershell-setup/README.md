@@ -122,6 +122,8 @@ code --install-extension yzhang.markdown-all-in-one
 
 The Terraform extension helps with syntax and formatting. The PowerShell extension improves script editing. The Azure extension is useful for browsing resources. GitHub Actions support helps with workflow files. Markdown support makes lesson README work easier.
 
+The repository includes `.vscode/extensions.json`, so VS Code can prompt for the same recommended extensions when the repository folder is opened. It also includes shared settings for Terraform format-on-save, PowerShell formatting, Markdown wrapping, line endings, and trailing whitespace cleanup. Personal VS Code files remain ignored.
+
 ## Open The Repository
 
 From the folder that contains this repository, run:
@@ -209,6 +211,7 @@ The script checks common commands, prints installed versions where possible, and
 - `code --version` works.
 - `az account show` returns the intended subscription.
 - VS Code opens the repository.
+- VS Code shows the workspace extension recommendations.
 - Terraform extension is installed.
 - PowerShell extension is installed.
 - `terraform validate` passes in this folder.

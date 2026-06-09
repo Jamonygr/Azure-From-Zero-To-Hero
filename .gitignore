@@ -16,7 +16,10 @@ override.tf.json
 *_override.tf.json
 
 # Local editor and OS noise
-.vscode/
+.vscode/*
+!.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
 .idea/
 Thumbs.db
 .DS_Store

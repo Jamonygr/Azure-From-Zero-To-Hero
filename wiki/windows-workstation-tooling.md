@@ -119,6 +119,8 @@ code --install-extension yzhang.markdown-all-in-one
 
 Extensions do not replace command-line validation. Always trust `terraform fmt`, `terraform validate`, and GitHub Actions more than editor highlighting.
 
+The repository tracks `.vscode/extensions.json` so VS Code can offer the same recommended extension set automatically. It also tracks a small `.vscode/settings.json` for shared Terraform, PowerShell, Markdown, line-ending, and whitespace defaults. User-specific editor files stay ignored.
+
 ## Terraform CLI
 
 Terraform CLI is the main infrastructure tool. It reads `.tf` files, initializes providers, validates configuration, creates plans, applies reviewed plans, and destroys managed resources.
@@ -321,7 +323,7 @@ VS Code works best when the repository root is opened as the workspace. Open the
 code .
 ~~~
 
-Opening a single file is fine for quick reading, but it weakens the lab experience. Folder mode gives you search across the curriculum, relative Markdown links, extension recommendations, integrated terminal context, and Git status in the same window.
+Opening a single file is fine for quick reading, but it weakens the lab experience. Folder mode gives you search across the curriculum, relative Markdown links, extension recommendations, shared workspace settings, integrated terminal context, and Git status in the same window.
 
 Recommended layout:
 

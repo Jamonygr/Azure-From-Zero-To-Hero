@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "hashicorp.terraform",
+    "ms-vscode.powershell",
+    "ms-azuretools.vscode-azureresourcegroups",
+    "github.vscode-github-actions",
+    "yzhang.markdown-all-in-one"
+  ]
+}

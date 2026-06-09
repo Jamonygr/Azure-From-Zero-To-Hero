@@ -2,6 +2,10 @@ param()
 
 $ErrorActionPreference = "Stop"
 
+$scriptRoot = Split-Path -Parent $PSCommandPath
+$repoRoot = Resolve-Path (Join-Path $scriptRoot "..")
+$workspaceExtensionsPath = Join-Path $repoRoot ".vscode\extensions.json"
+
 $commands = @(
   @{ Name = "pwsh"; VersionArgs = @("--version"); Required = $true },
   @{ Name = "terraform"; VersionArgs = @("version"); Required = $true },
@@ -41,7 +45,17 @@ if ($code) {
     "ms-azuretools.vscode-azureresourcegroups",
     "github.vscode-github-actions",
     "yzhang.markdown-all-in-one"
-)
+  )
+
+  if (Test-Path $workspaceExtensionsPath) {
+    try {
+      $extensionConfig = Get-Content -Raw $workspaceExtensionsPath | ConvertFrom-Json
+      $extensions = @($extensionConfig.recommendations)
+    }
+    catch {
+      Write-Host "[WARN] Could not read VS Code workspace recommendations: $($_.Exception.Message)"
+    }
+  }
 
   $installed = @()
   try {

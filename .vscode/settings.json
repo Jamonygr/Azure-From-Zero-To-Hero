@@ -1,0 +1,19 @@
+{
+  "editor.formatOnSave": false,
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true
+  },
+  "[powershell]": {
+    "editor.defaultFormatter": "ms-vscode.powershell"
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on"
+  }
+}
