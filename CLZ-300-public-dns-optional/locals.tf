@@ -5,7 +5,7 @@ locals {
   compact_prefix = substr(replace(local.prefix, "-", ""), 0, 18)
 
   tags = {
-    Project     = "Chriz Labz"
+    Project     = "Azure From Zero To Hero"
     Environment = var.environment
     ManagedBy   = "Terraform"
     Lab         = var.lab_id

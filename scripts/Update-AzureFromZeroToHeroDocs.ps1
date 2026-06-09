@@ -42,7 +42,7 @@ $Lessons = @(
   [ordered]@{ Number = 2; Id = "CLZ-110"; Folder = "CLZ-110-windows-workstation-setup"; Title = "Windows Workstation Setup"; Topic = "Terraform, Azure CLI, VS Code, Git, and PowerShell"; Build = "A verified local toolchain for running the whole curriculum."; Outcomes = "Confirm tool versions; sign in to Azure CLI; select the intended subscription."; Diagram = "terraform-workflow.svg"; Next = "Run the Terraform workflow end to end." },
   [ordered]@{ Number = 3; Id = "CLZ-120"; Folder = "CLZ-120-terraform-core-workflow"; Title = "Terraform Core Workflow"; Topic = "init, fmt, validate, plan, apply, and destroy"; Build = "A safe command routine that repeats in every lesson."; Outcomes = "Initialize providers; validate HCL; produce a saved plan; clean up with destroy."; Diagram = "terraform-workflow.svg"; Next = "Configure provider authentication clearly." },
   [ordered]@{ Number = 4; Id = "CLZ-130"; Folder = "CLZ-130-provider-authentication"; Title = "Provider Authentication"; Topic = "Azure provider and CLI authentication"; Build = "A provider configuration that can target one explicit subscription."; Outcomes = "Understand AzureRM provider setup; use subscription_id when needed; avoid accidental deployments."; Diagram = "terraform-workflow.svg"; Next = "Standardize names and tags." },
-  [ordered]@{ Number = 5; Id = "CLZ-140"; Folder = "CLZ-140-resource-groups-tags"; Title = "Resource Groups And Tags"; Topic = "Resource groups, standard tags, and naming"; Build = "A naming and tagging pattern for the Chriz Labz estate."; Outcomes = "Use clz prefixes; tag resources consistently; make cleanup and cost review easier."; Diagram = "resource-naming.svg"; Next = "Make the configuration reusable with inputs and outputs." },
+  [ordered]@{ Number = 5; Id = "CLZ-140"; Folder = "CLZ-140-resource-groups-tags"; Title = "Resource Groups And Tags"; Topic = "Resource groups, standard tags, and naming"; Build = "A naming and tagging pattern for the Azure From Zero To Hero estate."; Outcomes = "Use clz prefixes; tag resources consistently; make cleanup and cost review easier."; Diagram = "resource-naming.svg"; Next = "Make the configuration reusable with inputs and outputs." },
   [ordered]@{ Number = 6; Id = "CLZ-150"; Folder = "CLZ-150-variables-locals-outputs"; Title = "Variables Locals Outputs"; Topic = "Variables, locals, outputs, and tfvars examples"; Build = "A configurable lesson folder with safe example values."; Outcomes = "Change behavior with variables; keep derived names in locals; expose useful outputs."; Diagram = "resource-naming.svg"; Next = "Learn what Terraform records in state." },
   [ordered]@{ Number = 7; Id = "CLZ-160"; Folder = "CLZ-160-state-and-locking-basics"; Title = "State And Locking Basics"; Topic = "Local state safety and cleanup discipline"; Build = "A local-state workflow with clear safety rules."; Outcomes = "Identify state files; avoid committing runtime data; destroy resources from the owning folder."; Diagram = "remote-state.svg"; Next = "Start the Azure network foundation." },
   [ordered]@{ Number = 8; Id = "CLZ-170"; Folder = "CLZ-170-virtual-network-foundation"; Title = "Virtual Network Foundation"; Topic = "VNet, subnets, and address plan"; Build = "A four-subnet Azure network for web, app, data, and management workloads."; Outcomes = "Design address ranges; create subnets; prepare repeatable network outputs."; Diagram = "network-foundation.svg"; Next = "Attach security rules to the network." },
@@ -78,7 +78,7 @@ $Diagrams = @{
   <style>.bg{fill:#f7fafc}.box{fill:#ffffff;stroke:#1f6feb;stroke-width:3}.accent{fill:#dbeafe}.text{font:600 24px Arial,sans-serif;fill:#111827}.small{font:17px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
   <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
   <rect class="bg" width="1100" height="420" rx="18"/>
-  <text class="text" x="40" y="55">Chriz Labz Terraform Workflow</text>
+  <text class="text" x="40" y="55">Azure From Zero To Hero Terraform Workflow</text>
   <g transform="translate(55 115)">
     <rect class="box" width="160" height="110" rx="12"/><text class="text" x="32" y="45">Write</text><text class="small" x="24" y="78">.tf files</text>
     <line class="arrow" x1="180" y1="55" x2="245" y2="55"/>
@@ -98,7 +98,7 @@ $Diagrams = @{
   "resource-naming.svg" = @'
 <svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360" role="img" aria-labelledby="title desc">
   <title id="title">Naming and tags</title>
-  <desc id="desc">Resource naming parts and standard Chriz Labz tags.</desc>
+  <desc id="desc">Resource naming parts and standard Azure From Zero To Hero tags.</desc>
   <style>.bg{fill:#f8fafc}.part{fill:#eef2ff;stroke:#4f46e5;stroke-width:3}.tag{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}</style>
   <rect class="bg" width="1100" height="360" rx="18"/>
   <text class="text" x="40" y="55">Resource Identity Pattern</text>
@@ -112,7 +112,7 @@ $Diagrams = @{
   </g>
   <g transform="translate(775 38)">
     <rect class="tag" width="270" height="108" rx="12"/>
-    <text class="small" x="22" y="34">Project = Chriz Labz</text>
+    <text class="small" x="22" y="34">Project = Azure From Zero To Hero</text>
     <text class="small" x="22" y="62">ManagedBy = Terraform</text>
     <text class="small" x="22" y="90">Lab = CLZ-220</text>
   </g>
@@ -280,7 +280,7 @@ $Diagrams = @{
   <rect class="bg" width="1200" height="620" rx="18"/>
   <text class="text" x="40" y="55">CLZ-390 Windows Reference Architecture</text>
   <rect class="vnet" x="70" y="95" width="1060" height="410" rx="18"/>
-  <text class="small" x="100" y="130">Chriz Labz VNet</text>
+  <text class="small" x="100" y="130">Azure From Zero To Hero VNet</text>
   <rect class="net" x="120" y="165" width="220" height="120" rx="12"/><text class="text" x="165" y="215">Bastion</text><text class="small" x="150" y="248">private RDP path</text>
   <rect class="box" x="455" y="145" width="260" height="160" rx="12"/><text class="text" x="497" y="205">Standard LB</text><text class="small" x="505" y="240">HTTP frontend</text>
   <line class="arrow" x1="735" y1="225" x2="815" y2="225"/>
@@ -292,7 +292,7 @@ $Diagrams = @{
 '@
   "curriculum-map.svg" = @'
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
-  <title id="title">Chriz Labz curriculum map</title>
+  <title id="title">Azure From Zero To Hero curriculum map</title>
   <desc id="desc">The curriculum progresses from foundations to network, Windows compute, state, security, automation, data, and capstone.</desc>
   <style>.bg{fill:#f8fafc}.lane{fill:#fff;stroke:#cbd5e1;stroke-width:2}.step{fill:#dbeafe;stroke:#2563eb;stroke-width:3}.adv{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 23px Arial,sans-serif;fill:#111827}.small{font:17px Arial,sans-serif;fill:#374151}</style>
   <rect class="bg" width="1200" height="520" rx="18"/>
@@ -316,11 +316,11 @@ foreach ($diagramName in $Diagrams.Keys) {
 
 $lessonRows = ($Lessons | ForEach-Object { "| $($_.Number) | [$($_.Id)]($($_.Folder)/README.md) | $($_.Title) | $($_.Topic) |" }) -join "`r`n"
 $rootReadme = @'
-# Chriz Labz
+# Azure From Zero To Hero
 
-![Chriz Labz curriculum map](assets/diagrams/curriculum-map.svg)
+![Azure From Zero To Hero curriculum map](assets/diagrams/curriculum-map.svg)
 
-Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts with the Terraform workflow, then builds Azure networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a capstone reference architecture.
+Azure From Zero To Hero is an original Windows-focused Azure Terraform lab library. It starts with the Terraform workflow, then builds Azure networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a capstone reference architecture.
 
 ## What Makes This Lab Set Different
 - Windows-only implementation path using PowerShell and Windows Server 2022.
@@ -391,8 +391,8 @@ terraform destroy
 ## Repo Checks
 
 ~~~powershell
-.\scripts\Initialize-ChrizLabzWorkspace.ps1
-.\scripts\Test-ChrizLabzTerraform.ps1
+.\scripts\Initialize-AzureFromZeroToHeroWorkspace.ps1
+.\scripts\Test-AzureFromZeroToHeroTerraform.ps1
 ~~~
 
 ## Cost And Cleanup
@@ -417,7 +417,7 @@ $lessonTemplate = @'
 ## Overview
 {{BUILD}}
 
-This lesson is part of the Windows-only Chriz Labz path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
 
 ## What You Build
 | Item | Description |
@@ -545,7 +545,7 @@ Write-LabFile -RelativePath "wiki/azure-networking-glossary.md" -Content @'
 ![Network foundation](../assets/diagrams/network-foundation.svg)
 
 ## Core Terms
-| Term | Meaning in Chriz Labz |
+| Term | Meaning in Azure From Zero To Hero |
 |---|---|
 | Resource group | Boundary for one lab deployment |
 | VNet | Private address space for lab resources |
@@ -575,7 +575,7 @@ Write-LabFile -RelativePath "wiki/windows-vm-and-vmss-notes.md" -Content @'
 ![Windows IIS VM](../assets/diagrams/windows-iis-vm.svg)
 
 ## Image Standard
-Chriz Labz uses Windows Server 2022 Azure Edition by default:
+Azure From Zero To Hero uses Windows Server 2022 Azure Edition by default:
 
 | Field | Value |
 |---|---|
@@ -680,7 +680,7 @@ terraform destroy
 Write-LabFile -RelativePath "assets/README.md" -Content @'
 # Assets
 
-This folder contains original SVG diagrams used by the Chriz Labz README files and wiki pages.
+This folder contains original SVG diagrams used by the Azure From Zero To Hero README files and wiki pages.
 
 ## Diagram Index
 | Diagram | Used for |
@@ -720,7 +720,10 @@ override.tf.json
 *_override.tf.json
 
 # Local editor and OS noise
-.vscode/
+.vscode/*
+!.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
 .idea/
 Thumbs.db
 .DS_Store
@@ -771,17 +774,17 @@ jobs:
 Write-LabFile -RelativePath "CONTRIBUTING.md" -Content @'
 # Contributing
 
-Chriz Labz is organized as small, readable Terraform lessons. Keep contributions focused and easy to validate.
+Azure From Zero To Hero is organized as small, readable Terraform lessons. Keep contributions focused and easy to validate.
 
 ## Standards
 - Use PowerShell examples.
 - Keep lesson folders independently deployable.
 - Commit only safe example values.
 - Run `terraform fmt -check -recursive`.
-- Run `.\scripts\Test-ChrizLabzTerraform.ps1` before pushing broad Terraform changes.
+- Run `.\scripts\Test-AzureFromZeroToHeroTerraform.ps1` before pushing broad Terraform changes.
 
 ## Documentation
 Every lesson README should include a goal, architecture image, build summary, runbook, validation checklist, cleanup note, and next lesson pointer.
 '@
 
-Write-Host "Chriz Labz documentation enriched."
+Write-Host "Azure From Zero To Hero documentation enriched."

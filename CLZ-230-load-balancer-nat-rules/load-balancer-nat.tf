@@ -186,7 +186,7 @@ resource "azurerm_virtual_machine_extension" "iis" {
   auto_upgrade_minor_version = true
 
   settings = jsonencode({
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Chriz Labz backend ${count.index + 1}'\""
+    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Azure From Zero To Hero backend ${count.index + 1}'\""
   })
 }
 resource "azurerm_lb_nat_rule" "rdp_first" {

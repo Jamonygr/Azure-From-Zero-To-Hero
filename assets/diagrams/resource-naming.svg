@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360" role="img" aria-labelledby="title desc">
   <title id="title">Naming and tags</title>
-  <desc id="desc">Resource naming parts and standard Chriz Labz tags.</desc>
+  <desc id="desc">Resource naming parts and standard Azure From Zero To Hero tags.</desc>
   <style>.bg{fill:#f8fafc}.part{fill:#eef2ff;stroke:#4f46e5;stroke-width:3}.tag{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}</style>
   <rect class="bg" width="1100" height="360" rx="18"/>
   <text class="text" x="40" y="55">Resource Identity Pattern</text>
@@ -14,7 +14,7 @@
   </g>
   <g transform="translate(775 38)">
     <rect class="tag" width="270" height="108" rx="12"/>
-    <text class="small" x="22" y="34">Project = Chriz Labz</text>
+    <text class="small" x="22" y="34">Project = Azure From Zero To Hero</text>
     <text class="small" x="22" y="62">ManagedBy = Terraform</text>
     <text class="small" x="22" y="90">Lab = CLZ-220</text>
   </g>

@@ -5,7 +5,7 @@ variable "workstation_os" {
 }
 
 variable "preferred_shell" {
-  description = "Preferred shell for running Chriz Labz commands."
+  description = "Preferred shell for running Azure From Zero To Hero commands."
   type        = string
   default     = "PowerShell"
 }

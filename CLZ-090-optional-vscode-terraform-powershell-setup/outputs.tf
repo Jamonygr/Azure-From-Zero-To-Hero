@@ -4,7 +4,7 @@ output "required_commands" {
 }
 
 output "recommended_extensions" {
-  description = "VS Code extensions recommended for the Chriz Labz workflow."
+  description = "VS Code extensions recommended for the Azure From Zero To Hero workflow."
   value       = local.recommended_extensions
 }
 

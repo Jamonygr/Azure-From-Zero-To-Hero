@@ -2,13 +2,13 @@
 
 ![Windows IIS VM](../assets/diagrams/windows-iis-vm.svg)
 
-Windows compute is the main workload path in Chriz Labz. The curriculum starts with simple Windows Server VMs, adds IIS bootstrap, moves administration behind Azure Bastion, places multiple web nodes behind a Standard Load Balancer, and then introduces Windows VM Scale Sets for repeatable capacity.
+Windows compute is the main workload path in Azure From Zero To Hero. The curriculum starts with simple Windows Server VMs, adds IIS bootstrap, moves administration behind Azure Bastion, places multiple web nodes behind a Standard Load Balancer, and then introduces Windows VM Scale Sets for repeatable capacity.
 
 This page explains the design decisions behind those labs. It covers image selection, sizing, credentials, networking, IIS automation, RDP access, VMSS behavior, load-balancing, autoscale, and common validation steps. Use it when a lesson creates a Windows VM or Windows VMSS and you want more context than the lesson README provides.
 
 ## Standard Windows Image
 
-Chriz Labz uses Windows Server 2022 Azure Edition by default.
+Azure From Zero To Hero uses Windows Server 2022 Azure Edition by default.
 
 | Field | Value |
 |---|---|
@@ -48,7 +48,7 @@ For quota issues, either lower the instance count or select another size availab
 
 ## Administrator Credentials
 
-Windows VMs require an administrator username and password in these labs. Chriz Labz generates the password with the `random_password` provider instead of committing a real password.
+Windows VMs require an administrator username and password in these labs. Azure From Zero To Hero generates the password with the `random_password` provider instead of committing a real password.
 
 ~~~hcl
 resource "random_password" "windows_admin" {
@@ -129,7 +129,7 @@ After Bastion is introduced, prefer private Windows VMs. Public IPs remain usefu
 
 ## IIS Bootstrap
 
-IIS is the standard validation workload in Chriz Labz. It gives a simple HTTP endpoint that can validate VM provisioning, PowerShell extension execution, NSG behavior, Load Balancer probes, and VMSS instance readiness.
+IIS is the standard validation workload in Azure From Zero To Hero. It gives a simple HTTP endpoint that can validate VM provisioning, PowerShell extension execution, NSG behavior, Load Balancer probes, and VMSS instance readiness.
 
 The common extension is `CustomScriptExtension`:
 
@@ -247,7 +247,7 @@ Use `for_each` when each VM has identity. Use `count` when instances are truly i
 
 A VM Scale Set, or VMSS, creates and manages a group of similar VM instances. It is the natural next step after individual VMs.
 
-The Chriz Labz VMSS pattern includes:
+The Azure From Zero To Hero VMSS pattern includes:
 
 | Component | Purpose |
 |---|---|
@@ -370,4 +370,4 @@ Each stage teaches one new layer. If a later lesson feels complex, go back to th
 
 ## Summary
 
-Windows compute in Chriz Labz is more than VM creation. It is a full path from basic provisioning to operational architecture: secure credentials, predictable names, controlled access, PowerShell bootstrap, IIS validation, load-balanced delivery, scale sets, autoscale, and final module composition. The goal is to make every resource relationship visible before it becomes part of the capstone.
+Windows compute in Azure From Zero To Hero is more than VM creation. It is a full path from basic provisioning to operational architecture: secure credentials, predictable names, controlled access, PowerShell bootstrap, IIS validation, load-balanced delivery, scale sets, autoscale, and final module composition. The goal is to make every resource relationship visible before it becomes part of the capstone.

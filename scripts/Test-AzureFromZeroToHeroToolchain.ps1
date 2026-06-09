@@ -84,7 +84,7 @@ catch {
 }
 
 if ($failed) {
-  throw "Required Chriz Labz workstation tools are missing."
+  throw "Required Azure From Zero To Hero workstation tools are missing."
 }
 
-Write-Host "Chriz Labz workstation toolchain check completed."
+Write-Host "Azure From Zero To Hero workstation toolchain check completed."

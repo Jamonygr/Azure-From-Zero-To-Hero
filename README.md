@@ -1,8 +1,8 @@
-# Chriz Labz
+# Azure From Zero To Hero
 
-![Chriz Labz curriculum map](assets/diagrams/curriculum-map.svg)
+![Azure From Zero To Hero curriculum map](assets/diagrams/curriculum-map.svg)
 
-Chriz Labz is an original Windows-focused Azure Terraform lab library. It starts with an optional workstation setup lab, then moves into the Terraform workflow, Azure networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a capstone reference architecture.
+Azure From Zero To Hero is an original Windows-focused Azure Terraform lab library. It starts with an optional workstation setup lab, then moves into the Terraform workflow, Azure networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a capstone reference architecture.
 
 ## What Makes This Lab Set Different
 - Windows-only implementation path using PowerShell and Windows Server 2022.
@@ -102,8 +102,8 @@ terraform destroy
 ## Repo Checks
 
 ~~~powershell
-.\scripts\Initialize-ChrizLabzWorkspace.ps1
-.\scripts\Test-ChrizLabzTerraform.ps1
+.\scripts\Initialize-AzureFromZeroToHeroWorkspace.ps1
+.\scripts\Test-AzureFromZeroToHeroTerraform.ps1
 ~~~
 
 ## Cost And Cleanup

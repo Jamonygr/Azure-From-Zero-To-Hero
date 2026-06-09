@@ -22,7 +22,7 @@ variable "location" {
 }
 
 variable "lab_id" {
-  description = "Chriz Labz lesson ID."
+  description = "Azure From Zero To Hero lesson ID."
   type        = string
   default     = "CLZ-330"
 }

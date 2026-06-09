@@ -2,7 +2,7 @@
 
 ![Windows workstation toolchain](../assets/diagrams/workstation-toolchain.svg)
 
-This guide supports the optional `CLZ-090` setup lab. It explains how a Windows workstation should be prepared for Chriz Labz, why each tool exists, how the tools work together, and how to validate the setup before deploying Azure resources. It is intentionally more detailed than the lesson README because workstation issues can waste a lot of time if they are not diagnosed early.
+This guide supports the optional `CLZ-090` setup lab. It explains how a Windows workstation should be prepared for Azure From Zero To Hero, why each tool exists, how the tools work together, and how to validate the setup before deploying Azure resources. It is intentionally more detailed than the lesson README because workstation issues can waste a lot of time if they are not diagnosed early.
 
 The goal is a predictable local workflow: open the repository in VS Code, use PowerShell as the terminal, authenticate with Azure CLI, run Terraform from the correct lesson folder, validate formatting, review plans, and keep local values out of git.
 
@@ -19,7 +19,7 @@ The recommended workstation has these core tools:
 | Azure CLI | Authenticates to Azure and inspects subscriptions/resources |
 | Git | Tracks changes and pushes to GitHub |
 
-You can run Terraform from another editor or terminal if you prefer, but the Chriz Labz documentation assumes PowerShell examples and VS Code-friendly navigation.
+You can run Terraform from another editor or terminal if you prefer, but the Azure From Zero To Hero documentation assumes PowerShell examples and VS Code-friendly navigation.
 
 ## Why Setup Gets Its Own Optional Lab
 
@@ -62,7 +62,7 @@ The `--exact` option is useful for Azure CLI because it ensures the official pac
 
 ## PowerShell 7
 
-PowerShell 7 is the preferred shell for Chriz Labz. Windows includes Windows PowerShell 5.1, but PowerShell 7 is the modern cross-platform version and has a better experience with many current tools.
+PowerShell 7 is the preferred shell for Azure From Zero To Hero. Windows includes Windows PowerShell 5.1, but PowerShell 7 is the modern cross-platform version and has a better experience with many current tools.
 
 Validate it with:
 
@@ -261,7 +261,7 @@ In managed environments, use approved software distribution channels and ask the
 Run:
 
 ~~~powershell
-.\scripts\Test-ChrizLabzToolchain.ps1
+.\scripts\Test-AzureFromZeroToHeroToolchain.ps1
 ~~~
 
 The script checks required commands, prints version output, lists recommended VS Code extensions when possible, and checks Azure CLI sign-in. It does not install software and does not create Azure resources.
@@ -356,13 +356,13 @@ Use the policy required by your organization. The curriculum does not require lo
 When running a script from the repository, use an explicit relative path:
 
 ~~~powershell
-.\scripts\Test-ChrizLabzToolchain.ps1
+.\scripts\Test-AzureFromZeroToHeroToolchain.ps1
 ~~~
 
 From inside `CLZ-090`, use:
 
 ~~~powershell
-..\scripts\Test-ChrizLabzToolchain.ps1
+..\scripts\Test-AzureFromZeroToHeroToolchain.ps1
 ~~~
 
 That habit makes it clear which script is being executed and prevents accidental reliance on a command with the same name elsewhere.
@@ -466,4 +466,4 @@ Use official docs when an install path changes:
 
 ## Summary
 
-A clean workstation setup is not glamorous, but it makes every Terraform lesson smoother. The expected Chriz Labz setup is PowerShell 7, VS Code, Terraform CLI, Azure CLI, Git, and a few editor extensions. Validate the tools before deploying resources, keep local values out of git, confirm Azure subscription context, and run Terraform from the correct lesson folder. Once those habits are in place, the rest of the curriculum becomes much easier to follow.
+A clean workstation setup is not glamorous, but it makes every Terraform lesson smoother. The expected Azure From Zero To Hero setup is PowerShell 7, VS Code, Terraform CLI, Azure CLI, Git, and a few editor extensions. Validate the tools before deploying resources, keep local values out of git, confirm Azure subscription context, and run Terraform from the correct lesson folder. Once those habits are in place, the rest of the curriculum becomes much easier to follow.

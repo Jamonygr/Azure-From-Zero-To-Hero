@@ -4,7 +4,7 @@
 
 Terraform state is the operational record of what Terraform manages. It maps resource addresses in configuration to real Azure resource IDs, stores selected attributes, tracks dependencies, and supports future plans. State is the reason Terraform can look at a resource block such as `azurerm_resource_group.lab` and know which Azure resource group belongs to it.
 
-This page explains how state works in Chriz Labz, why local state is used early, why Azure Storage is introduced later, how remote-state outputs are consumed, what should never be committed, and how to avoid common state mistakes.
+This page explains how state works in Azure From Zero To Hero, why local state is used early, why Azure Storage is introduced later, how remote-state outputs are consumed, what should never be committed, and how to avoid common state mistakes.
 
 ## What State Does
 
@@ -38,7 +38,7 @@ If configuration changes, Terraform may update Azure. If Azure changes outside T
 
 ## Local State In Early Lessons
 
-Early Chriz Labz lessons use local state. Local state keeps the learning loop transparent because the state file is created in the lesson folder and the relationship between commands and files is easy to inspect.
+Early Azure From Zero To Hero lessons use local state. Local state keeps the learning loop transparent because the state file is created in the lesson folder and the relationship between commands and files is easy to inspect.
 
 Local state is useful for:
 
@@ -92,7 +92,7 @@ If a folder behaves strangely after provider or backend changes, removing `.terr
 
 ## Dependency Lock Files
 
-Terraform can create `.terraform.lock.hcl` to record provider selections. In many production repositories, lock files are committed for repeatable provider installation. Chriz Labz currently ignores them to keep every lesson lightweight and avoid committing one lock file per lesson folder.
+Terraform can create `.terraform.lock.hcl` to record provider selections. In many production repositories, lock files are committed for repeatable provider installation. Azure From Zero To Hero currently ignores them to keep every lesson lightweight and avoid committing one lock file per lesson folder.
 
 This is a deliberate curriculum choice. The provider version constraints in `versions.tf` already define the accepted version range. The validation workflow initializes each lesson from those constraints.
 
@@ -134,7 +134,7 @@ terraform {
 }
 ~~~
 
-Chriz Labz does not put backend blocks into every lesson by default because the lessons should run independently. The remote-state lesson teaches the backend shape, and later work can adopt it where needed.
+Azure From Zero To Hero does not put backend blocks into every lesson by default because the lessons should run independently. The remote-state lesson teaches the backend shape, and later work can adopt it where needed.
 
 ## State Keys
 
@@ -237,7 +237,7 @@ Destroying the backend storage account that holds active remote state is a speci
 
 ## Import And State Repair
 
-Terraform can import existing Azure resources into state, but import is not part of the normal Chriz Labz path. Import is useful when a resource exists and you want Terraform to manage it. It requires matching configuration and careful review.
+Terraform can import existing Azure resources into state, but import is not part of the normal Azure From Zero To Hero path. Import is useful when a resource exists and you want Terraform to manage it. It requires matching configuration and careful review.
 
 For beginner and intermediate lab work, it is usually better to destroy and recreate short-lived lab resources than to practice state repair. Use import later when you have a real reason.
 
@@ -258,7 +258,7 @@ Do not apply drift changes blindly. Read the plan and decide whether Terraform o
 
 ## Workspace Note
 
-Terraform workspaces can separate state under one configuration, but Chriz Labz does not rely on workspaces in the core path. The curriculum uses folder boundaries, environment variables, and state keys to keep the model explicit.
+Terraform workspaces can separate state under one configuration, but Azure From Zero To Hero does not rely on workspaces in the core path. The curriculum uses folder boundaries, environment variables, and state keys to keep the model explicit.
 
 Workspaces can be useful, but they also add another hidden selector. A hidden selector can confuse lab users who expect one folder to mean one state. For this repository, explicit state keys are easier to teach.
 
@@ -302,4 +302,4 @@ Before committing:
 
 ## Summary
 
-State is Terraform's memory. Treat it as operational data that deserves protection and deliberate handling. Chriz Labz starts with local state so the learning loop is visible, then introduces Azure Storage remote state when shared outputs and safer collaboration become relevant. The most important habits are simple: do not commit state, do not edit state manually, use clear backend keys, review plans before apply or destroy, and protect any state that contains sensitive values.
+State is Terraform's memory. Treat it as operational data that deserves protection and deliberate handling. Azure From Zero To Hero starts with local state so the learning loop is visible, then introduces Azure Storage remote state when shared outputs and safer collaboration become relevant. The most important habits are simple: do not commit state, do not edit state manually, use clear backend keys, review plans before apply or destroy, and protect any state that contains sensitive values.

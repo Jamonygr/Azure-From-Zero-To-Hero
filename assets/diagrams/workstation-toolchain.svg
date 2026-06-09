@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
   <title id="title">Windows workstation toolchain</title>
-  <desc id="desc">A Windows workstation setup flow for VS Code, PowerShell, Terraform, Azure CLI, Git, and Chriz Labz validation.</desc>
+  <desc id="desc">A Windows workstation setup flow for VS Code, PowerShell, Terraform, Azure CLI, Git, and Azure From Zero To Hero validation.</desc>
   <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#2563eb;stroke-width:3}.tool{fill:#dbeafe}.check{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
   <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
   <rect class="bg" width="1200" height="520" rx="18"/>

@@ -2,13 +2,13 @@
 
 ![Network foundation](../assets/diagrams/network-foundation.svg)
 
-Azure networking is the base layer for almost every Chriz Labz lesson after the first few Terraform fundamentals. Windows VMs, IIS sites, Azure Bastion, Load Balancer, VM Scale Sets, NAT Gateway, Private DNS, Private Endpoint, Azure SQL, and monitoring all depend on network decisions made early in the lab path.
+Azure networking is the base layer for almost every Azure From Zero To Hero lesson after the first few Terraform fundamentals. Windows VMs, IIS sites, Azure Bastion, Load Balancer, VM Scale Sets, NAT Gateway, Private DNS, Private Endpoint, Azure SQL, and monitoring all depend on network decisions made early in the lab path.
 
 This guide explains the networking vocabulary used in the curriculum. It is written as a practical field reference, not as a dictionary of every Azure networking feature. The goal is to help you understand why each resource exists, what problem it solves, and how it relates to the Terraform files in the lesson folders.
 
 ## Resource Group
 
-A resource group is the management boundary for one lesson. In Chriz Labz, every lesson creates a resource group named with the lesson ID, such as `clz-dev-clz170-rg`. The resource group gives you a clean place to inspect resources, confirm tags, and run cleanup.
+A resource group is the management boundary for one lesson. In Azure From Zero To Hero, every lesson creates a resource group named with the lesson ID, such as `clz-dev-clz170-rg`. The resource group gives you a clean place to inspect resources, confirm tags, and run cleanup.
 
 Resource groups are not network containers by themselves. They can contain resources from many regions, although the lab keeps resources in one region unless a lesson is specifically about global routing. The resource group location mostly affects metadata. Individual resources still have their own location arguments.
 
@@ -28,7 +28,7 @@ The resource group appears in almost every other resource through `resource_grou
 
 A virtual network, or VNet, is a private address space in Azure. It is the largest network boundary used in the lab architecture. Resources inside a VNet can communicate over private addresses when routing and security rules allow it.
 
-The standard Chriz Labz VNet uses:
+The standard Azure From Zero To Hero VNet uses:
 
 | Setting | Value |
 |---|---|
@@ -42,7 +42,7 @@ The address space is intentionally larger than the current subnet set. That leav
 
 ## Subnets
 
-A subnet is a smaller address range inside the VNet. Chriz Labz uses role-based subnet names:
+A subnet is a smaller address range inside the VNet. Azure From Zero To Hero uses role-based subnet names:
 
 | Subnet | Purpose |
 |---|---|
@@ -88,7 +88,7 @@ In the early labs, dynamic private allocation keeps configuration simple. In pri
 
 ## Public IP Address
 
-A public IP gives an Azure resource an internet-routable endpoint. Chriz Labz uses public IPs only when a lesson needs them:
+A public IP gives an Azure resource an internet-routable endpoint. Azure From Zero To Hero uses public IPs only when a lesson needs them:
 
 | Lesson type | Why a public IP may exist |
 |---|---|
@@ -102,7 +102,7 @@ Public IPs are not automatically bad, but they should be intentional. Later less
 
 ## Network Security Group
 
-A network security group, or NSG, contains rules that allow or deny traffic. NSGs can be associated with subnets or NICs. Chriz Labz primarily uses subnet-level associations so the rule is easy to reason about.
+A network security group, or NSG, contains rules that allow or deny traffic. NSGs can be associated with subnets or NICs. Azure From Zero To Hero primarily uses subnet-level associations so the rule is easy to reason about.
 
 Each rule has:
 
@@ -145,7 +145,7 @@ Key Bastion pieces:
 
 ![Load-balanced Windows tier](../assets/diagrams/load-balancer-vmss.svg)
 
-Azure Standard Load Balancer distributes layer 4 traffic. In Chriz Labz, it is used for HTTP delivery to Windows IIS backends and for a controlled NAT rule example.
+Azure Standard Load Balancer distributes layer 4 traffic. In Azure From Zero To Hero, it is used for HTTP delivery to Windows IIS backends and for a controlled NAT rule example.
 
 A basic load balancer pattern contains:
 
@@ -183,7 +183,7 @@ NAT Gateway is useful because outbound identity becomes predictable. That can ma
 
 Private DNS provides name resolution inside a VNet. A private DNS zone is linked to the VNet, and records inside the zone resolve for resources that use that VNet's DNS path.
 
-Chriz Labz uses private DNS in two patterns:
+Azure From Zero To Hero uses private DNS in two patterns:
 
 | Pattern | Example |
 |---|---|
@@ -208,7 +208,7 @@ If DNS is wrong, the private endpoint can exist but clients may still try to rea
 
 ## Public DNS
 
-Public DNS zones are optional in Chriz Labz because not every lab user owns a domain. The public DNS lesson uses a boolean variable so the resource is not created accidentally.
+Public DNS zones are optional in Azure From Zero To Hero because not every lab user owns a domain. The public DNS lesson uses a boolean variable so the resource is not created accidentally.
 
 Public DNS is useful when you need internet clients to resolve a name to a public service. The lab explains the shape without requiring domain delegation.
 
@@ -222,7 +222,7 @@ The global routing lesson uses external endpoint host names so it can teach rout
 
 ## Service Endpoints And Private Endpoints
 
-Service endpoints and private endpoints are different patterns. Chriz Labz focuses on private endpoints because they make the private network path visible and pair well with private DNS.
+Service endpoints and private endpoints are different patterns. Azure From Zero To Hero focuses on private endpoints because they make the private network path visible and pair well with private DNS.
 
 Private endpoints create a private IP in your VNet. That private IP becomes the service access point. This is a clear model for storage and database lessons.
 
@@ -274,4 +274,4 @@ Tags add another search dimension. The `Lab` tag is especially useful when you n
 
 ## Summary
 
-Azure networking in Chriz Labz is built in layers. First you create a VNet and subnets. Then you apply NSGs. Then you attach Windows workloads. Then you add public delivery with Load Balancer, private administration with Bastion, stable outbound access with NAT Gateway, name resolution with DNS, private service access with Private Endpoint, and global routing with Traffic Manager. Each layer teaches a separate responsibility, and together they form the network foundation for the final Windows reference architecture.
+Azure networking in Azure From Zero To Hero is built in layers. First you create a VNet and subnets. Then you apply NSGs. Then you attach Windows workloads. Then you add public delivery with Load Balancer, private administration with Bastion, stable outbound access with NAT Gateway, name resolution with DNS, private service access with Private Endpoint, and global routing with Traffic Manager. Each layer teaches a separate responsibility, and together they form the network foundation for the final Windows reference architecture.

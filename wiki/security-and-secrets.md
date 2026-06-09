@@ -2,13 +2,13 @@
 
 ![Generated secret handling](../assets/diagrams/security-secrets.svg)
 
-Security in Chriz Labz is taught as a progression. The early lessons keep access simple so that the Terraform resource relationships are easy to see. Later lessons tighten the model with Azure Bastion, generated credentials, sensitive outputs, Key Vault, private endpoints, and clearer separation between public delivery and private administration.
+Security in Azure From Zero To Hero is taught as a progression. The early lessons keep access simple so that the Terraform resource relationships are easy to see. Later lessons tighten the model with Azure Bastion, generated credentials, sensitive outputs, Key Vault, private endpoints, and clearer separation between public delivery and private administration.
 
 This page explains the security decisions used across the curriculum. It focuses on practical lab safety: how credentials are generated, what sensitive output means, how state affects secrets, how RDP access should evolve, why Key Vault is introduced, and how private endpoints reduce public exposure for platform services.
 
 ## Security Goals
 
-Chriz Labz uses a few consistent security goals:
+Azure From Zero To Hero uses a few consistent security goals:
 
 | Goal | Practice |
 |---|---|
@@ -188,7 +188,7 @@ Do not grant broad access permanently just because it is convenient during setup
 
 ![Private endpoint service access](../assets/diagrams/private-endpoint-sql.svg)
 
-Private endpoints move service access into the VNet. Chriz Labz uses private endpoints for storage and Azure SQL.
+Private endpoints move service access into the VNet. Azure From Zero To Hero uses private endpoints for storage and Azure SQL.
 
 The security benefit is that clients can reach a service over a private address instead of using the public service endpoint. This is especially useful for data services.
 
@@ -248,7 +248,7 @@ Standard tags:
 
 | Tag | Use |
 |---|---|
-| `Project` | Identifies Chriz Labz |
+| `Project` | Identifies Azure From Zero To Hero |
 | `Environment` | Separates dev, test, prod |
 | `ManagedBy` | Shows Terraform ownership |
 | `Lab` | Ties resources to one lesson |
@@ -322,7 +322,7 @@ Before committing:
 | No state files | State stays local or remote backend only |
 | No private credential files | Generated or external only |
 | No broad admin CIDR in examples | Documentation-safe values only |
-| No copied source identifiers | Chriz Labz stays original |
+| No copied source identifiers | Azure From Zero To Hero stays original |
 
 Before applying:
 
@@ -336,4 +336,4 @@ Before applying:
 
 ## Summary
 
-Security in Chriz Labz is practical and progressive. You start by understanding resources, then add controls: scoped admin access, sensitive outputs, Azure Bastion, Key Vault, private endpoints, private DNS, validation-only CI, and cleanup discipline. The most important habits are to avoid committed secrets, protect state, keep admin paths narrow, use private access for data services, and destroy lab resources when they are no longer needed.
+Security in Azure From Zero To Hero is practical and progressive. You start by understanding resources, then add controls: scoped admin access, sensitive outputs, Azure Bastion, Key Vault, private endpoints, private DNS, validation-only CI, and cleanup discipline. The most important habits are to avoid committed secrets, protect state, keep admin paths narrow, use private access for data services, and destroy lab resources when they are no longer needed.

@@ -1,6 +1,6 @@
 # Assets
 
-This folder contains original SVG diagrams used by the Chriz Labz README files and wiki pages.
+This folder contains original SVG diagrams used by the Azure From Zero To Hero README files and wiki pages.
 
 ## Diagram Index
 | Diagram | Used for |

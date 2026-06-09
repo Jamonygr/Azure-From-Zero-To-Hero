@@ -2,7 +2,7 @@
 
 ![Terraform workflow](../assets/diagrams/terraform-workflow.svg)
 
-Terraform is the control loop for Chriz Labz. Each lesson describes the Azure resources that should exist, and Terraform compares that desired configuration against recorded state and live provider data. The result is a plan: a concrete list of resources to create, update, replace, or destroy. A good Terraform habit is not to memorize commands, but to understand what question each command answers.
+Terraform is the control loop for Azure From Zero To Hero. Each lesson describes the Azure resources that should exist, and Terraform compares that desired configuration against recorded state and live provider data. The result is a plan: a concrete list of resources to create, update, replace, or destroy. A good Terraform habit is not to memorize commands, but to understand what question each command answers.
 
 This page is a field guide for the core Terraform ideas used throughout the curriculum. It explains how the files fit together, how the command workflow protects you from surprises, how variables and outputs shape each lesson, and how to read the plan before you apply it. The examples are intentionally aligned with the Windows-only Azure labs in this repository.
 
@@ -18,7 +18,7 @@ Terraform works with three views of the world:
 
 When all three views agree, Terraform has nothing to change. When configuration and state differ, Terraform builds a plan to make the target match the configuration. If a resource was changed outside Terraform, the provider refresh step can reveal drift. That is why plan review matters: it is the moment where Terraform shows what it thinks needs to happen.
 
-In Chriz Labz, each lesson folder is a small Terraform project. The project boundary is intentional. It lets you practice one concept at a time, run cleanup safely from the same folder, and avoid mixing state from unrelated lessons. Later lessons introduce remote state and modules, but the basic workflow stays the same.
+In Azure From Zero To Hero, each lesson folder is a small Terraform project. The project boundary is intentional. It lets you practice one concept at a time, run cleanup safely from the same folder, and avoid mixing state from unrelated lessons. Later lessons introduce remote state and modules, but the basic workflow stays the same.
 
 ## Standard Command Flow
 
@@ -97,7 +97,7 @@ That distinction matters. The Terraform address is how Terraform tracks the obje
 
 ## Variables
 
-Variables are inputs. They make one configuration reusable without editing the `.tf` files for every environment. Chriz Labz uses common variables for environment, location, prefix, lesson ID, administrator name, instance count, and optional service settings.
+Variables are inputs. They make one configuration reusable without editing the `.tf` files for every environment. Azure From Zero To Hero uses common variables for environment, location, prefix, lesson ID, administrator name, instance count, and optional service settings.
 
 Good variables have three traits:
 
@@ -134,7 +134,7 @@ locals {
   prefix   = lower("${var.name_prefix}-${var.environment}-${local.lab_code}")
 
   tags = {
-    Project     = "Chriz Labz"
+    Project     = "Azure From Zero To Hero"
     Environment = var.environment
     ManagedBy   = "Terraform"
     Lab         = var.lab_id
@@ -171,7 +171,7 @@ Sensitive outputs are still stored in state. Marking an output sensitive only co
 
 ## Data Flow Inside A Lesson
 
-Most Chriz Labz lessons follow this flow:
+Most Azure From Zero To Hero lessons follow this flow:
 
 1. Variables accept user-controlled values like environment and region.
 2. Locals combine those values into names and tags.
@@ -235,7 +235,7 @@ State is Terraform's memory. If someone changes an Azure resource outside Terraf
 
 Drift is not always bad. Sometimes it reveals a real manual fix. Sometimes it reveals an accidental change. In either case, Terraform needs a decision: should the configuration be updated to match the manual change, or should Terraform restore the configured shape?
 
-Chriz Labz keeps each lesson small so drift is easy to understand. If a resource in `CLZ-220` changes, you know the load-balancer lesson owns it. The `Lab` tag also helps identify ownership in Azure.
+Azure From Zero To Hero keeps each lesson small so drift is easy to understand. If a resource in `CLZ-220` changes, you know the load-balancer lesson owns it. The `Lab` tag also helps identify ownership in Azure.
 
 ## Modules
 
@@ -306,4 +306,4 @@ Then run the standard command flow. If the plan surprises you, go back to the re
 
 ## Summary
 
-Terraform is reliable when you keep the loop disciplined: write clear configuration, initialize the folder, format, validate, plan, review, apply, validate in Azure, and destroy when the lesson is complete. Chriz Labz repeats that loop in every lesson so that the command sequence becomes automatic and the architecture concepts can take center stage.
+Terraform is reliable when you keep the loop disciplined: write clear configuration, initialize the folder, format, validate, plan, review, apply, validate in Azure, and destroy when the lesson is complete. Azure From Zero To Hero repeats that loop in every lesson so that the command sequence becomes automatic and the architecture concepts can take center stage.

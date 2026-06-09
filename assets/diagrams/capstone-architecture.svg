@@ -6,7 +6,7 @@
   <rect class="bg" width="1200" height="620" rx="18"/>
   <text class="text" x="40" y="55">CLZ-390 Windows Reference Architecture</text>
   <rect class="vnet" x="70" y="95" width="1060" height="410" rx="18"/>
-  <text class="small" x="100" y="130">Chriz Labz VNet</text>
+  <text class="small" x="100" y="130">Azure From Zero To Hero VNet</text>
   <rect class="net" x="120" y="165" width="220" height="120" rx="12"/><text class="text" x="165" y="215">Bastion</text><text class="small" x="150" y="248">private RDP path</text>
   <rect class="box" x="455" y="145" width="260" height="160" rx="12"/><text class="text" x="497" y="205">Standard LB</text><text class="small" x="505" y="240">HTTP frontend</text>
   <line class="arrow" x1="735" y1="225" x2="815" y2="225"/>

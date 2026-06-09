@@ -5,7 +5,7 @@
 ## Overview
 An internal DNS zone linked to the lab VNet.
 
-This lesson is part of the Windows-only Chriz Labz path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
 
 ## What You Build
 | Item | Description |

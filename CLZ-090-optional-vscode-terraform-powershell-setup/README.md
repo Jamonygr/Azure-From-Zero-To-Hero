@@ -4,7 +4,7 @@
 
 ## Overview
 
-This optional pre-lab prepares a Windows workstation for the Chriz Labz Terraform path. It belongs before `CLZ-100` because a reliable local toolchain prevents avoidable problems later. The lab does not create Azure resources. Instead, it focuses on the editor, terminal, package manager, Terraform CLI, Azure CLI, Git, VS Code extensions, PowerShell profile choices, and repeatable validation commands.
+This optional pre-lab prepares a Windows workstation for the Azure From Zero To Hero Terraform path. It belongs before `CLZ-100` because a reliable local toolchain prevents avoidable problems later. The lab does not create Azure resources. Instead, it focuses on the editor, terminal, package manager, Terraform CLI, Azure CLI, Git, VS Code extensions, PowerShell profile choices, and repeatable validation commands.
 
 The main curriculum already includes `CLZ-110-windows-workstation-setup`, but this optional lab is intentionally deeper. Use it if you want a stronger setup guide before touching Azure resources, or if your workstation has never been used for Terraform work before.
 
@@ -29,7 +29,7 @@ Keeping this lab optional prevents the core curriculum from spending too much ti
 
 ## Toolchain Architecture
 
-The Chriz Labz workstation has five core tools:
+The Azure From Zero To Hero workstation has five core tools:
 
 | Tool | Role |
 |---|---|
@@ -186,7 +186,7 @@ The plan should show no Azure infrastructure resources. Terraform may still disp
 Run the helper:
 
 ~~~powershell
-..\scripts\Test-ChrizLabzToolchain.ps1
+..\scripts\Test-AzureFromZeroToHeroToolchain.ps1
 ~~~
 
 The script checks common commands, prints installed versions where possible, and warns about missing optional editor extensions. It does not install anything or change Azure resources.

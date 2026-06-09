@@ -4,7 +4,7 @@
 
 Troubleshooting Terraform and Azure labs is easiest when you move in layers. Start with the current folder and Terraform command output. Then check provider initialization, variables, state, plan details, Azure resource status, networking, bootstrap extensions, and service-specific behavior. Do not jump straight to the most complex explanation.
 
-This guide gives a practical troubleshooting workflow for Chriz Labz. It covers local command failures, Terraform validation errors, Azure provider authentication, naming conflicts, Windows VM readiness, IIS bootstrap, Load Balancer health, Bastion access, private endpoints, Azure SQL, GitHub Actions, and cleanup failures.
+This guide gives a practical troubleshooting workflow for Azure From Zero To Hero. It covers local command failures, Terraform validation errors, Azure provider authentication, naming conflicts, Windows VM readiness, IIS bootstrap, Load Balancer health, Bastion access, private endpoints, Azure SQL, GitHub Actions, and cleanup failures.
 
 ## First Rule: Find The Scope
 
@@ -128,7 +128,7 @@ The example files are safe placeholders. Real deployments may need local overrid
 
 ## Naming Conflicts
 
-Some Azure names must be unique. Storage accounts and Key Vault names are common examples. Chriz Labz uses compact prefixes and random suffixes in several lessons, but conflicts can still happen.
+Some Azure names must be unique. Storage accounts and Key Vault names are common examples. Azure From Zero To Hero uses compact prefixes and random suffixes in several lessons, but conflicts can still happen.
 
 If Azure reports a name conflict:
 
@@ -344,7 +344,7 @@ Run the same checks locally:
 
 ~~~powershell
 terraform fmt -check -recursive
-.\scripts\Test-ChrizLabzTerraform.ps1 -Validate
+.\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -Validate
 ~~~
 
 If local validation passes but CI fails, compare Terraform versions and read the failing folder from the workflow logs.
@@ -408,4 +408,4 @@ Avoid these shortcuts:
 
 ## Summary
 
-Most Chriz Labz troubleshooting is a matter of narrowing scope. Check the current folder, command, provider setup, variables, state, plan, Azure resource status, network path, and service-specific health. Move from simple to complex. The repository is intentionally structured so each lesson has a small blast radius and a predictable file layout. Use that structure to debug one layer at a time.
+Most Azure From Zero To Hero troubleshooting is a matter of narrowing scope. Check the current folder, command, provider setup, variables, state, plan, Azure resource status, network path, and service-specific health. Move from simple to complex. The repository is intentionally structured so each lesson has a small blast radius and a predictable file layout. Use that structure to debug one layer at a time.

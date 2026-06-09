@@ -31,7 +31,7 @@ $Lessons = @(
   [ordered]@{ Number = 2; Id = "CLZ-110"; Folder = "CLZ-110-windows-workstation-setup"; Title = "Windows Workstation Setup"; Topic = "Terraform, Azure CLI, VS Code, Git, and PowerShell"; Kind = "basic"; Focus = "Confirm the Windows toolchain and subscription context." },
   [ordered]@{ Number = 3; Id = "CLZ-120"; Folder = "CLZ-120-terraform-core-workflow"; Title = "Terraform Core Workflow"; Topic = "init, fmt, validate, plan, apply, and destroy"; Kind = "basic"; Focus = "Practice the repeatable Terraform command loop." },
   [ordered]@{ Number = 4; Id = "CLZ-130"; Folder = "CLZ-130-provider-authentication"; Title = "Provider Authentication"; Topic = "Azure provider and CLI authentication"; Kind = "basic"; Focus = "Use the Azure provider with an explicit subscription setting." },
-  [ordered]@{ Number = 5; Id = "CLZ-140"; Folder = "CLZ-140-resource-groups-tags"; Title = "Resource Groups And Tags"; Topic = "Resource groups, standard tags, and naming"; Kind = "basic"; Focus = "Apply the Chriz Labz naming and tagging model." },
+  [ordered]@{ Number = 5; Id = "CLZ-140"; Folder = "CLZ-140-resource-groups-tags"; Title = "Resource Groups And Tags"; Topic = "Resource groups, standard tags, and naming"; Kind = "basic"; Focus = "Apply the Azure From Zero To Hero naming and tagging model." },
   [ordered]@{ Number = 6; Id = "CLZ-150"; Folder = "CLZ-150-variables-locals-outputs"; Title = "Variables Locals Outputs"; Topic = "Variables, locals, outputs, and tfvars examples"; Kind = "basic"; Focus = "Control the same Terraform with input values." },
   [ordered]@{ Number = 7; Id = "CLZ-160"; Folder = "CLZ-160-state-and-locking-basics"; Title = "State And Locking Basics"; Topic = "Local state safety and cleanup discipline"; Kind = "basic"; Focus = "Understand what Terraform records before adding shared state." },
   [ordered]@{ Number = 8; Id = "CLZ-170"; Folder = "CLZ-170-virtual-network-foundation"; Title = "Virtual Network Foundation"; Topic = "VNet, subnets, and address plan"; Kind = "network"; Focus = "Build the base network used by later Windows workloads." },
@@ -146,7 +146,7 @@ variable "location" {
 }
 
 variable "lab_id" {
-  description = "Chriz Labz lesson ID."
+  description = "Azure From Zero To Hero lesson ID."
   type        = string
   default     = "$($Lesson.Id)"
 }
@@ -279,7 +279,7 @@ locals {
   compact_prefix = substr(replace(local.prefix, "-", ""), 0, 18)
 
   tags = {
-    Project     = "Chriz Labz"
+    Project     = "Azure From Zero To Hero"
     Environment = var.environment
     ManagedBy   = "Terraform"
     Lab         = var.lab_id
@@ -422,7 +422,7 @@ resource "azurerm_virtual_machine_extension" "iis" {
   auto_upgrade_minor_version = true
 
   settings = jsonencode({
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Chriz Labz IIS ${local.prefix}'\""
+    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Azure From Zero To Hero IIS ${local.prefix}'\""
   })
 }
 '@
@@ -688,7 +688,7 @@ resource "azurerm_virtual_machine_extension" "iis" {
   auto_upgrade_minor_version = true
 
   settings = jsonencode({
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Chriz Labz backend ${count.index + 1}'\""
+    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Azure From Zero To Hero backend ${count.index + 1}'\""
   })
 }
 '@ + $natRule
@@ -973,7 +973,7 @@ resource "azurerm_virtual_machine_scale_set_extension" "iis" {
   auto_upgrade_minor_version   = true
 
   settings = jsonencode({
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Chriz Labz VMSS ${local.prefix}'\""
+    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Azure From Zero To Hero VMSS ${local.prefix}'\""
   })
 }
 '@ + $autoscale
@@ -1829,7 +1829,7 @@ $architecture
 
 ## Validation
 - Confirm the resource group name starts with ``clz-dev``.
-- Confirm every Azure resource has the standard Chriz Labz tags.
+- Confirm every Azure resource has the standard Azure From Zero To Hero tags.
 - Review ``terraform output`` for lesson-specific validation values.
 
 ## Cleanup
@@ -1845,9 +1845,9 @@ Run ``terraform destroy`` from this folder when the lab is complete.
 function Get-RootReadme {
   $rows = ($Lessons | ForEach-Object { "| $($_.Number) | ``$($_.Folder)`` | $($_.Topic) |" }) -join "`r`n"
   return @"
-# Chriz Labz
+# Azure From Zero To Hero
 
-Chriz Labz is an original Windows-focused Azure Terraform curriculum. It uses PowerShell, Windows Server 2022, IIS, Azure Bastion RDP, GitHub Actions, Azure SQL, Key Vault, Private Endpoint, and Azure Monitor.
+Azure From Zero To Hero is an original Windows-focused Azure Terraform curriculum. It uses PowerShell, Windows Server 2022, IIS, Azure Bastion RDP, GitHub Actions, Azure SQL, Key Vault, Private Endpoint, and Azure Monitor.
 
 ## Defaults
 - Region: ``eastus2``
@@ -1872,7 +1872,7 @@ The ``wiki`` folder contains reusable explanations for Terraform workflow, Azure
 Each lesson uses names like ``clz-dev-clz100-rg`` and tags every supported resource with:
 
 ~~~hcl
-Project     = "Chriz Labz"
+Project     = "Azure From Zero To Hero"
 Environment = var.environment
 ManagedBy   = "Terraform"
 Lab         = var.lab_id
@@ -1925,7 +1925,7 @@ A logical container for Azure resources created by one lab.
 An isolated address space for Azure resources.
 
 ## Subnet
-A smaller address range inside a VNet. Chriz Labz uses web, app, data, and management subnets.
+A smaller address range inside a VNet. Azure From Zero To Hero uses web, app, data, and management subnets.
 
 ## Network Security Group
 A rule set that controls inbound and outbound traffic.
@@ -1946,7 +1946,7 @@ function Get-WikiWindows {
 # Windows VM And VMSS Notes
 
 ## Image Standard
-Chriz Labz uses Windows Server 2022 Azure Edition by default.
+Azure From Zero To Hero uses Windows Server 2022 Azure Edition by default.
 
 ## Access
 Early labs may use scoped RDP for learning. Later labs prefer Azure Bastion so Windows VMs do not need public IPs.
@@ -2249,7 +2249,7 @@ resource "azurerm_virtual_machine_scale_set_extension" "iis" {
   auto_upgrade_minor_version   = true
 
   settings = jsonencode({
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Chriz Labz capstone VMSS'\""
+    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Azure From Zero To Hero capstone VMSS'\""
   })
 }
 '@
@@ -2312,7 +2312,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - "Chriz Labz/**"
+      - "**"
 
 permissions:
   id-token: write
@@ -2324,7 +2324,7 @@ jobs:
     defaults:
       run:
         shell: pwsh
-        working-directory: "Chriz Labz/CLZ-370-github-actions-terraform"
+        working-directory: "CLZ-370-github-actions-terraform"
 
     steps:
       - name: Checkout
@@ -2355,11 +2355,11 @@ Write-LabFile -RelativePath "wiki/state-backend-and-locking.md" -Content (Get-Wi
 Write-LabFile -RelativePath "wiki/security-and-secrets.md" -Content (Get-WikiSecurity)
 Write-LabFile -RelativePath "wiki/troubleshooting.md" -Content (Get-WikiTroubleshooting)
 
-Write-LabFile -RelativePath "scripts/Initialize-ChrizLabzWorkspace.ps1" -Content (Get-InitScript)
-Write-LabFile -RelativePath "scripts/Test-ChrizLabzTerraform.ps1" -Content (Get-TestScript)
-Write-LabFile -RelativePath "scripts/Invoke-ChrizLabzCleanup.ps1" -Content (Get-CleanupScript)
+Write-LabFile -RelativePath "scripts/Initialize-AzureFromZeroToHeroWorkspace.ps1" -Content (Get-InitScript)
+Write-LabFile -RelativePath "scripts/Test-AzureFromZeroToHeroTerraform.ps1" -Content (Get-TestScript)
+Write-LabFile -RelativePath "scripts/Invoke-AzureFromZeroToHeroCleanup.ps1" -Content (Get-CleanupScript)
 
-Write-LabFile -RelativePath "modules/README.md" -Content "# Chriz Labz Modules`r`n`r`nReusable modules are introduced by the capstone lesson. They stay small so each lab user can read every resource."
+Write-LabFile -RelativePath "modules/README.md" -Content "# Azure From Zero To Hero Modules`r`n`r`nReusable modules are introduced by the capstone lesson. They stay small so each lab user can read every resource."
 Write-LabFile -RelativePath "modules/network-core/main.tf" -Content (Get-NetworkModuleMain)
 Write-LabFile -RelativePath "modules/network-core/variables.tf" -Content (Get-NetworkModuleVariables)
 Write-LabFile -RelativePath "modules/network-core/outputs.tf" -Content (Get-NetworkModuleOutputs)
@@ -2384,4 +2384,4 @@ foreach ($lesson in $Lessons) {
   }
 }
 
-Write-Host "Chriz Labz scaffold created at $Root"
+Write-Host "Azure From Zero To Hero scaffold created at $Root"

@@ -4,7 +4,7 @@
   <style>.bg{fill:#f7fafc}.box{fill:#ffffff;stroke:#1f6feb;stroke-width:3}.accent{fill:#dbeafe}.text{font:600 24px Arial,sans-serif;fill:#111827}.small{font:17px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
   <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
   <rect class="bg" width="1100" height="420" rx="18"/>
-  <text class="text" x="40" y="55">Chriz Labz Terraform Workflow</text>
+  <text class="text" x="40" y="55">Azure From Zero To Hero Terraform Workflow</text>
   <g transform="translate(55 115)">
     <rect class="box" width="160" height="110" rx="12"/><text class="text" x="32" y="45">Write</text><text class="small" x="24" y="78">.tf files</text>
     <line class="arrow" x1="180" y1="55" x2="245" y2="55"/>

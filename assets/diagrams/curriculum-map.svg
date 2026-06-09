@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
-  <title id="title">Chriz Labz curriculum map</title>
+  <title id="title">Azure From Zero To Hero curriculum map</title>
   <desc id="desc">The curriculum progresses from foundations to network, Windows compute, state, security, automation, data, and capstone.</desc>
   <style>.bg{fill:#f8fafc}.lane{fill:#fff;stroke:#cbd5e1;stroke-width:2}.step{fill:#dbeafe;stroke:#2563eb;stroke-width:3}.adv{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 23px Arial,sans-serif;fill:#111827}.small{font:17px Arial,sans-serif;fill:#374151}</style>
   <rect class="bg" width="1200" height="520" rx="18"/>
