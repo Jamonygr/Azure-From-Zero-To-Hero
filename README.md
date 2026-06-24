@@ -2,14 +2,34 @@
 
 ![From Zero To Hero with Terraform and Azure roadmap](assets/images/azure-from-zero-to-hero-roadmap.png)
 
-Azure From Zero To Hero is an original Windows-focused Azure Terraform lab library. It starts with an optional workstation setup lab, then moves into the Terraform workflow, Azure networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a capstone reference architecture.
+Azure From Zero To Hero is a Windows-focused Azure Terraform lab library with a free companion book. The labs teach Azure step by step through real Terraform deployments, starting from workstation setup and core workflow, then moving into networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a final reference architecture.
+
+## Free Companion Book
+
+[![Beyond Clickopz book cover](bbca5ab6-3237-4f8b-a21d-cebf9b4f59ff.png)](ClickopzBook.pdf)
+
+Download the free PDF: [Beyond Clickopz](ClickopzBook.pdf)
+
+The book supports the labs by explaining the learning path, the move from manual cloud work to Infrastructure as Code, and the concepts behind the Terraform exercises. Use it as the reader-friendly guide, then use this repository as the hands-on lab environment.
+
+## Start Here
+
+| Step | Action | Result |
+|---:|---|---|
+| 1 | Read the free companion book | Understand why the labs move from manual Azure work to Terraform |
+| 2 | Prepare the Windows workstation | Install VS Code, Terraform, Azure CLI, Git, and PowerShell tooling |
+| 3 | Run the labs in order | Build each Azure pattern with Terraform and PowerShell |
+| 4 | Validate each lesson | Use `terraform fmt`, `terraform validate`, and `terraform plan` before applying |
+| 5 | Clean up resources | Run `terraform destroy` after each lab unless the next lesson depends on it |
 
 ## What Makes This Lab Set Different
+
 - Windows-only implementation path using PowerShell and Windows Server 2022.
 - Each lesson is independently deployable and includes cleanup guidance.
 - The curriculum uses original names, diagrams, explanations, and Terraform structure.
 - The examples use generated secrets and safe `terraform.tfvars.example` files.
 - The later lessons move from direct public access toward Bastion, Key Vault, and private endpoints.
+- The free book and the Terraform labs are designed to support each other.
 
 ## Visual Learning Path
 
@@ -25,6 +45,7 @@ Azure From Zero To Hero is an original Windows-focused Azure Terraform lab libra
 | Operations | 360-390 | Monitoring, GitHub Actions, Azure SQL, final reference architecture |
 
 ## Defaults
+
 - Region: `eastus2`
 - Prefix: `clz`
 - Environments: `dev`, `test`, `prod`
@@ -90,7 +111,9 @@ Azure From Zero To Hero is an original Windows-focused Azure Terraform lab libra
 | Private endpoint | ![Private endpoint](assets/diagrams/private-endpoint-sql.svg) |
 | Capstone | ![Capstone architecture](assets/diagrams/capstone-architecture.svg) |
 
-## Standard Runbook
+## Standard Lab Runbook
+
+Run these commands from an individual lesson folder after reviewing that lesson's README and variables:
 
 ~~~powershell
 terraform init
@@ -103,15 +126,23 @@ terraform destroy
 
 ## Repo Checks
 
+Use the repository scripts when you want to initialize the workspace or test the Terraform lesson set:
+
 ~~~powershell
 .\scripts\Initialize-AzureFromZeroToHeroWorkspace.ps1
 .\scripts\Test-AzureFromZeroToHeroTerraform.ps1
 ~~~
 
 ## Cost And Cleanup
+
 Many lessons create paid Azure resources. Use a small `instance_count`, keep the default `eastus2` only if it fits your quota, and run `terraform destroy` after each lab unless the next lesson needs its outputs.
 
+## Contributing
+
+Contributions are welcome when they improve the lab path or keep the free book aligned with the hands-on exercises. Useful contributions include fixes to lab steps, Terraform validation notes, diagrams, documentation, cleanup guidance, and book-to-lab references. See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change.
+
 ## References
+
 - [Terraform core concepts](wiki/terraform-core-concepts.md)
 - [Windows workstation tooling](wiki/windows-workstation-tooling.md)
 - [Azure networking glossary](wiki/azure-networking-glossary.md)
@@ -119,4 +150,3 @@ Many lessons create paid Azure resources. Use a small `instance_count`, keep the
 - [State backend and locking](wiki/state-backend-and-locking.md)
 - [Security and secrets](wiki/security-and-secrets.md)
 - [Troubleshooting](wiki/troubleshooting.md)
-
