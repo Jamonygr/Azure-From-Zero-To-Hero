@@ -12,6 +12,10 @@ $commands = @(
   @{ Name = "az"; VersionArgs = @("version"); Required = $true },
   @{ Name = "git"; VersionArgs = @("--version"); Required = $true },
   @{ Name = "code"; VersionArgs = @("--version"); Required = $true },
+  @{ Name = "node"; VersionArgs = @("--version"); Required = $false },
+  @{ Name = "npm"; VersionArgs = @("--version"); Required = $false },
+  @{ Name = "tflint"; VersionArgs = @("--version"); Required = $false },
+  @{ Name = "trivy"; VersionArgs = @("--version"); Required = $false },
   @{ Name = "winget"; VersionArgs = @("--version"); Required = $false }
 )
 
@@ -73,6 +77,14 @@ if ($code) {
       Write-Host "[WARN] VS Code extension missing: $extension"
     }
   }
+}
+
+$psScriptAnalyzer = Get-Module -ListAvailable -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
+if ($psScriptAnalyzer) {
+  Write-Host "[OK] PSScriptAnalyzer module installed: $($psScriptAnalyzer.Version)"
+}
+else {
+  Write-Host "[WARN] PSScriptAnalyzer module missing. Install with: Install-Module PSScriptAnalyzer -Scope CurrentUser"
 }
 
 try {

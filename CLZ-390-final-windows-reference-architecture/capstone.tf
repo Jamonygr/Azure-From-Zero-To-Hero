@@ -59,6 +59,10 @@ resource "azurerm_bastion_host" "main" {
 
 data "azurerm_client_config" "current" {}
 
+# Lab exception: the capstone keeps Key Vault reachable for local Terraform secret
+# creation; production designs should deny by default and use private access.
+#trivy:ignore:AVD-AZU-0013
+#trivy:ignore:AZU-0013
 resource "azurerm_key_vault" "lab" {
   name                       = substr("kv-${local.compact_prefix}", 0, 24)
   location                   = azurerm_resource_group.lab.location

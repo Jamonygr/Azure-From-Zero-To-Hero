@@ -39,6 +39,10 @@ resource "random_string" "suffix" {
   special = false
 }
 
+# Lab exception: the lesson focuses on creating the private endpoint and DNS link;
+# production storage accounts should add deny-by-default network rules.
+#trivy:ignore:AVD-AZU-0012
+#trivy:ignore:AZU-0012
 resource "azurerm_storage_account" "private" {
   name                            = substr("st${local.compact_prefix}${random_string.suffix.result}", 0, 24)
   resource_group_name             = azurerm_resource_group.lab.name

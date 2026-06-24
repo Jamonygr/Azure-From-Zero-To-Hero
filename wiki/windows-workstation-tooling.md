@@ -18,6 +18,10 @@ The recommended workstation has these core tools:
 | Terraform CLI | Plans, validates, applies, and destroys infrastructure |
 | Azure CLI | Authenticates to Azure and inspects subscriptions/resources |
 | Git | Tracks changes and pushes to GitHub |
+| Node.js/npm | Runs Markdown quality checks through `markdownlint-cli2` |
+| PSScriptAnalyzer | Checks PowerShell helper scripts |
+| TFLint | Lints Terraform configuration beyond `terraform validate` |
+| Trivy | Scans Terraform configuration for security risks |
 
 You can run Terraform from another editor or terminal if you prefer, but the Azure From Zero To Hero documentation assumes PowerShell examples and VS Code-friendly navigation.
 
@@ -106,6 +110,7 @@ code --install-extension hashicorp.terraform
 code --install-extension ms-vscode.powershell
 code --install-extension ms-azuretools.vscode-azureresourcegroups
 code --install-extension github.vscode-github-actions
+code --install-extension DavidAnson.vscode-markdownlint
 code --install-extension yzhang.markdown-all-in-one
 ~~~
 
@@ -115,6 +120,7 @@ code --install-extension yzhang.markdown-all-in-one
 | PowerShell | Better `.ps1` editing and terminal integration |
 | Azure Resource Groups | Azure browsing from the editor |
 | GitHub Actions | Workflow file editing and pipeline navigation |
+| markdownlint | Markdown quality feedback while editing |
 | Markdown All in One | Better documentation authoring |
 
 Extensions do not replace command-line validation. Always trust `terraform fmt`, `terraform validate`, and GitHub Actions more than editor highlighting.

@@ -9,6 +9,10 @@ resource "random_password" "windows_admin" {
 }
 data "azurerm_client_config" "current" {}
 
+# Lab exception: local Terraform needs to create and read the generated secret
+# without requiring a private endpoint or caller IP rule in this beginner lab.
+#trivy:ignore:AVD-AZU-0013
+#trivy:ignore:AZU-0013
 resource "azurerm_key_vault" "lab" {
   name                       = substr("kv-${local.compact_prefix}", 0, 24)
   location                   = azurerm_resource_group.lab.location

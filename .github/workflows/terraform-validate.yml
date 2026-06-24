@@ -1,4 +1,4 @@
-name: terraform-validate
+name: repo-quality
 
 on:
   workflow_dispatch:
@@ -13,8 +13,12 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
-  validate:
+  terraform-validate:
+    name: Terraform format and validate
     runs-on: windows-latest
     defaults:
       run:
@@ -28,19 +32,185 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform format and validate
-        run: .\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -Format -Validate -ReportPath artifacts\terraform-validation-report.json
+        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -Terraform -ReportPath artifacts\quality-terraform-report.json
 
-      - name: Repository documentation and script checks
-        run: .\scripts\Test-AzureFromZeroToHeroDocs.ps1 -ReportPath artifacts\repo-quality-report.json
-
-      - name: Optional safe plan checks
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_safe_plans }}
-        run: .\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -PlanSafeLessons -ReportPath artifacts\terraform-plan-report.json
-
-      - name: Upload validation reports
+      - name: Upload Terraform reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: validation-reports
+          name: terraform-validation-reports
+          path: artifacts/*.json
+          if-no-files-found: warn
+
+  repo-docs:
+    name: Repository docs
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Repository documentation and script checks
+        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -Docs -ReportPath artifacts\quality-docs-report.json
+
+      - name: Upload docs reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository-docs-reports
+          path: artifacts/*.json
+          if-no-files-found: warn
+
+  powershell-quality:
+    name: PowerShell analysis
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PSScriptAnalyzer
+        run: Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+
+      - name: PowerShell quality checks
+        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -PowerShell -ReportPath artifacts\quality-powershell-report.json
+
+      - name: Upload PowerShell reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: powershell-analysis-reports
+          path: artifacts/*.json
+          if-no-files-found: warn
+
+  markdown-quality:
+    name: Markdown lint
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Markdown quality checks
+        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -Markdown -ReportPath artifacts\quality-markdown-report.json
+
+      - name: Upload Markdown reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: markdownlint-reports
+          path: artifacts/*
+          if-no-files-found: warn
+
+  terraform-lint:
+    name: Terraform lint
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.63.1
+          cache: true
+
+      - name: Terraform lint checks
+        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -TerraformLint -ReportPath artifacts\quality-tflint-report.json
+
+      - name: Upload TFLint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tflint-reports
+          path: artifacts/*
+          if-no-files-found: warn
+
+  security-scan:
+    name: Security scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare artifacts directory
+        run: mkdir -p artifacts
+
+      - name: Trivy config report
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: config
+          scan-ref: .
+          version: v0.69.3
+          ignorefile: .trivyignore
+          severity: MEDIUM,HIGH,CRITICAL
+          format: table
+          output: artifacts/trivy-config-report.txt
+          exit-code: "0"
+
+      - name: Trivy critical gate
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: config
+          scan-ref: .
+          version: v0.69.3
+          ignorefile: .trivyignore
+          severity: CRITICAL
+          format: table
+          exit-code: "1"
+
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-security-reports
+          path: artifacts/*
+          if-no-files-found: warn
+
+  optional-safe-plans:
+    name: Optional safe Terraform plans
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_safe_plans }}
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Optional safe plan checks
+        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -PlanSafeLessons -ReportPath artifacts\quality-safe-plans-report.json
+
+      - name: Upload safe plan reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-safe-plan-reports
           path: artifacts/*.json
           if-no-files-found: warn

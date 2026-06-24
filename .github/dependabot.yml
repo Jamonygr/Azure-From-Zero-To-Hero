@@ -1,0 +1,35 @@
+version: 2
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Europe/Berlin"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "terraform"
+    directories:
+      - "/CLZ-*"
+      - "/modules/*"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:30"
+      timezone: "Europe/Berlin"
+    labels:
+      - "dependencies"
+      - "terraform"
+    groups:
+      terraform-providers:
+        patterns:
+          - "hashicorp/azurerm"
+          - "hashicorp/random"

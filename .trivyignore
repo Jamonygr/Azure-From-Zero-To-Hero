@@ -1,0 +1,7 @@
+# Azure From Zero To Hero security scan exceptions.
+#
+# Keep this file narrow. Add a Trivy rule ID only when a lab intentionally
+# demonstrates a risky pattern and the matching README explains why it exists.
+#
+# The CI security job reports MEDIUM/HIGH/CRITICAL findings and blocks only
+# CRITICAL findings by default, so this file starts with no active exceptions.

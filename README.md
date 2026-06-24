@@ -1,5 +1,7 @@
 # Azure From Zero To Hero
 
+[![Repo quality](https://github.com/Jamonygr/Azure-From-Zero-To-Hero/actions/workflows/terraform-validate.yml/badge.svg)](https://github.com/Jamonygr/Azure-From-Zero-To-Hero/actions/workflows/terraform-validate.yml)
+
 ![From Zero To Hero with Terraform and Azure roadmap](assets/images/azure-from-zero-to-hero-roadmap.png)
 
 Azure From Zero To Hero is a Windows-focused Azure Terraform lab library with a free companion book. The labs teach Azure step by step through real Terraform deployments, starting from workstation setup and core workflow, then moving into networking, Windows Server, IIS, Bastion RDP, Load Balancer, VM Scale Sets, remote state, Key Vault, private endpoints, Azure SQL, monitoring, GitHub Actions, and a final reference architecture.
@@ -134,11 +136,23 @@ Use the repository scripts when you want to initialize the workspace or test the
 .\scripts\Test-AzureFromZeroToHeroDocs.ps1 -ReportPath artifacts\repo-quality-report.json
 ~~~
 
+Run the full local quality gate before broad changes or pull requests:
+
+~~~powershell
+.\scripts\Test-AzureFromZeroToHeroQuality.ps1 -ReportPath artifacts\quality-report.json
+~~~
+
 When Azure CLI authentication is available, you can also run backend-free plan checks for lessons that do not depend on owned public DNS or existing remote state:
 
 ~~~powershell
 .\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -PlanSafeLessons -ReportPath artifacts\terraform-plan-report.json
 ~~~
+
+## Quality Gates
+
+GitHub Actions runs separate checks for Terraform format/validation, repository docs, PowerShell analysis, Markdown linting, Terraform linting, and Trivy configuration scanning. The default workflow does not run `terraform apply` and does not require paid Azure deployment credentials.
+
+Local full-quality checks require Terraform, PowerShell 7, Node.js/npm, PSScriptAnalyzer, TFLint, and Trivy. The workstation tooling guide lists install and validation commands.
 
 ## Cost And Cleanup
 

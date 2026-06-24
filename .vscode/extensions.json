@@ -4,6 +4,7 @@
     "ms-vscode.powershell",
     "ms-azuretools.vscode-azureresourcegroups",
     "github.vscode-github-actions",
+    "DavidAnson.vscode-markdownlint",
     "yzhang.markdown-all-in-one"
   ]
 }
