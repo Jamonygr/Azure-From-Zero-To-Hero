@@ -30,6 +30,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
 
       - name: Terraform format and validate
         run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -Terraform -ReportPath artifacts\quality-terraform-report.json
@@ -129,6 +131,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
@@ -203,6 +207,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
 
       - name: Optional safe plan checks
         run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -PlanSafeLessons -ReportPath artifacts\quality-safe-plans-report.json
