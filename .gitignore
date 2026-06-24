@@ -1,11 +1,13 @@
 # Terraform runtime data
 **/.terraform/*
+# Lesson lock files are generated during local and CI validation instead of being committed.
 .terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfplan
 crash.log
 crash.*.log
+artifacts/
 
 # Local values and overrides
 terraform.tfvars

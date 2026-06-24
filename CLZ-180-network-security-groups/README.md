@@ -16,6 +16,9 @@ This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps t
 | Naming style | `clz-dev-clz180-*` |
 | Cleanup path | `terraform destroy` from this folder |
 
+## Cost Awareness
+
+This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
 ## Learning Outcomes
 Set rule priority; limit admin access; associate an NSG with a subnet.
 
@@ -52,4 +55,3 @@ Run `terraform destroy` from this folder. If the lab created shared values for t
 
 ## Next Lesson
 Deploy the first Windows VM.
-

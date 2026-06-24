@@ -1,16 +1,20 @@
 output "vnet_name" {
-  value = azurerm_virtual_network.main.name
+  description = "Virtual network name."
+  value       = azurerm_virtual_network.main.name
 }
 
 output "vnet_id" {
-  value = azurerm_virtual_network.main.id
+  description = "Virtual network ID."
+  value       = azurerm_virtual_network.main.id
 }
 
 output "web_subnet_id" {
-  value = azurerm_subnet.web.id
+  description = "Web subnet ID."
+  value       = azurerm_subnet.web.id
 }
 
 output "data_subnet_id" {
-  value = azurerm_subnet.data.id
+  description = "Data subnet ID."
+  value       = azurerm_subnet.data.id
 }
 

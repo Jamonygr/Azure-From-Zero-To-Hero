@@ -16,6 +16,9 @@ This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps t
 | Naming style | `clz-dev-clz270-*` |
 | Cleanup path | `terraform destroy` from this folder |
 
+## Cost Awareness
+
+This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
 ## Learning Outcomes
 Create autoscale profiles; define thresholds; inspect scaling settings in Azure.
 
@@ -28,6 +31,7 @@ Create autoscale profiles; define thresholds; inspect scaling settings in Azure.
 | `locals.tf` | Naming and tag composition |
 | `resource-group.tf` | Lesson resource group |
 | `autoscale.tf` | Lesson-specific Azure resources |
+| `../modules/windows-iis-vmss` | Shared VMSS and Load Balancer pattern |
 | `outputs.tf` | Values used for validation |
 | `terraform.tfvars.example` | Safe example inputs |
 
@@ -52,4 +56,3 @@ Run `terraform destroy` from this folder. If the lab created shared values for t
 
 ## Next Lesson
 Control outbound access with NAT Gateway.
-

@@ -33,6 +33,7 @@ resource "azurerm_subnet" "mgmt" {
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.40.10.0/24"]
 }
+
 resource "azurerm_network_security_group" "web" {
   name                = "${local.prefix}-web-nsg"
   location            = azurerm_resource_group.lab.location
@@ -72,6 +73,7 @@ resource "azurerm_subnet_network_security_group_association" "web" {
   subnet_id                 = azurerm_subnet.web.id
   network_security_group_id = azurerm_network_security_group.web.id
 }
+
 resource "random_password" "windows_admin" {
   length           = 20
   special          = true
@@ -81,105 +83,25 @@ resource "random_password" "windows_admin" {
   min_special      = 2
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
-resource "azurerm_public_ip" "lb" {
-  name                = "${local.prefix}-vmss-lb-pip"
-  location            = azurerm_resource_group.lab.location
+
+module "windows_iis_vmss" {
+  source              = "../modules/windows-iis-vmss"
   resource_group_name = azurerm_resource_group.lab.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  tags                = local.tags
-}
-
-resource "azurerm_lb" "web" {
-  name                = "${local.prefix}-vmss-lb"
   location            = azurerm_resource_group.lab.location
-  resource_group_name = azurerm_resource_group.lab.name
-  sku                 = "Standard"
+  prefix              = local.prefix
+  subnet_id           = azurerm_subnet.web.id
+  admin_username      = var.admin_username
+  admin_password      = random_password.windows_admin.result
+  instance_count      = var.instance_count
   tags                = local.tags
-
-  frontend_ip_configuration {
-    name                 = "public"
-    public_ip_address_id = azurerm_public_ip.lb.id
-  }
+  site_message        = "Azure From Zero To Hero VMSS ${local.prefix}"
 }
 
-resource "azurerm_lb_backend_address_pool" "web" {
-  name            = "vmss-backend-pool"
-  loadbalancer_id = azurerm_lb.web.id
-}
-
-resource "azurerm_lb_probe" "http" {
-  name            = "http-probe"
-  loadbalancer_id = azurerm_lb.web.id
-  protocol        = "Tcp"
-  port            = 80
-}
-
-resource "azurerm_lb_rule" "http" {
-  name                           = "http-rule"
-  loadbalancer_id                = azurerm_lb.web.id
-  protocol                       = "Tcp"
-  frontend_port                  = 80
-  backend_port                   = 80
-  frontend_ip_configuration_name = "public"
-  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.web.id]
-  probe_id                       = azurerm_lb_probe.http.id
-}
-
-resource "azurerm_windows_virtual_machine_scale_set" "web" {
-  name                 = "${local.prefix}-web-vmss"
-  computer_name_prefix = "clzwin"
-  location             = azurerm_resource_group.lab.location
-  resource_group_name  = azurerm_resource_group.lab.name
-  sku                  = "Standard_B2s"
-  instances            = var.instance_count
-  admin_username       = var.admin_username
-  admin_password       = random_password.windows_admin.result
-  upgrade_mode         = "Manual"
-  tags                 = local.tags
-
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  source_image_reference {
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2022-datacenter-azure-edition"
-    version   = "latest"
-  }
-
-  network_interface {
-    name    = "web-nic"
-    primary = true
-
-    ip_configuration {
-      name                                   = "internal"
-      primary                                = true
-      subnet_id                              = azurerm_subnet.web.id
-      load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.web.id]
-    }
-  }
-}
-
-resource "azurerm_virtual_machine_scale_set_extension" "iis" {
-  name                         = "install-iis"
-  virtual_machine_scale_set_id = azurerm_windows_virtual_machine_scale_set.web.id
-  publisher                    = "Microsoft.Compute"
-  type                         = "CustomScriptExtension"
-  type_handler_version         = "1.10"
-  auto_upgrade_minor_version   = true
-
-  settings = jsonencode({
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value 'Azure From Zero To Hero VMSS ${local.prefix}'\""
-  })
-}
 resource "azurerm_monitor_autoscale_setting" "web" {
   name                = "${local.prefix}-vmss-autoscale"
   location            = azurerm_resource_group.lab.location
   resource_group_name = azurerm_resource_group.lab.name
-  target_resource_id  = azurerm_windows_virtual_machine_scale_set.web.id
+  target_resource_id  = module.windows_iis_vmss.vmss_id
   tags                = local.tags
 
   profile {
@@ -194,7 +116,7 @@ resource "azurerm_monitor_autoscale_setting" "web" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_windows_virtual_machine_scale_set.web.id
+        metric_resource_id = module.windows_iis_vmss.vmss_id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -214,7 +136,7 @@ resource "azurerm_monitor_autoscale_setting" "web" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_windows_virtual_machine_scale_set.web.id
+        metric_resource_id = module.windows_iis_vmss.vmss_id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -232,4 +154,3 @@ resource "azurerm_monitor_autoscale_setting" "web" {
     }
   }
 }
-

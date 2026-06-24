@@ -27,6 +27,10 @@ Some users already have a working workstation. If `terraform version`, `az versi
 
 Keeping this lab optional prevents the core curriculum from spending too much time on workstation setup while still giving new users a complete guide.
 
+## Cost Awareness
+
+This optional pre-lab creates no Azure resources and should not create Azure cost. The only possible cost is your local workstation tooling, if your environment uses paid software channels or enterprise-managed install sources.
+
 ## Toolchain Architecture
 
 The Azure From Zero To Hero workstation has five core tools:

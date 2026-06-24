@@ -25,6 +25,7 @@ module "windows_iis_vmss" {
   admin_password      = random_password.windows_admin.result
   instance_count      = var.instance_count
   tags                = local.tags
+  site_message        = "Azure From Zero To Hero capstone VMSS"
 }
 
 resource "azurerm_subnet" "bastion" {

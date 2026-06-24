@@ -14,7 +14,7 @@ output "autoscale_setting_name" {
 
 output "vmss_load_balancer_url" {
   description = "VMSS load balancer validation URL."
-  value       = "http://${azurerm_public_ip.lb.ip_address}"
+  value       = module.windows_iis_vmss.load_balancer_url
 }
 
 output "windows_admin_password" {

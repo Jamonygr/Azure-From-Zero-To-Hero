@@ -16,6 +16,9 @@ This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps t
 | Naming style | `clz-dev-clz230-*` |
 | Cleanup path | `terraform destroy` from this folder |
 
+## Cost Awareness
+
+This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
 ## Learning Outcomes
 Understand frontend ports; associate a NAT rule; compare public and private access options.
 
@@ -52,4 +55,3 @@ Run `terraform destroy` from this folder. If the lab created shared values for t
 
 ## Next Lesson
 Scale Windows VMs with count.
-

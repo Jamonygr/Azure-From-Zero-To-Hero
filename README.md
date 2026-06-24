@@ -130,7 +130,14 @@ Use the repository scripts when you want to initialize the workspace or test the
 
 ~~~powershell
 .\scripts\Initialize-AzureFromZeroToHeroWorkspace.ps1
-.\scripts\Test-AzureFromZeroToHeroTerraform.ps1
+.\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -Format -Validate -ReportPath artifacts\terraform-validation-report.json
+.\scripts\Test-AzureFromZeroToHeroDocs.ps1 -ReportPath artifacts\repo-quality-report.json
+~~~
+
+When Azure CLI authentication is available, you can also run backend-free plan checks for lessons that do not depend on owned public DNS or existing remote state:
+
+~~~powershell
+.\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -PlanSafeLessons -ReportPath artifacts\terraform-plan-report.json
 ~~~
 
 ## Cost And Cleanup
@@ -149,4 +156,6 @@ Contributions are welcome when they improve the lab path or keep the free book a
 - [Windows VM and VMSS notes](wiki/windows-vm-and-vmss-notes.md)
 - [State backend and locking](wiki/state-backend-and-locking.md)
 - [Security and secrets](wiki/security-and-secrets.md)
+- [Architecture plan](wiki/architecture-plan.md)
+- [Final reference architecture plan](wiki/final-reference-architecture-plan.md)
 - [Troubleshooting](wiki/troubleshooting.md)

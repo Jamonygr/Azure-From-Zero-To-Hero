@@ -2,6 +2,12 @@ name: terraform-validate
 
 on:
   workflow_dispatch:
+    inputs:
+      run_safe_plans:
+        description: Run optional backend-free plan checks for lessons that do not depend on owned DNS or existing remote state.
+        required: false
+        type: boolean
+        default: false
   pull_request:
   push:
     branches:
@@ -21,20 +27,20 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Format
-        run: terraform fmt -check -recursive
+      - name: Terraform format and validate
+        run: .\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -Format -Validate -ReportPath artifacts\terraform-validation-report.json
 
-      - name: Validate lesson folders
-        run: |
-          $folders = Get-ChildItem -Directory -Filter "CLZ-*"
-          foreach ($folder in $folders) {
-            Push-Location $folder.FullName
-            try {
-              terraform init -backend=false -input=false
-              terraform validate
-            }
-            finally {
-              Pop-Location
-            }
-          }
+      - name: Repository documentation and script checks
+        run: .\scripts\Test-AzureFromZeroToHeroDocs.ps1 -ReportPath artifacts\repo-quality-report.json
 
+      - name: Optional safe plan checks
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_safe_plans }}
+        run: .\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -PlanSafeLessons -ReportPath artifacts\terraform-plan-report.json
+
+      - name: Upload validation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-reports
+          path: artifacts/*.json
+          if-no-files-found: warn
