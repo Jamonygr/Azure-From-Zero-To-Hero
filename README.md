@@ -33,6 +33,29 @@ The book supports the labs by explaining the learning path, the move from manual
 - The later lessons move from direct public access toward Bastion, Key Vault, and private endpoints.
 - The free book and the Terraform labs are designed to support each other.
 
+## Project Navigation
+
+| Need | Start here |
+|---|---|
+| Choose the next lesson | [Curriculum](#curriculum) |
+| Understand learner outcomes | [Learning outcomes and review rubric](wiki/learning-outcomes-and-review-rubric.md) |
+| Control cost and cleanup risk | [Cost governance and lab safety](wiki/cost-governance-and-lab-safety.md) |
+| Maintain or release broad updates | [Release and maintenance playbook](wiki/release-and-maintenance-playbook.md) |
+| Report a lesson issue | [Support guide](SUPPORT.md) |
+| Review security expectations | [Security policy](SECURITY.md) |
+
+## Learning Outcomes
+
+By the end of the path, a learner should be able to:
+
+- Prepare a Windows workstation for Azure Terraform work.
+- Explain Terraform init, format, validate, plan, apply, state, outputs, and destroy.
+- Build Azure networking foundations with VNets, subnets, NSGs, NAT, DNS, and private endpoints.
+- Deploy Windows Server workloads with IIS, Bastion access, Load Balancer, and VM Scale Sets.
+- Move from local state to Azure Storage-backed remote state.
+- Use Key Vault, monitoring, GitHub Actions, and private Azure SQL access in a coherent reference architecture.
+- Review cost, cleanup, public exposure, and secret-handling risk before applying a lab.
+
 ## Visual Learning Path
 
 ![Azure From Zero To Hero curriculum map](assets/diagrams/curriculum-map.svg)
@@ -154,6 +177,13 @@ GitHub Actions runs separate checks for Terraform format/validation, repository 
 
 Local full-quality checks require Terraform, PowerShell 7, Node.js/npm, PSScriptAnalyzer, TFLint, and Trivy. The workstation tooling guide lists install and validation commands.
 
+## Community And Maintenance
+
+- [Contributing guide](CONTRIBUTING.md) explains standards, safety review, and validation expectations.
+- [Support guide](SUPPORT.md) explains what to include in lesson questions and bug reports.
+- [Security policy](SECURITY.md) explains safe reporting and lab security expectations.
+- [Roadmap](ROADMAP.md) tracks near-term curriculum and repository improvements.
+
 ## Cost And Cleanup
 
 Many lessons create paid Azure resources. Use a small `instance_count`, keep the default `eastus2` only if it fits your quota, and run `terraform destroy` after each lab unless the next lesson needs its outputs.
@@ -170,6 +200,9 @@ Contributions are welcome when they improve the lab path or keep the free book a
 - [Windows VM and VMSS notes](wiki/windows-vm-and-vmss-notes.md)
 - [State backend and locking](wiki/state-backend-and-locking.md)
 - [Security and secrets](wiki/security-and-secrets.md)
+- [Cost governance and lab safety](wiki/cost-governance-and-lab-safety.md)
+- [Learning outcomes and review rubric](wiki/learning-outcomes-and-review-rubric.md)
+- [Release and maintenance playbook](wiki/release-and-maintenance-playbook.md)
 - [Architecture plan](wiki/architecture-plan.md)
 - [Final reference architecture plan](wiki/final-reference-architecture-plan.md)
 - [Troubleshooting](wiki/troubleshooting.md)
