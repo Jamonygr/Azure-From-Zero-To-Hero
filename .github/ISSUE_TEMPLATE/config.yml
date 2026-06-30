@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Support guide
+    url: https://github.com/Jamonygr/Azure-From-Zero-To-Hero/blob/main/SUPPORT.md
+    about: Read what details make a support request actionable.

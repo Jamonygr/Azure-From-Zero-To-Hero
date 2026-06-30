@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest a new lesson, Azure pattern, diagram, script, or quality check.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Learning outcome
+      description: What should a learner be able to do after this change?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the lesson, pattern, or repository improvement.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional alternatives or tradeoffs.
+  - type: checkboxes
+    id: fit
+    attributes:
+      label: Fit check
+      options:
+        - label: This fits the Windows, PowerShell, Azure, and Terraform learning path.
+          required: true
+        - label: This can include cleanup and cost guidance.
+          required: true

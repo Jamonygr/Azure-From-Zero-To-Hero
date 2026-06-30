@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a broken command, script, link, workflow, or Terraform example.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the lab path. Remove any secrets, tenant details, subscription IDs, and private screenshots before submitting.
+  - type: input
+    id: lesson
+    attributes:
+      label: Lesson or area
+      description: "Example: CLZ-210-azure-bastion-rdp, scripts, README, GitHub Actions."
+      placeholder: CLZ-210-azure-bastion-rdp
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the failure and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: List the commands or clicks needed to reproduce the issue.
+      placeholder: |
+        1. Open lesson ...
+        2. Run ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Sanitized output
+      description: Paste the relevant output after removing secrets and tenant-specific values.
+      render: text
+  - type: input
+    id: terraform-version
+    attributes:
+      label: Terraform version
+      placeholder: terraform version
+  - type: input
+    id: azure-cli-version
+    attributes:
+      label: Azure CLI version
+      placeholder: az version
+  - type: input
+    id: powershell-version
+    attributes:
+      label: PowerShell version
+      placeholder: $PSVersionTable.PSVersion
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets, tokens, subscription IDs, tenant IDs, and private environment details.
+          required: true
