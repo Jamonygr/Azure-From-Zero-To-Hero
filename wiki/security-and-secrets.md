@@ -263,7 +263,7 @@ A practical learning subscription should have:
 
 | Requirement | Reason |
 |---|---|
-| Ability to create resource groups | Every lesson creates one |
+| Ability to create resource groups | Required by the deployable Azure lessons |
 | Ability to create network and compute resources | Core curriculum requirement |
 | Ability to create Key Vault and private endpoints | Later lessons |
 | Ability to delete created resources | Cleanup |

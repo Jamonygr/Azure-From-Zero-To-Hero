@@ -6,8 +6,8 @@ Use this guide to evaluate whether the curriculum teaches real Azure skills inst
 
 | Phase | Lessons | Learner can demonstrate |
 |---|---:|---|
-| Workstation readiness | 090-110 | Install and verify Terraform, Azure CLI, Git, VS Code, and PowerShell tooling on Windows |
-| Terraform foundation | 120-160 | Run init, format, validate, plan, apply, destroy, variables, locals, outputs, state, and locking basics |
+| Workstation readiness | 090 | Optionally install and verify the full Windows contributor toolchain |
+| Terraform foundation | 100-160 | Evaluate Terraform locally, verify Azure readiness without paid resources, then run the first deployment and learn state/locking |
 | Network foundation | 170-180 | Design a VNet, subnets, address ranges, and NSG rules with explainable intent |
 | Windows compute | 190-270 | Deploy Windows VMs, bootstrap IIS, use Bastion, configure load balancing, and scale VMSS workloads |
 | Platform services | 280-350 | Add NAT Gateway, DNS, remote state, Key Vault, and private endpoints |
@@ -31,10 +31,10 @@ Before calling a lesson ready, verify:
 
 1. The lesson README names the goal and expected result.
 2. The Terraform files pass `terraform fmt -check`.
-3. Backend-free validation passes where the lesson does not require existing remote state.
+3. Lockfile-readonly, backend-free static validation passes; Azure plans remain explicit local/manual actions.
 4. The sample variables avoid real names, real credentials, and private tenant data.
 5. The cleanup path is clear and tested.
-6. The next lesson pointer is correct.
+6. Catalog-generated previous/next navigation is correct.
 7. Any diagram matches the deployed resource shape.
 
 ## Phase Review Questions

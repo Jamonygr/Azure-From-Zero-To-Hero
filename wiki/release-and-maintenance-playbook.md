@@ -10,11 +10,13 @@ From the repository root:
 .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -ReportPath artifacts\quality-report.json
 ~~~
 
-For Azure-authenticated validation, run optional safe plan checks only when the subscription context is correct:
+Repository automation does not run Azure plans. When a release requires cloud
+evidence, an authorized maintainer selects the subscription by ID and follows
+the [manual Azure smoke matrix](manual-azure-smoke-matrix.md):
 
 ~~~powershell
-az account show
-.\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -PlanSafeLessons -ReportPath artifacts\terraform-plan-report.json
+$subscriptionId = az account show --query id --output tsv
+az account show --query '{tenant:tenantId,subscription:id,user:user.name}' --output table
 ~~~
 
 ## Pull Request Review
@@ -34,7 +36,7 @@ Dependabot groups GitHub Actions and Terraform provider updates. For provider up
 
 1. Review the provider changelog before merging.
 2. Run Terraform format and validation.
-3. Inspect any changed lock files if lock files are intentionally introduced later.
+3. Regenerate and inspect the committed root-module lockfiles for Windows and Linux AMD64.
 4. Add a troubleshooting note when provider behavior changes learner-facing commands.
 
 ## Issue Triage

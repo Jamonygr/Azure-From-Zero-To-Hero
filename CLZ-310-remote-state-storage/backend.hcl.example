@@ -1,0 +1,7 @@
+# Copy to backend.hcl only after CLZ-310 has created the backend resources.
+# Replace the first three values with `terraform output backend_configuration`.
+resource_group_name  = "clz-dev-clz310-rg"
+storage_account_name = "replacewithstateaccount"
+container_name       = "tfstate"
+key                  = "clz310.tfstate"
+use_azuread_auth     = true

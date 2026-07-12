@@ -1,0 +1,43 @@
+name: lesson-terraform-validate
+
+on:
+  pull_request:
+    paths:
+      - "CLZ-370-github-actions-terraform/**"
+      - ".github/workflows/lesson-terraform-validate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lesson-terraform-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: CLZ-370-github-actions-terraform
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+
+      - name: Initialize without a backend
+        run: terraform init -backend=false -input=false -lockfile=readonly
+
+      - name: Check formatting
+        run: terraform fmt -check
+
+      - name: Validate configuration
+        run: terraform validate -no-color

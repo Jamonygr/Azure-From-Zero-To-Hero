@@ -1,57 +1,110 @@
-# CLZ-220 - Standard Load Balancer Windows
+# CLZ-220 - Standard Load Balancer for Windows
 
-![Standard Load Balancer Windows architecture](../assets/diagrams/load-balancer-vmss.svg)
+![Standard Load Balancer for Windows architecture](../assets/diagrams/load-balancer-vmss.svg)
 
-## Overview
-A public load balancer with two IIS Windows backends.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Serve one public HTTP endpoint from multiple IIS Windows backends and define both inbound distribution and explicit outbound SNAT behavior.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-210 and understand why workload administration should be private.
+- Quota for the requested Windows instance count.
+- Allow several minutes for IIS extensions and the health probe to become ready.
+
+## Architecture
+
+A zone-redundant Standard public IP fronts a Standard Load Balancer. Its backend pool contains multiple private NICs. A TCP health probe gates an HTTP rule, and an outbound rule explicitly supplies SNAT; the inbound rule disables implicit outbound SNAT.
+
+## Resources And Cost
+
+**Relative cost: High.** Multiple Windows VMs and disks dominate. The Standard public IP and outbound data also contribute.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | Public Standard Load Balancer with Windows backend |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz220-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Standard Load Balancer and public IP | HTTP frontend, probe, backend pool, rule, and explicit outbound rule. |
+| Windows IIS backends | Private NICs in the web subnet; instance count multiplies compute/disk cost. |
+| VNet and web NSG | Allows the intended HTTP flow while Azure's default rules deny other unsolicited ingress. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Create frontend IP, backend pool, probe, rule, and NIC associations.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `load-balancer.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for plan, apply, and destroy; use the exact subscription GUID. |
+| `environment` | Keep `dev` for an ephemeral lab unless testing an environment boundary. |
+| `location` | Select a supported region with adequate quota. |
+| `name_prefix` | Use a short lowercase prefix for derived names. |
+| `admin_username` | Nonreserved local administrator name used on each backend. |
+| `instance_count` | Keep the small default; each additional instance adds VM and disk cost. |
+| `vm_size` | Use a small regionally available Windows size. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz220`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-220-standard-load-balancer-windows
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+$url = terraform output -raw load_balancer_url
+1..4 | ForEach-Object { (Invoke-WebRequest -Uri $url -UseBasicParsing).Content }
+$lb = az network lb list --resource-group $resourceGroup --query '[0].name' -o tsv
+az network lb outbound-rule list --resource-group $resourceGroup --lb-name $lb --query '[].{name:name,protocol:protocol,ports:allocatedOutboundPorts}' --output table
+az network lb probe list --resource-group $resourceGroup --lb-name $lb --output table
+```
+
+Expected result:
+
+- Repeated HTTP requests return status 200 and can show more than one backend identity.
+- The health probe and HTTP rule exist.
+- An explicit outbound rule is listed; the matching inbound rule does not provide implicit outbound SNAT.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| The frontend returns 502/timeout | Wait for IIS bootstrap, then inspect probe health, NSG port 80, and backend-pool associations. |
+| A backend cannot download bootstrap content | Verify the outbound rule and backend pool membership. |
+| Only one page appears repeatedly | Load Balancer distribution is flow based; use new TCP connections and verify both backends are healthy. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Add a controlled admin NAT pattern.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+az group exists --name $resourceGroup
+```
+
+The load balancer, public IP, VMs, disks, and network are deleted.
+
+## Production Delta
+
+- Use zones/zone-redundant components where supported, TLS termination, application health semantics, monitoring, and capacity planning.
+- Keep explicit outbound behavior, but prefer NAT Gateway or Azure Firewall when workloads need scalable or governed egress.
+
+## Exercises
+
+1. Temporarily stop one backend and observe probe-driven removal without changing Terraform.
+2. Explain why Standard Load Balancer preserves client source IP and how that affects NSG design.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-210 - Azure Bastion RDP](../CLZ-210-azure-bastion-rdp/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-230 - Load Balancer NAT Rules &rarr;](../CLZ-230-load-balancer-nat-rules/README.md)
+<!-- lesson-navigation:end -->

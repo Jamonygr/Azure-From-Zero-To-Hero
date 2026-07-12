@@ -227,19 +227,28 @@ Use `count` when resources are interchangeable. The index becomes part of the ad
 
 ## For-Each Windows VMs
 
-The `for_each` lesson creates named Windows VMs from a map:
+The `for_each` lesson creates named Windows VMs from a typed map. Each key is
+stable identity and each value carries lesson-specific configuration:
 
 ~~~hcl
-variable "vm_names" {
-  type = map(string)
+variable "vm_definitions" {
+  type = map(object({
+    vm_size = string
+    role    = string
+  }))
+
   default = {
-    web = "web"
-    ops = "ops"
+    web = {
+      vm_size = "Standard_B2s"
+      role    = "web"
+    }
   }
 }
 ~~~
 
-The resource address includes the key, such as `azurerm_windows_virtual_machine.web["web"]`. Keys are stable, so adding or removing another key is less disruptive than shifting count indexes.
+The resource address includes the key, such as
+`azurerm_windows_virtual_machine.web["web"]`. Keys are stable, while the object
+values drive VM size and role tags.
 
 Use `for_each` when each VM has identity. Use `count` when instances are truly interchangeable.
 

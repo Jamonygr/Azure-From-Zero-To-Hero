@@ -316,12 +316,12 @@ Remote state errors can come from missing storage, wrong names, missing permissi
 
 Check:
 
-| Variable | Meaning |
+| Object attribute | Meaning |
 |---|---|
-| `remote_state_resource_group_name` | Resource group containing backend storage |
-| `remote_state_storage_account_name` | Storage account name |
-| `remote_state_container_name` | Container name |
-| `remote_state_key` | State file key |
+| `remote_state.resource_group_name` | Resource group containing backend storage |
+| `remote_state.storage_account_name` | Storage account name; placeholder values are rejected |
+| `remote_state.container_name` | Container name |
+| `remote_state.key` | State file key (`clz310.tfstate` in the exercise) |
 
 If the remote state data source fails, verify the producing lesson created the storage and state file. A container can exist without the expected key.
 

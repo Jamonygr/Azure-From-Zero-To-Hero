@@ -68,6 +68,20 @@ resource "azurerm_network_security_rule" "allow_admin_rdp" {
   network_security_group_name = azurerm_network_security_group.web.name
 }
 
+resource "azurerm_network_security_rule" "deny_other_rdp" {
+  name                        = "deny-other-rdp"
+  priority                    = 120
+  direction                   = "Inbound"
+  access                      = "Deny"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "3389"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.lab.name
+  network_security_group_name = azurerm_network_security_group.web.name
+}
+
 resource "azurerm_subnet_network_security_group_association" "web" {
   subnet_id                 = azurerm_subnet.web.id
   network_security_group_id = azurerm_network_security_group.web.id

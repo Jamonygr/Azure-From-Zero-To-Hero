@@ -1,7 +1,16 @@
 {
   "editor.formatOnSave": false,
   "files.eol": "\n",
+  "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.terraform": true
+  },
+  "search.exclude": {
+    "**/.terraform": true,
+    "artifacts": true
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform",
     "editor.formatOnSave": true

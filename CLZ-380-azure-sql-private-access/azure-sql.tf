@@ -42,8 +42,19 @@ resource "random_password" "windows_admin" {
   min_special      = 2
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
+
+resource "random_string" "suffix" {
+  length  = 6
+  upper   = false
+  special = false
+
+  keepers = {
+    prefix = local.prefix
+  }
+}
+
 resource "azurerm_mssql_server" "main" {
-  name                          = "${local.prefix}-sql"
+  name                          = "${local.prefix}-sql-${random_string.suffix.result}"
   resource_group_name           = azurerm_resource_group.lab.name
   location                      = azurerm_resource_group.lab.location
   version                       = "12.0"
@@ -52,6 +63,12 @@ resource "azurerm_mssql_server" "main" {
   minimum_tls_version           = "1.2"
   public_network_access_enabled = false
   tags                          = local.tags
+}
+
+resource "azurerm_mssql_server_extended_auditing_policy" "main" {
+  server_id              = azurerm_mssql_server.main.id
+  log_monitoring_enabled = true
+  retention_in_days      = 90
 }
 
 resource "azurerm_mssql_database" "main" {

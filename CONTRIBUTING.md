@@ -12,7 +12,9 @@ Azure From Zero To Hero is organized as small, readable Terraform lessons. Keep 
 ## Standards
 
 - Use PowerShell examples.
-- Keep lesson folders independently deployable.
+- Keep deployable lesson folders self-contained except for cataloged exercises
+  such as the intentional CLZ-310 to CLZ-320 remote-state dependency. Keep
+  local/readiness lessons credential-free.
 - Commit only safe example values.
 - Keep diagrams, README files, variables, outputs, and cleanup notes aligned.
 - Prefer explicit learner guidance over unexplained automation.
@@ -21,15 +23,34 @@ Azure From Zero To Hero is organized as small, readable Terraform lessons. Keep 
 
 ## Documentation
 
-Every lesson README should include a goal, architecture image, build summary, runbook, validation checklist, cleanup note, and next lesson pointer. When architecture changes, update the matching diagram or explain why the existing diagram is still accurate.
+Every lesson README uses these exact second-level headings: `Goal`,
+`Prerequisites`, `Architecture`, `Resources And Cost`, `Inputs`, `Deploy`,
+`Validate`, `Troubleshooting`, `Cleanup`, `Production Delta`, `Exercises`, and
+`Navigation`. Validation must include commands and expected results; cleanup
+must prove the resources are gone.
+
+`curriculum/lessons.psd1` is the source of truth for lesson metadata. After a
+title, dependency, diagram, cost, deployment-mode, or navigation change, run:
+
+```powershell
+./scripts/Sync-AzureFromZeroToHeroCurriculum.ps1 -Write
+./scripts/Sync-AzureFromZeroToHeroCurriculum.ps1 -Check
+```
+
+The sync script changes only marked curriculum and navigation blocks. Create a
+single appended lesson with `New-AzureFromZeroToHeroLesson.ps1`; do not restore
+the retired repository-wide scaffold/overwrite generator. When architecture
+changes, update the matching diagram or explain why it still applies.
 
 ## Quality Tools
 
 - Terraform validation stays backend-free by default and does not run `terraform apply`.
 - Markdown linting uses `markdownlint-cli2` with repo settings.
 - PowerShell checks use PSScriptAnalyzer with repo settings.
-- TFLint runs with the AzureRM ruleset and only fails on error-level findings.
-- Trivy reports Terraform security findings and blocks critical issues by default.
+- TFLint warnings and errors fail the quality gate.
+- Trivy blocks undocumented MEDIUM, HIGH, and CRITICAL Terraform findings.
+- `actionlint`, Pester, curriculum drift, and unused-variable checks run in the
+  contributor gate.
 
 ## Safety Review
 

@@ -1,57 +1,104 @@
-# CLZ-120 - Terraform Core Workflow
+# CLZ-120 - First Azure Deployment and Terraform Workflow
 
-![Terraform Core Workflow architecture](../assets/diagrams/terraform-workflow.svg)
+![First Azure Deployment and Terraform Workflow architecture](../assets/diagrams/terraform-workflow.svg)
 
-## Overview
-A safe command routine that repeats in every lesson.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Run the complete, reviewable Terraform lifecycle against Azure for the first time: initialize, format, validate, plan, inspect, apply, verify, and destroy a tagged resource group.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-110 and keep its intended subscription ID available.
+- Contributor permission at a disposable learning scope.
+- No active resources from an older version of this lesson.
+
+## Architecture
+
+The AzureRM provider authenticates through the selected Azure CLI context while `subscription_id` pins the target. One tagged resource group is the smallest Azure object that demonstrates the full Terraform lifecycle.
+
+## Resources And Cost
+
+**Relative cost: Low.** An empty resource group has no direct charge, although resources later placed inside it can be billable.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | init, fmt, validate, plan, apply, and destroy |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz120-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Azure resource group | Lifecycle boundary carrying the standard lesson tags. |
+| Local Terraform state and plan | Tracks the resource; protect it even though this lesson stores no secret. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Initialize providers; validate HCL; produce a saved plan; clean up with destroy.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `lab.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for Azure plan, apply, and destroy; copy the exact ID returned by Azure CLI. |
+| `environment` | Keep `dev` for the lab or choose `test`/`prod` only to study the naming boundary. |
+| `location` | Use a region where your subscription has access and sufficient quota. |
+| `name_prefix` | Use a short lowercase prefix; resource names derive from it. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz120`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-120-terraform-core-workflow
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+az group show --name $resourceGroup --query '{name:name,location:location,state:properties.provisioningState,tags:tags}' --output json
+terraform state list
+```
+
+Expected result:
+
+- Azure reports the exact output name, selected location, `Succeeded`, and the standard tags.
+- Terraform state contains only `azurerm_resource_group.lab`.
+- Re-running `terraform plan` reports no changes.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| Provider configuration requires a subscription | Pass `-var "subscription_id=$subscriptionId"` and confirm the value is a GUID. |
+| Authorization fails | Verify the CLZ-110 role assignment at the target scope and allow time for a new grant to propagate. |
+| The plan targets an unexpected subscription | Stop; compare `$subscriptionId`, `az account show`, and the provider plan before applying. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Configure provider authentication clearly.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+terraform state list
+az group exists --name $resourceGroup
+```
+
+Destroy completes, state is empty, and Azure CLI returns `false` for the resource group.
+
+## Production Delta
+
+- Use a reviewed remote backend with locking, encryption, restricted access, and recovery controls.
+- Run plans in CI with workload identity federation and require approval before apply.
+
+## Exercises
+
+1. Change only the environment and identify which name/tag values force replacement.
+2. Run a second plan after apply and explain why an empty plan is an important acceptance check.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-110 - Azure CLI and Subscription Readiness](../CLZ-110-windows-workstation-setup/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-130 - Provider Authentication &rarr;](../CLZ-130-provider-authentication/README.md)
+<!-- lesson-navigation:end -->

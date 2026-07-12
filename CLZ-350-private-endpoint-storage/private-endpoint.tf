@@ -37,21 +37,44 @@ resource "random_string" "suffix" {
   length  = 6
   upper   = false
   special = false
+
+  keepers = {
+    prefix = local.compact_prefix
+  }
 }
 
-# Lab exception: the lesson focuses on creating the private endpoint and DNS link;
-# production storage accounts should add deny-by-default network rules.
-#trivy:ignore:AVD-AZU-0012
-#trivy:ignore:AZU-0012
+# Scanner compatibility: queue logging is configured with the provider's
+# modern azurerm_storage_account_queue_properties resource below; Trivy does
+# not currently associate that standalone resource with this storage account.
+#trivy:ignore:AZU-0057
 resource "azurerm_storage_account" "private" {
-  name                            = substr("st${local.compact_prefix}${random_string.suffix.result}", 0, 24)
-  resource_group_name             = azurerm_resource_group.lab.name
-  location                        = azurerm_resource_group.lab.location
-  account_tier                    = "Standard"
-  account_replication_type        = "LRS"
-  min_tls_version                 = "TLS1_2"
-  allow_nested_items_to_be_public = false
-  tags                            = local.tags
+  name                              = substr("st${local.compact_prefix}${random_string.suffix.result}", 0, 24)
+  resource_group_name               = azurerm_resource_group.lab.name
+  location                          = azurerm_resource_group.lab.location
+  account_tier                      = "Standard"
+  account_replication_type          = "LRS"
+  min_tls_version                   = "TLS1_2"
+  allow_nested_items_to_be_public   = false
+  public_network_access_enabled     = false
+  infrastructure_encryption_enabled = true
+  tags                              = local.tags
+
+  network_rules {
+    default_action = "Deny"
+    bypass         = ["AzureServices"]
+  }
+}
+
+resource "azurerm_storage_account_queue_properties" "private" {
+  storage_account_id = azurerm_storage_account.private.id
+
+  logging {
+    delete                = true
+    read                  = true
+    write                 = true
+    version               = "1.0"
+    retention_policy_days = 7
+  }
 }
 
 resource "azurerm_private_dns_zone" "blob" {

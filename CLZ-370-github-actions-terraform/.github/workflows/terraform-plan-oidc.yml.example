@@ -1,0 +1,55 @@
+name: lesson-terraform-plan-oidc
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: lesson-terraform-plan-oidc
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    environment: azure-lab-plan
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: CLZ-370-github-actions-terraform
+    env:
+      ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Sign in to Azure with OIDC
+        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5 # v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_version: 1.15.8
+          terraform_wrapper: false
+
+      - name: Initialize without a backend
+        run: terraform init -backend=false -input=false -lockfile=readonly
+
+      - name: Check formatting and validate
+        run: |
+          terraform fmt -check
+          terraform validate -no-color
+
+      - name: Create a non-applying plan
+        run: terraform plan -refresh=false -input=false -lock=false -no-color -var "subscription_id=$env:ARM_SUBSCRIPTION_ID"

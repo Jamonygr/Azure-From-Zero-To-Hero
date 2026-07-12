@@ -1,57 +1,110 @@
-# CLZ-350 - Private Endpoint Storage
+# CLZ-350 - Private Endpoint for Storage
 
-![Private Endpoint Storage architecture](../assets/diagrams/private-endpoint-sql.svg)
+![Private Endpoint for Storage architecture](../assets/diagrams/private-endpoint-sql.svg)
 
-## Overview
-A storage account reachable through a private endpoint.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Disable public Storage access and connect the blob service to a data subnet through a Private Endpoint and linked Private DNS zone.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-290.
+- Permission to create Storage, Private Endpoint, Private DNS, and VNet resources.
+- For data-plane validation, an existing test client inside the linked VNet or a connected network is required; this lesson does not create one.
+
+## Architecture
+
+A uniquely named Storage account denies public network access. Its blob subresource receives a Private Endpoint NIC in the data subnet. A `privatelink.blob.core.windows.net` zone, VNet link, and zone group make the normal service hostname resolve to that private address for in-VNet clients.
+
+## Resources And Cost
+
+**Relative cost: Low.** Private Endpoint has an hourly/data charge; Storage capacity/transactions and Private DNS queries also apply.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | Private endpoint and private DNS for Storage |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz350-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Storage account | Standard LRS, TLS 1.2, no anonymous containers, public network access disabled. |
+| Blob Private Endpoint | Private IP in `data-snet` and an approved service connection. |
+| Private DNS zone, link, and zone group | Maps the public service hostname through `privatelink` to the endpoint. |
+| VNet and subnets | Resolution and private-connectivity scope. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Create service connection; attach a private DNS zone group; verify private name resolution.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `private-endpoint.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for Azure plan, apply, and destroy; use the exact subscription GUID. |
+| `environment` | Keep `dev` for an ephemeral lab unless testing another environment boundary. |
+| `location` | Choose a supported region with sufficient quota. |
+| `name_prefix` | Use a short lowercase prefix for derived names. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, endpoint names, and secrets in untracked local files or protected repository settings.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz350`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-350-private-endpoint-storage
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+$account = terraform output -raw storage_account_name
+az network private-endpoint show --ids (terraform output -raw private_endpoint_id) --query '{state:provisioningState,connection:privateLinkServiceConnections[0].privateLinkServiceConnectionState.status,ip:customDnsConfigs[0].ipAddresses[0]}' --output json
+az storage account show --resource-group $resourceGroup --name $account --query publicNetworkAccess --output tsv
+# Run the next two commands only from a client in the linked VNet:
+Resolve-DnsName "$account.blob.core.windows.net"
+Test-NetConnection "$account.blob.core.windows.net" -Port 443
+```
+
+Expected result:
+
+- Control plane: endpoint provisioning is `Succeeded`, connection is `Approved`, and Storage public network access is `Disabled`.
+- Data plane in the VNet: the standard blob FQDN resolves to a private `10.40.3.x` address and TCP 443 succeeds.
+- A normal Internet laptop is expected to fail the private data-plane test unless connected to the VNet and using the correct DNS path.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| Azure shows Approved but DNS returns a public IP | Run inside the linked VNet and inspect the zone group, VNet link, custom DNS forwarding, and resolver cache. |
+| The laptop cannot access Storage | That is expected with public access disabled; use an in-VNet/connected client. |
+| The endpoint is Pending | Inspect connection approval and the correct `blob` subresource selection. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Add observability.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+az group exists --name $resourceGroup
+```
+
+The endpoint, private DNS records/link, Storage account, network, and resource group are deleted.
+
+## Production Delta
+
+- Use centralized Private DNS/resolver architecture, least-privilege data roles, lifecycle/recovery policy, logging, and controlled egress.
+- Add zone-redundant or geo-redundant storage only after matching durability and cost requirements.
+- Control-plane success is not an availability test; continuously validate DNS and TLS from representative private clients.
+
+## Exercises
+
+1. From an in-VNet client, record the CNAME/A chain for the blob FQDN.
+2. Explain why disabling public network access before private DNS is correct only when a private validation path already exists.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-340 - Key Vault Secrets](../CLZ-340-key-vault-secrets/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-360 - Azure Monitor and Log Analytics &rarr;](../CLZ-360-azure-monitor-log-analytics/README.md)
+<!-- lesson-navigation:end -->

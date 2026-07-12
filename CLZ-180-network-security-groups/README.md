@@ -2,56 +2,104 @@
 
 ![Network Security Groups architecture](../assets/diagrams/network-foundation.svg)
 
-## Overview
-A web subnet protected by HTTP and scoped RDP rules.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Protect the web subnet with deterministic NSG priorities, public HTTP for the teaching service, and RDP limited to one administrator IPv4 address.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-170.
+- Discover your current public IPv4 address and express it as a `/32` CIDR.
+
+## Architecture
+
+The CLZ-170 network is recreated in this independent lesson. A web NSG is associated with the web subnet. HTTP is allowed for the example service, while RDP is admitted only from `admin_cidr`; Azure's default deny rules handle other unsolicited inbound traffic.
+
+## Resources And Cost
+
+**Relative cost: Low.** NSGs and rules have no direct charge; traffic processing and later workloads can be billable.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | NSGs and rule design |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz180-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| VNet and four subnets | Network boundary used to teach subnet-level policy. |
+| Web NSG association | Applies all web rules to NICs placed in the subnet. |
+| HTTP and RDP rules | Port 80 teaching access and tightly scoped port 3389 administration. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Set rule priority; limit admin access; associate an NSG with a subnet.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `security.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for plan, apply, and destroy; use the exact subscription GUID. |
+| `environment` | Keep `dev` for an ephemeral lab unless testing an environment boundary. |
+| `location` | Select a supported region with adequate quota. |
+| `name_prefix` | Use a short lowercase prefix for derived names. |
+| `admin_cidr` | Required: replace the documentation address with your current public IPv4 plus `/32`; broad ranges are rejected. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz180`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-180-network-security-groups
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+$nsg = terraform output -raw web_nsg_name
+az network nsg rule list --resource-group $resourceGroup --nsg-name $nsg --query '[].{name:name,priority:priority,source:sourceAddressPrefix,port:destinationPortRange,access:access}' --output table
+terraform plan -var "subscription_id=$subscriptionId" -var 'admin_cidr=0.0.0.0/0'
+```
+
+Expected result:
+
+- HTTP and administrator RDP rules have unique priorities and `Allow` access.
+- The RDP rule source is exactly the supplied `/32`.
+- The deliberately broad negative plan fails before Azure is changed.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| The safety check rejects the CIDR | Use a routable IPv4 `/32`; do not substitute `0.0.0.0/0`, `*`, or a large network. |
+| A rule priority conflicts | Give each custom rule a unique value from 100 through 4096. |
+| RDP remains unreachable later | Confirm both the NSG path and whether the workload actually has a public, NAT, or Bastion ingress path. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Deploy the first Windows VM.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+az group exists --name $resourceGroup
+```
+
+Azure CLI returns `false`; no NSG remains associated with a deleted subnet.
+
+## Production Delta
+
+- Prefer Azure Bastion, Just-In-Time access, VPN, or private management over direct Internet RDP.
+- Restrict web ingress to the real proxy/load-balancer path and use Application Security Groups where they simplify intent.
+
+## Exercises
+
+1. Change the RDP source to another safe `/32` and identify the in-place rule update.
+2. Add a deny rule with a valid priority and explain how Azure evaluates it against the allow rules.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-170 - Virtual Network Foundation](../CLZ-170-virtual-network-foundation/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-190 - Windows VM Basics &rarr;](../CLZ-190-windows-vm-basics/README.md)
+<!-- lesson-navigation:end -->

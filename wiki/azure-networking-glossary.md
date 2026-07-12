@@ -8,7 +8,11 @@ This guide explains the networking vocabulary used in the curriculum. It is writ
 
 ## Resource Group
 
-A resource group is the management boundary for one lesson. In Azure From Zero To Hero, every lesson creates a resource group named with the lesson ID, such as `clz-dev-clz170-rg`. The resource group gives you a clean place to inspect resources, confirm tags, and run cleanup.
+A resource group is the management boundary for one deployed Azure lesson. In
+Azure From Zero To Hero, deployable lessons typically create a resource group
+named with the lesson ID, such as `clz-dev-clz170-rg`. Local-only, readiness,
+and workflow lessons do not create Azure resources. The resource group gives
+you a clean place to inspect resources, confirm tags, and run cleanup.
 
 Resource groups are not network containers by themselves. They can contain resources from many regions, although the lab keeps resources in one region unless a lesson is specifically about global routing. The resource group location mostly affects metadata. Individual resources still have their own location arguments.
 

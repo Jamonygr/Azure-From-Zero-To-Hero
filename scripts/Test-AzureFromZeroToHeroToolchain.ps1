@@ -1,102 +1,149 @@
-param()
+[CmdletBinding()]
+param(
+  [Alias("Profile")]
+  [ValidateSet("Learner", "Contributor")]
+  [string]$ToolProfile = "Learner"
+)
 
 $ErrorActionPreference = "Stop"
 
-$scriptRoot = Split-Path -Parent $PSCommandPath
-$repoRoot = Resolve-Path (Join-Path $scriptRoot "..")
-$workspaceExtensionsPath = Join-Path $repoRoot ".vscode\extensions.json"
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$manifestPath = Join-Path $repoRoot ".config\tool-versions.psd1"
+$manifest = Import-PowerShellDataFile -Path $manifestPath
+$requiredCommands = if ($ToolProfile -eq "Contributor") {
+  @($manifest.ContributorCommands)
+}
+else {
+  @($manifest.LearnerCommands)
+}
 
-$commands = @(
-  @{ Name = "pwsh"; VersionArgs = @("--version"); Required = $true },
-  @{ Name = "terraform"; VersionArgs = @("version"); Required = $true },
-  @{ Name = "az"; VersionArgs = @("version"); Required = $true },
-  @{ Name = "git"; VersionArgs = @("--version"); Required = $true },
-  @{ Name = "code"; VersionArgs = @("--version"); Required = $true },
-  @{ Name = "node"; VersionArgs = @("--version"); Required = $false },
-  @{ Name = "npm"; VersionArgs = @("--version"); Required = $false },
-  @{ Name = "tflint"; VersionArgs = @("--version"); Required = $false },
-  @{ Name = "trivy"; VersionArgs = @("--version"); Required = $false },
-  @{ Name = "winget"; VersionArgs = @("--version"); Required = $false }
-)
+$minimumVersions = @{
+  pwsh       = [version]$manifest.Runtime.PowerShell
+  terraform  = [version]$manifest.Runtime.Terraform
+  az         = [version]$manifest.Runtime.AzureCli
+  git        = [version]$manifest.Runtime.Git
+  node       = [version]$manifest.Runtime.NodeMinimum
+  tflint     = [version]$manifest.Runtime.TFLint
+  trivy      = [version]$manifest.Runtime.Trivy
+  actionlint = [version]$manifest.Runtime.Actionlint
+}
 
-$failed = $false
+function Get-InstalledVersion {
+  param([Parameter(Mandatory)][string]$Command)
 
-foreach ($item in $commands) {
-  $cmd = Get-Command $item.Name -ErrorAction SilentlyContinue
-  if (-not $cmd) {
-    $level = if ($item.Required) { "ERROR" } else { "WARN" }
-    Write-Host "[$level] $($item.Name) was not found on PATH."
-    if ($item.Required) {
-      $failed = $true
+  $rawVersion = switch ($Command) {
+    "pwsh" { (& pwsh --version | Select-Object -First 1) }
+    "terraform" {
+      $terraformJson = & terraform version -json | ConvertFrom-Json
+      $terraformJson.terraform_version
     }
+    "az" {
+      $azureVersions = & az version --output json | ConvertFrom-Json
+      $azureVersions."azure-cli"
+    }
+    "git" { (& git --version | Select-Object -First 1) }
+    "code" { (& code --version | Select-Object -First 1) }
+    "node" { (& node --version | Select-Object -First 1) }
+    "npm" { (& npm --version | Select-Object -First 1) }
+    "tflint" { (& tflint --version | Select-Object -First 1) }
+    "trivy" { (& trivy --version | Select-Object -First 1) }
+    "actionlint" { (& actionlint -version | Select-Object -First 1) }
+    default { $null }
+  }
+
+  if (-not $rawVersion) {
+    return $null
+  }
+
+  $versionMatch = [regex]::Match([string]$rawVersion, '\d+(?:\.\d+){1,3}')
+  if (-not $versionMatch.Success) {
+    return $null
+  }
+
+  return [version]$versionMatch.Value
+}
+
+$issues = [System.Collections.Generic.List[string]]::new()
+Write-Host "Azure From Zero To Hero $ToolProfile toolchain audit"
+
+foreach ($commandName in $requiredCommands) {
+  $commandInfo = Get-Command $commandName -ErrorAction SilentlyContinue
+  if (-not $commandInfo) {
+    $issues.Add("$commandName is not installed or not available on PATH.")
+    Write-Host "[ERROR] $commandName not found"
     continue
   }
 
-  Write-Host "[OK] $($item.Name) found at $($cmd.Source)"
-  try {
-    & $item.Name @($item.VersionArgs) | Select-Object -First 6
+  $installedVersion = Get-InstalledVersion -Command $commandName
+  if ($installedVersion) {
+    Write-Host "[OK] $commandName $installedVersion"
   }
-  catch {
-    Write-Host "[WARN] Could not read version for $($item.Name): $($_.Exception.Message)"
+  else {
+    Write-Host "[OK] $commandName found at $($commandInfo.Source)"
+  }
+
+  if ($minimumVersions.ContainsKey($commandName) -and $installedVersion -and $installedVersion -lt $minimumVersions[$commandName]) {
+    $issues.Add("$commandName $installedVersion is older than the supported minimum $($minimumVersions[$commandName]).")
+    Write-Host "[ERROR] Upgrade $commandName to $($minimumVersions[$commandName]) or newer."
+  }
+
+  if ($commandName -eq "terraform" -and $installedVersion -and $installedVersion -ne [version]$manifest.Runtime.Terraform) {
+    $issues.Add("Terraform $installedVersion does not match the repository-tested version $($manifest.Runtime.Terraform).")
+    Write-Host "[ERROR] Use the repository-tested Terraform version $($manifest.Runtime.Terraform)."
+  }
+
+  if ($commandName -eq "node" -and $installedVersion -and $installedVersion.Major -ne [int]$manifest.Runtime.NodeMajor) {
+    $issues.Add("Node.js major version $($installedVersion.Major) does not match supported major $($manifest.Runtime.NodeMajor).")
+    Write-Host "[ERROR] Use Node.js major $($manifest.Runtime.NodeMajor)."
   }
 }
 
-$code = Get-Command code -ErrorAction SilentlyContinue
-if ($code) {
-  $extensions = @(
-    "hashicorp.terraform",
-    "ms-vscode.powershell",
-    "ms-azuretools.vscode-azureresourcegroups",
-    "github.vscode-github-actions",
-    "yzhang.markdown-all-in-one"
-  )
+if ($ToolProfile -eq "Contributor") {
+  foreach ($moduleName in $manifest.PowerShellModules.Keys) {
+    $requiredVersion = [version]$manifest.PowerShellModules[$moduleName]
+    $installedModule = Get-Module -ListAvailable -Name $moduleName |
+      Sort-Object Version -Descending |
+      Select-Object -First 1
 
-  if (Test-Path $workspaceExtensionsPath) {
-    try {
-      $extensionConfig = Get-Content -Raw $workspaceExtensionsPath | ConvertFrom-Json
-      $extensions = @($extensionConfig.recommendations)
-    }
-    catch {
-      Write-Host "[WARN] Could not read VS Code workspace recommendations: $($_.Exception.Message)"
-    }
-  }
-
-  $installed = @()
-  try {
-    $installed = @(code --list-extensions)
-  }
-  catch {
-    Write-Host "[WARN] Could not list VS Code extensions: $($_.Exception.Message)"
-  }
-
-  foreach ($extension in $extensions) {
-    if ($installed -contains $extension) {
-      Write-Host "[OK] VS Code extension installed: $extension"
+    if (-not $installedModule -or $installedModule.Version -lt $requiredVersion) {
+      $current = if ($installedModule) { $installedModule.Version } else { "missing" }
+      $issues.Add("PowerShell module $moduleName is $current; $requiredVersion or newer is required.")
+      Write-Host "[ERROR] $moduleName $current (requires $requiredVersion or newer)"
     }
     else {
-      Write-Host "[WARN] VS Code extension missing: $extension"
+      Write-Host "[OK] $moduleName $($installedModule.Version)"
     }
   }
-}
 
-$psScriptAnalyzer = Get-Module -ListAvailable -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
-if ($psScriptAnalyzer) {
-  Write-Host "[OK] PSScriptAnalyzer module installed: $($psScriptAnalyzer.Version)"
-}
-else {
-  Write-Host "[WARN] PSScriptAnalyzer module missing. Install with: Install-Module PSScriptAnalyzer -Scope CurrentUser"
+  if (Get-Command code -ErrorAction SilentlyContinue) {
+    $installedExtensions = @(code --list-extensions 2>$null)
+    foreach ($extension in $manifest.VSCodeExtensions) {
+      if ($installedExtensions -contains $extension) {
+        Write-Host "[OK] VS Code extension $extension"
+      }
+      else {
+        $issues.Add("VS Code extension $extension is not installed.")
+        Write-Host "[ERROR] VS Code extension missing: $extension"
+      }
+    }
+  }
 }
 
 try {
-  $account = az account show --output json 2>$null | ConvertFrom-Json
-  Write-Host "[OK] Azure CLI account: $($account.name) / $($account.id)"
+  $signedInAccountId = & az account show --query id --output tsv 2>$null
+  if ($signedInAccountId) {
+    Write-Host "[OK] Azure CLI has an active account (details masked)."
+  }
+  else {
+    Write-Host "[WARN] Azure CLI is not signed in. Run az login before Azure resource labs."
+  }
 }
 catch {
   Write-Host "[WARN] Azure CLI is not signed in. Run az login before Azure resource labs."
 }
 
-if ($failed) {
-  throw "Required Azure From Zero To Hero workstation tools are missing."
+if ($issues.Count -gt 0) {
+  throw "$($issues.Count) $ToolProfile toolchain requirement(s) are not satisfied.`n$($issues -join "`n")"
 }
 
-Write-Host "Azure From Zero To Hero workstation toolchain check completed."
+Write-Host "Azure From Zero To Hero $ToolProfile toolchain audit passed."

@@ -2,10 +2,14 @@ resource "random_string" "suffix" {
   length  = 6
   upper   = false
   special = false
+
+  keepers = {
+    prefix = local.compact_prefix
+  }
 }
 
 resource "azurerm_traffic_manager_profile" "web" {
-  name                   = "${local.prefix}-tm"
+  name                   = "${local.prefix}-tm-${random_string.suffix.result}"
   resource_group_name    = azurerm_resource_group.lab.name
   traffic_routing_method = "Priority"
   tags                   = local.tags
@@ -34,5 +38,12 @@ resource "azurerm_traffic_manager_external_endpoint" "secondary" {
   profile_id = azurerm_traffic_manager_profile.web.id
   target     = var.secondary_endpoint_fqdn
   priority   = 2
+}
+
+check "distinct_endpoints" {
+  assert {
+    condition     = lower(var.primary_endpoint_fqdn) != lower(var.secondary_endpoint_fqdn)
+    error_message = "primary_endpoint_fqdn and secondary_endpoint_fqdn must identify different endpoints."
+  }
 }
 

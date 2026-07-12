@@ -1,57 +1,107 @@
-# CLZ-300 - Public DNS Optional
+# CLZ-300 - Optional Public DNS
 
-![Public DNS Optional architecture](../assets/diagrams/network-foundation.svg)
+![Optional Public DNS architecture](../assets/diagrams/global-routing.svg)
 
-## Overview
-An optional public DNS zone controlled by a boolean variable.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Model an Azure public DNS zone safely: the default creates no zone, while an explicit opt-in requires a domain you actually own and never accepts `example.com`.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-290.
+- To enable creation, own a real public domain and understand registrar delegation.
+- Do not change registrar name servers merely to finish the lesson.
+
+## Architecture
+
+A boolean controls whether Terraform creates one Azure DNS zone. When disabled, only the lesson resource group is managed. When enabled, Azure returns authoritative name servers, but public resolution occurs only after the domain owner delegates the zone at the registrar.
+
+## Resources And Cost
+
+**Relative cost: Low.** Azure DNS hosted zones and queries are low cost; registrar/domain charges are external.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | Public DNS zone pattern |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz300-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Resource group | Always created for lifecycle consistency. |
+| Optional public DNS zone | Created only when explicitly enabled with a non-placeholder owned domain. |
+| Authoritative name servers | Outputs used for deliberate external delegation; Terraform does not change the registrar. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Model optional resources; expose name server outputs; avoid creating domains accidentally.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `public-dns.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for Azure plan, apply, and destroy; use the exact subscription GUID. |
+| `environment` | Keep `dev` for the lab unless testing another environment boundary. |
+| `location` | Select a supported region with sufficient quota. |
+| `name_prefix` | Use a short lowercase prefix. |
+| `create_public_dns_zone` | Keep `false` for the safe path; set `true` only when you own and intend to manage the domain. |
+| `dns_zone_name` | Replace `example.com` with the owned apex domain before enabling creation; placeholder use is rejected. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, domains, endpoint names, and secrets in untracked local files or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz300`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-300-public-dns-optional
+Copy-Item terraform.tfvars.example terraform.tfvars -ErrorAction SilentlyContinue
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+The default applies only the resource group. Enabling the zone is a separate, deliberate run after editing both public-DNS inputs.
+
+## Validate
+
+```powershell
+terraform output -json public_dns_name_servers
+terraform plan -var "subscription_id=$subscriptionId" -var 'create_public_dns_zone=true' -var 'dns_zone_name=example.com'
+$resourceGroup = terraform output -raw resource_group_name
+az network dns zone list --resource-group $resourceGroup --query '[].{name:name,nameServers:nameServers}' --output json
+```
+
+Expected result:
+
+- Default mode returns an empty name-server list and creates no DNS zone.
+- The deliberately unsafe `example.com` enablement fails before Azure is changed.
+- Enabled owned-domain mode returns Azure authoritative name servers; public lookup still requires registrar delegation.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| The safety check rejects the plan | Use an owned domain, or keep zone creation disabled. |
+| The zone exists but Internet DNS does not resolve | Compare registrar delegation with the Azure name-server output and allow for DNS TTL/propagation. |
+| A parent zone is already managed elsewhere | Coordinate delegation; do not create conflicting authorities. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Create remote state storage.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+az group exists --name $resourceGroup
+```
+
+The optional zone and resource group are deleted. Restore registrar delegation separately if you changed it; Terraform does not own that external state.
+
+## Production Delta
+
+- Protect DNS changes with review, least privilege, activity logs, DNSSEC decisions, and documented registrar ownership.
+- Use separate zones/subdomains per environment and test delegation/rollback before production cutover.
+
+## Exercises
+
+1. Run the default plan and prove there is no `azurerm_dns_zone` change.
+2. With a domain you own, plan (but do not apply) enabled creation and identify the external delegation step.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-290 - Private DNS](../CLZ-290-private-dns/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-310 - Remote State Storage &rarr;](../CLZ-310-remote-state-storage/README.md)
+<!-- lesson-navigation:end -->

@@ -4,7 +4,8 @@ This roadmap keeps the project moving toward a polished Azure learning experienc
 
 ## Current Focus
 
-- Keep every lesson independently readable and deployable.
+- Keep every lesson independently readable, and keep Azure deployments
+  self-contained except for explicitly taught dependencies such as CLZ-310/320.
 - Strengthen private access, secret handling, cleanup, and cost awareness.
 - Keep diagrams aligned with the Terraform patterns.
 - Maintain local and GitHub Actions quality gates.

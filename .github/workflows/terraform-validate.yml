@@ -2,12 +2,6 @@ name: repo-quality
 
 on:
   workflow_dispatch:
-    inputs:
-      run_safe_plans:
-        description: Run optional backend-free plan checks for lessons that do not depend on owned DNS or existing remote state.
-        required: false
-        type: boolean
-        default: false
   pull_request:
   push:
     branches:
@@ -16,128 +10,144 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: repo-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TERRAFORM_VERSION: 1.15.8
+  TFLINT_VERSION: 0.63.1
+  TRIVY_VERSION: 0.72.0
+  NODE_VERSION: 24
+
 jobs:
   terraform-validate:
-    name: Terraform format and validate
+    name: Terraform format, lock, validate, and test
     runs-on: windows-latest
+    timeout-minutes: 25
     defaults:
       run:
         shell: pwsh
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: false
 
-      - name: Terraform format and validate
+      - name: Prepare Terraform provider cache
+        run: |
+          $cacheDirectory = Join-Path $env:RUNNER_TEMP "terraform-plugin-cache"
+          New-Item -ItemType Directory -Force -Path $cacheDirectory | Out-Null
+          Add-Content -Path $env:GITHUB_ENV -Value "TF_PLUGIN_CACHE_DIR=$cacheDirectory"
+
+      - name: Restore Terraform provider cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ runner.temp }}/terraform-plugin-cache
+          key: terraform-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
+
+      - name: Terraform format, validate, and mock test
         run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -Terraform -ReportPath artifacts\quality-terraform-report.json
 
       - name: Upload Terraform reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: terraform-validation-reports
           path: artifacts/*.json
           if-no-files-found: warn
+          retention-days: 7
 
-  repo-docs:
-    name: Repository docs
+  repository-quality:
+    name: Documentation, PowerShell, tests, and workflows
     runs-on: windows-latest
+    timeout-minutes: 20
     defaults:
       run:
         shell: pwsh
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - name: Repository documentation and script checks
-        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -Docs -ReportPath artifacts\quality-docs-report.json
+      - name: Install pinned PowerShell modules
+        run: |
+          Install-Module PSScriptAnalyzer -RequiredVersion 1.25.0 -Scope CurrentUser -Force
+          Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -AllowClobber
 
-      - name: Upload docs reports
+      - name: Install verified actionlint
+        run: |
+          $uri = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_windows_amd64.zip"
+          $archive = Join-Path $env:RUNNER_TEMP "actionlint.zip"
+          Invoke-WebRequest -Uri $uri -OutFile $archive
+          $actualHash = (Get-FileHash -Algorithm SHA256 $archive).Hash.ToLowerInvariant()
+          $expectedHash = "6e7241b51e6817ea6a047693d8e6fed13b31819c9a0dd6c5a726e1592d22f6e9"
+          if ($actualHash -ne $expectedHash) { throw "actionlint checksum verification failed." }
+          Expand-Archive -Path $archive -DestinationPath (Join-Path $env:RUNNER_TEMP "actionlint") -Force
+          Add-Content -Path $env:GITHUB_PATH -Value (Join-Path $env:RUNNER_TEMP "actionlint")
+
+      - name: Repository quality checks
+        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -Docs -Curriculum -PowerShell -Pester -Actionlint -ReportPath artifacts\quality-repository-report.json
+
+      - name: Upload repository reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: repository-docs-reports
-          path: artifacts/*.json
+          name: repository-quality-reports
+          path: artifacts/*
           if-no-files-found: warn
-
-  powershell-quality:
-    name: PowerShell analysis
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: pwsh
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install PSScriptAnalyzer
-        run: Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
-
-      - name: PowerShell quality checks
-        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -PowerShell -ReportPath artifacts\quality-powershell-report.json
-
-      - name: Upload PowerShell reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: powershell-analysis-reports
-          path: artifacts/*.json
-          if-no-files-found: warn
+          retention-days: 7
 
   markdown-quality:
     name: Markdown lint
     runs-on: windows-latest
+    timeout-minutes: 10
     defaults:
       run:
         shell: pwsh
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: "22"
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Markdown quality checks
         run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -Markdown -ReportPath artifacts\quality-markdown-report.json
 
       - name: Upload Markdown reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: markdownlint-reports
           path: artifacts/*
           if-no-files-found: warn
+          retention-days: 7
 
   terraform-lint:
     name: Terraform lint
     runs-on: windows-latest
+    timeout-minutes: 20
     defaults:
       run:
         shell: pwsh
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_wrapper: false
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v4
+        uses: terraform-linters/setup-tflint@90f302c255ef959cbfb4bd10581afecdb7ece3e6 # v4
         with:
-          tflint_version: v0.63.1
+          tflint_version: v${{ env.TFLINT_VERSION }}
           cache: true
 
       - name: Terraform lint checks
@@ -145,78 +155,42 @@ jobs:
 
       - name: Upload TFLint reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: tflint-reports
           path: artifacts/*
           if-no-files-found: warn
+          retention-days: 7
 
   security-scan:
-    name: Security scan
+    name: Terraform security scan
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Prepare artifacts directory
         run: mkdir -p artifacts
 
-      - name: Trivy config report
-        uses: aquasecurity/trivy-action@0.35.0
+      - name: Trivy configuration gate
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
         with:
           scan-type: config
           scan-ref: .
-          version: v0.69.3
-          ignorefile: .trivyignore
+          version: v${{ env.TRIVY_VERSION }}
+          trivyignores: .trivyignore
           severity: MEDIUM,HIGH,CRITICAL
           format: table
           output: artifacts/trivy-config-report.txt
-          exit-code: "0"
-
-      - name: Trivy critical gate
-        uses: aquasecurity/trivy-action@0.35.0
-        with:
-          scan-type: config
-          scan-ref: .
-          version: v0.69.3
-          ignorefile: .trivyignore
-          severity: CRITICAL
-          format: table
           exit-code: "1"
 
       - name: Upload security reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: trivy-security-reports
           path: artifacts/*
           if-no-files-found: warn
-
-  optional-safe-plans:
-    name: Optional safe Terraform plans
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_safe_plans }}
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: pwsh
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_wrapper: false
-
-      - name: Optional safe plan checks
-        run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -PlanSafeLessons -ReportPath artifacts\quality-safe-plans-report.json
-
-      - name: Upload safe plan reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-safe-plan-reports
-          path: artifacts/*.json
-          if-no-files-found: warn
+          retention-days: 7

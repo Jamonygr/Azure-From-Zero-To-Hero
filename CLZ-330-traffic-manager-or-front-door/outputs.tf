@@ -12,3 +12,8 @@ output "traffic_manager_fqdn" {
   value       = azurerm_traffic_manager_profile.web.fqdn
 }
 
+output "traffic_manager_profile_name" {
+  description = "Globally unique Traffic Manager profile name."
+  value       = azurerm_traffic_manager_profile.web.name
+}
+

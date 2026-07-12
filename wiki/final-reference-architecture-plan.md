@@ -126,10 +126,11 @@ Important lab caveat: purge protection is disabled in this lesson so learners ca
 Run the capstone from `CLZ-390-final-windows-reference-architecture`:
 
 ```powershell
-terraform init
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
 terraform fmt -check
 terraform validate
-terraform plan -out tfplan
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
 terraform apply tfplan
 terraform output
 ```
@@ -137,15 +138,13 @@ terraform output
 Validate the whole repository from the root:
 
 ```powershell
-.\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -Format -Validate -ReportPath artifacts\terraform-validation-report.json
+.\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -Format -Validate -Test -LockfileReadonly -ReportPath artifacts\terraform-validation-report.json
 .\scripts\Test-AzureFromZeroToHeroDocs.ps1 -ReportPath artifacts\repo-quality-report.json
 ```
 
-When Azure CLI authentication is available, run backend-free safe plans for supported lessons:
-
-```powershell
-.\scripts\Test-AzureFromZeroToHeroTerraform.ps1 -PlanSafeLessons -ReportPath artifacts\terraform-plan-report.json
-```
+Repository automation does not run Azure plans. Use the capstone README and an
+explicit subscription ID for a deliberate local plan. Maintainers can use the
+[manual Azure smoke matrix](manual-azure-smoke-matrix.md) for release evidence.
 
 ## Validation Plan
 
@@ -164,7 +163,7 @@ When Azure CLI authentication is available, run backend-free safe plans for supp
 The capstone creates billable resources, including Windows compute, Load Balancer, Bastion, Key Vault, Public IPs, and Log Analytics. Keep `instance_count` low during learning, review the plan before apply, and destroy the deployment when validation is complete.
 
 ```powershell
-terraform destroy
+terraform destroy -var "subscription_id=$subscriptionId"
 ```
 
 If a learner needs to preserve evidence before cleanup, capture:
