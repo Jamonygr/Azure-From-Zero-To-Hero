@@ -196,9 +196,12 @@ jobs:
         uses: terraform-linters/setup-tflint@90f302c255ef959cbfb4bd10581afecdb7ece3e6 # v4
         with:
           tflint_version: v${{ env.TFLINT_VERSION }}
-          cache: true
+          github_token: ${{ github.token }}
 
       - name: Terraform lint checks
+        env:
+          # Authenticate plugin downloads to avoid shared-runner API rate limits.
+          GITHUB_TOKEN: ${{ github.token }}
         run: .\scripts\Test-AzureFromZeroToHeroQuality.ps1 -TerraformLint -ReportPath artifacts\quality-tflint-report.json
 
       - name: Upload TFLint reports
