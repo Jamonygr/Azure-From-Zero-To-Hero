@@ -1,22 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="360" viewBox="0 0 1100 360" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="455" viewBox="0 0 1100 455" role="img" aria-labelledby="title desc">
   <title id="title">Naming and tags</title>
   <desc id="desc">Resource naming parts and standard Azure From Zero To Hero tags.</desc>
-  <style>.bg{fill:#f8fafc}.part{fill:#eef2ff;stroke:#4f46e5;stroke-width:3}.tag{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}</style>
-  <rect class="bg" width="1100" height="360" rx="18"/>
+  <metadata>{"preserves": "labels, coordinates, resource shapes, and service connections", "sourceSha256": "898029037b4c084a7b8e9f32dc3c4a36432144c101655f6f8359855d5f84278e"}</metadata><style>.bg{fill:#080e1b}.part{fill:#1c2041;stroke:#b39bff;stroke-width:3}.tag{fill:#11332f;stroke:#60e0e5;stroke-width:3}.text{font:700 24px "Segoe UI",Arial,sans-serif;fill:#eff5ff}.small{font:18px "Segoe UI",Arial,sans-serif;fill:#bcd0eb}</style>
+  <rect class="bg" width="1100" height="360" rx="18" />
   <text class="text" x="40" y="55">Resource Identity Pattern</text>
   <text class="text" x="260" y="132">clz-dev-clz220-web-lb</text>
   <g transform="translate(120 170)">
-    <rect class="part" width="150" height="80" rx="12"/><text class="text" x="53" y="48">clz</text><text class="small" x="32" y="105">prefix</text>
-    <rect class="part" x="180" width="150" height="80" rx="12"/><text class="text" x="228" y="48">dev</text><text class="small" x="204" y="105">environment</text>
-    <rect class="part" x="360" width="150" height="80" rx="12"/><text class="text" x="400" y="48">clz220</text><text class="small" x="390" y="105">lesson</text>
-    <rect class="part" x="540" width="150" height="80" rx="12"/><text class="text" x="592" y="48">web</text><text class="small" x="579" y="105">workload</text>
-    <rect class="part" x="720" width="150" height="80" rx="12"/><text class="text" x="768" y="48">lb</text><text class="small" x="761" y="105">resource</text>
+    <rect class="part" width="150" height="80" rx="12" /><text class="text" x="53" y="48">clz</text><text class="small" x="32" y="105">prefix</text>
+    <rect class="part" x="180" width="150" height="80" rx="12" /><text class="text" x="228" y="48">dev</text><text class="small" x="204" y="105">environment</text>
+    <rect class="part" x="360" width="150" height="80" rx="12" /><text class="text" x="400" y="48">clz220</text><text class="small" x="390" y="105">lesson</text>
+    <rect class="part" x="540" width="150" height="80" rx="12" /><text class="text" x="592" y="48">web</text><text class="small" x="579" y="105">workload</text>
+    <rect class="part" x="720" width="150" height="80" rx="12" /><text class="text" x="768" y="48">lb</text><text class="small" x="761" y="105">resource</text>
   </g>
   <g transform="translate(775 38)">
-    <rect class="tag" width="270" height="108" rx="12"/>
-    <text class="small" x="22" y="34">Project = Azure From Zero To Hero</text>
+    <rect class="tag" width="270" height="108" rx="12" />
+    <text class="small" x="22" y="34" style="font-size:15px">Project = Azure From Zero To Hero</text>
     <text class="small" x="22" y="62">ManagedBy = Terraform</text>
     <text class="small" x="22" y="90">Lab = CLZ-220</text>
   </g>
-</svg>
-
+<g><rect y="360.0" width="1100.0" height="95" fill="#080e1b" /><g transform="translate(25 373.0) scale(0.75)" fill="none" stroke="#60e0e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 60h39c25 0 25-34 2-37-8-24-40-22-46 1C-3 30 0 60 24 60Z" /><path d="m30 40 12 12 15-22" /></g><g transform="translate(112 373.0) scale(0.75)" fill="none" stroke="#b39bff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="29" y="29" width="26" height="26" rx="5" /><path d="M42 29V12m0 43v17M29 42H12m43 0h17" /><circle cx="42" cy="9" r="5" /><circle cx="42" cy="75" r="5" /><circle cx="9" cy="42" r="5" /><circle cx="75" cy="42" r="5" /></g><text x="210" y="402.0" fill="#eaf2ff" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="500">Azure + Terraform learning architecture</text><text x="210" y="430.0" fill="#bdd0ec" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Follow the lesson for exact resource settings and deployment mode.</text></g></svg>

@@ -62,20 +62,22 @@ $resourceGroup = terraform output -raw resource_group_name
 $workspaceId = terraform output -raw log_analytics_workspace_id
 az monitor log-analytics workspace show --ids $workspaceId --query '{name:name,state:provisioningState,retention:retentionInDays}' --output table
 az monitor action-group list --resource-group $resourceGroup --query '[].{name:name,enabled:enabled}' --output table
-az monitor log-analytics query --workspace $workspaceId --analytics-query 'Heartbeat | take 5' --output table
+$workspaceGuid = az monitor log-analytics workspace show --ids $workspaceId --query customerId --output tsv
+az monitor log-analytics query --workspace $workspaceGuid --analytics-query 'Heartbeat | take 5' --output table
 ```
 
 Expected result:
 
 - The workspace is `Succeeded` with the configured retention.
 - The action group exists and is enabled.
-- The Heartbeat query may be empty because this lesson deliberately attaches no data source.
+- The query uses the workspace GUID (`customerId`), while `workspace show --ids` uses the ARM resource ID.
+- The Heartbeat query may return no rows or report that the table does not exist because this lesson deliberately attaches no data source.
 
 ## Troubleshooting
 
 | Symptom | Resolution |
 |---|---|
-| The query is empty | Expected until a VM/agent and data-collection rule send data; provisioning alone does not create telemetry. |
+| The query is empty or Heartbeat is unavailable | Expected until a VM/agent and data-collection rule send data; provisioning alone does not create telemetry or its tables. |
 | Log query returns authorization failure | Verify workspace query/read roles and the selected tenant. |
 | Notifications do not arrive | An action group alone does nothing; connect it to an alert rule and verify receiver configuration. |
 

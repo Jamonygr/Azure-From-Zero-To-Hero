@@ -1,0 +1,797 @@
+{
+  "lessonId": "CLZ-110",
+  "questions": [
+    {
+      "id": "CLZ110-Q01",
+      "learningObjective": "Choose immutable subscription identifiers",
+      "stem": "Two accessible subscriptions share a display name. What should CLZ-110 use to select the intended one?",
+      "options": {
+        "A": "The shared display name.",
+        "B": "The first region shown.",
+        "C": "The administrator's email alone.",
+        "D": "Its exact subscription GUID."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Names can collide and select the wrong context.",
+        "B": "Regions do not identify subscriptions.",
+        "C": "One identity can access multiple subscriptions.",
+        "D": "The ID avoids ambiguous display-name selection."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q02",
+      "learningObjective": "Distinguish login from selection",
+      "stem": "az login succeeds and lists several subscriptions. What remains necessary before later Terraform deployments?",
+      "options": {
+        "A": "Select and verify the intended subscription.",
+        "B": "Create a VM to discover the subscription.",
+        "C": "Register every resource provider.",
+        "D": "Delete subscriptions you do not need."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Authentication does not replace context verification.",
+        "B": "A read-only context query is sufficient.",
+        "C": "This lesson forbids provider registration.",
+        "D": "Access to other subscriptions does not justify deletion."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q03",
+      "learningObjective": "Read active Azure context",
+      "stem": "Which read-only command reports the currently selected tenant and subscription?",
+      "options": {
+        "A": "az account clear",
+        "B": "az account show",
+        "C": "az group create",
+        "D": "terraform fmt"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That clears cached subscription information.",
+        "B": "Its result exposes the active account context.",
+        "C": "That creates a resource rather than reads context.",
+        "D": "Formatting cannot report Azure account metadata."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q04",
+      "learningObjective": "Interpret readiness-only Terraform",
+      "stem": "What does terraform apply tfplan do with the supplied CLZ-110 configuration?",
+      "options": {
+        "A": "Create a quota request automatically.",
+        "B": "Register Microsoft.Compute.",
+        "C": "Record local outputs without deploying Azure resources.",
+        "D": "Create the first tagged resource group."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Quota checks are explicit read-only CLI commands.",
+        "B": "The configuration does not perform provider registration.",
+        "C": "No resource or Azure provider is declared.",
+        "D": "That starts in CLZ-120."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform apply command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/apply"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q05",
+      "learningObjective": "Evaluate regional quota readiness",
+      "stem": "A target VM family has zero remaining quota in eastus2. What is the appropriate next step?",
+      "options": {
+        "A": "Ignore quota because validate succeeded.",
+        "B": "Change only the resource-group tag.",
+        "C": "Attempt a larger size in the same constrained family.",
+        "D": "Choose an approved alternative or request quota before deployment."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Configuration validity does not create quota.",
+        "B": "Tags do not increase regional vCPU limits.",
+        "C": "That can worsen the shortage.",
+        "D": "Quota is a prerequisite to the later compute exercise."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure VM vCPU quotas",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/quotas"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q06",
+      "learningObjective": "Recognize read-only quota inspection",
+      "stem": "Which CLZ-110 command inspects regional VM usage without requesting a quota change?",
+      "options": {
+        "A": "az vm list-usage --location eastus2",
+        "B": "az vm create --location eastus2",
+        "C": "az group delete --name quota",
+        "D": "terraform destroy"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It reads usage and limits for the chosen region.",
+        "B": "VM creation is a deployment.",
+        "C": "Deleting a group is not a quota read.",
+        "D": "This is a state-driven deletion command."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure VM vCPU quotas",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/quotas"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q07",
+      "learningObjective": "Check permission scope",
+      "stem": "A role appears on a different subscription from the intended lab. What should the learner conclude?",
+      "options": {
+        "A": "Any visible role applies to all subscriptions.",
+        "B": "That assignment may not authorize the lab's target scope.",
+        "C": "Logging in twice expands its scope.",
+        "D": "A matching region name transfers permission."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "RBAC is scoped, not universal.",
+        "B": "RBAC permissions apply at their assigned scope and descendants.",
+        "C": "Authentication does not widen authorization.",
+        "D": "Region names do not transfer role assignments."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q08",
+      "learningObjective": "Handle insufficient access responsibly",
+      "stem": "The user can sign in but cannot read required role information at the learning scope. What is the suitable response?",
+      "options": {
+        "A": "Self-assign Owner without approval.",
+        "B": "Commit another user's access token.",
+        "C": "Ask the subscription owner to review the needed access.",
+        "D": "Remove all scope checks."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The lesson does not authorize privilege elevation.",
+        "B": "Credentials must not be shared in the repository.",
+        "C": "Readiness should be resolved with an authorized scope owner.",
+        "D": "That hides the unresolved access problem."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q09",
+      "learningObjective": "Inspect provider registration safely",
+      "stem": "The readiness command reads Microsoft.Compute registrationState. Which operation stays inside CLZ-110's read-only boundary?",
+      "options": {
+        "A": "az provider register --namespace Microsoft.Compute",
+        "B": "terraform apply an Azure VM",
+        "C": "az group create --name readiness",
+        "D": "az provider show --namespace Microsoft.Compute"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Registration changes subscription configuration.",
+        "B": "The lesson's Terraform has no VM resource.",
+        "C": "Resource creation is outside this lesson.",
+        "D": "Show reads provider metadata without registering it."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q10",
+      "learningObjective": "Separate tenant and subscription",
+      "stem": "Why inspect both tenantId and id in az account show?",
+      "options": {
+        "A": "They describe different identity and deployment boundaries.",
+        "B": "The values must always be identical.",
+        "C": "The tenant identifies the VM size.",
+        "D": "The subscription identifies a single Azure region."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A subscription ID is not a substitute for tenant context.",
+        "B": "They identify different Azure entities.",
+        "C": "A tenant is an identity directory, not compute sizing.",
+        "D": "A subscription can use multiple regions."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q11",
+      "learningObjective": "Understand subscription state",
+      "stem": "The selected subscription reports a state other than Enabled. What is the safe readiness decision?",
+      "options": {
+        "A": "Assume Terraform will enable it automatically.",
+        "B": "Resolve the subscription state before proceeding.",
+        "C": "Change the environment tag to prod.",
+        "D": "Delete all local .tf files."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Provider initialization does not repair subscription state.",
+        "B": "The expected usable context is Enabled.",
+        "C": "A tag does not enable billing or subscription access.",
+        "D": "That does not address subscription eligibility."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q12",
+      "learningObjective": "Use explicit subscription selection",
+      "stem": "Which command changes the CLI's active subscription to the stored GUID?",
+      "options": {
+        "A": "az account show --subscription $env:ARM_SUBSCRIPTION_ID",
+        "B": "terraform output subscription_id",
+        "C": "az account set --subscription $env:ARM_SUBSCRIPTION_ID",
+        "D": "az login --location eastus2"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Show is a read, not the documented context-selection step.",
+        "B": "Reading an output does not change Azure CLI context.",
+        "C": "Set selects the specified subscription context.",
+        "D": "A region is not a subscription selection argument."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q13",
+      "learningObjective": "Understand optional local input",
+      "stem": "CLZ-110 subscription_id is null. What does the generated subscription_source output indicate?",
+      "options": {
+        "A": "A new subscription has been created.",
+        "B": "All accessible subscriptions will be changed.",
+        "C": "The tenant ID is used as a subscription ID.",
+        "D": "The readiness checks rely on active Azure CLI subscription context."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The module declares no subscription resource.",
+        "B": "Its generated commands remain explicit reads.",
+        "C": "These identifiers have distinct meanings.",
+        "D": "The local configuration labels the source accordingly."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q14",
+      "learningObjective": "Identify manual command execution",
+      "stem": "The readiness_commands output contains an az login string. Does displaying it log the learner in?",
+      "options": {
+        "A": "No; the learner must execute the command explicitly.",
+        "B": "Yes, outputs execute each line automatically.",
+        "C": "Only if the string contains a subscription ID.",
+        "D": "Yes, but only in the Azure Portal."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Terraform is emitting text, not invoking the Azure CLI.",
+        "B": "Output values are not shell execution hooks.",
+        "C": "Including an identifier does not execute text.",
+        "D": "The portal does not execute local Terraform outputs."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q15",
+      "learningObjective": "Interpret region availability reads",
+      "stem": "az account list-locations returns eastus2. What additional check is still needed for a planned Windows VM?",
+      "options": {
+        "A": "A new environment tag called eastus2.",
+        "B": "The relevant VM-family quota and size availability.",
+        "C": "A resource-group deletion test in every region.",
+        "D": "A second copy of the README."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A tag does not prove quota.",
+        "B": "Region listing alone is not a compute capacity guarantee.",
+        "C": "Destructive tests are not part of readiness.",
+        "D": "Duplicating documentation provides no capacity evidence."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure regions overview",
+          "url": "https://learn.microsoft.com/en-us/azure/reliability/regions-overview"
+        },
+        {
+          "title": "Azure VM vCPU quotas",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/quotas"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q16",
+      "learningObjective": "Verify CLI tool readiness",
+      "stem": "A workstation runs Terraform but az is not recognized. What prerequisite is missing for CLZ-110's Azure checks?",
+      "options": {
+        "A": "An AzureRM resource block.",
+        "B": "A VM public IP.",
+        "C": "Azure CLI available on PATH.",
+        "D": "A remote-state container."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The readiness module intentionally has none.",
+        "B": "No VM is deployed here.",
+        "C": "The manual read-only commands require that executable.",
+        "D": "This lesson has no remote backend."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q17",
+      "learningObjective": "Apply least privilege",
+      "stem": "Which production onboarding choice matches the lesson's guidance?",
+      "options": {
+        "A": "Make every learner a permanent subscription Owner.",
+        "B": "Share one personal token across the team.",
+        "C": "Disable role review once login succeeds.",
+        "D": "Use least-privilege groups and workload identities."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That grants unnecessary authority.",
+        "B": "Shared personal credentials undermine accountability.",
+        "C": "Authentication does not establish appropriate scope.",
+        "D": "Avoid broad personal credentials for automation."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q18",
+      "learningObjective": "Interpret credential-free initialization",
+      "stem": "Why can CLZ-110's Terraform configuration be initialized before az login?",
+      "options": {
+        "A": "It declares no Azure provider or resources.",
+        "B": "Terraform caches every Azure token in the source.",
+        "C": "init creates an anonymous Azure subscription.",
+        "D": "Quota information is baked into Terraform itself."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The Azure checks are separate manually executed commands.",
+        "B": "The source does not contain such credentials.",
+        "C": "Initialization cannot provision an anonymous subscription.",
+        "D": "Live quota is queried through CLI reads."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform initialization",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q19",
+      "learningObjective": "Understand environment cleanup",
+      "stem": "What does Remove-Item Env:ARM_SUBSCRIPTION_ID remove in the documented cleanup?",
+      "options": {
+        "A": "The Azure subscription itself.",
+        "B": "The current PowerShell process's environment variable.",
+        "C": "Every RBAC role assigned to the user.",
+        "D": "All Azure CLI authentication caches."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Removing an environment variable does not delete a subscription.",
+        "B": "It clears the local selection input for later commands.",
+        "C": "RBAC assignments are separate Azure objects.",
+        "D": "The variable is not the complete CLI credential cache."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q20",
+      "learningObjective": "Separate read-only actions from local settings",
+      "stem": "az account set changes the active CLI context. How should that action be classified?",
+      "options": {
+        "A": "A VM deployment in the selected region.",
+        "B": "A role assignment that grants Contributor.",
+        "C": "A local context selection without Azure resource deployment.",
+        "D": "A backend migration."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "No VM is created.",
+        "B": "Context selection does not grant authorization.",
+        "C": "It affects subsequent command targeting, not resource provisioning.",
+        "D": "Terraform state is not moved by this CLI command."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q21",
+      "learningObjective": "Match quota checks to workload",
+      "stem": "CLZ-190 will use a particular VM family. Which quota row matters in CLZ-110?",
+      "options": {
+        "A": "Only the quota row for an unrelated region.",
+        "B": "The number of resource-group tags.",
+        "C": "The Terraform version number.",
+        "D": "The corresponding family in the chosen region."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Regional limits are independently relevant.",
+        "B": "Tags are not vCPU capacity.",
+        "C": "Terraform versions do not determine subscription quota.",
+        "D": "Family-specific regional limits can constrain deployment."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure VM vCPU quotas",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/quotas"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q22",
+      "learningObjective": "Treat syntax checks as limited evidence",
+      "stem": "An optional subscription_id string passes the GUID validation. What has been proven?",
+      "options": {
+        "A": "The value matches the configured GUID format.",
+        "B": "The user is Contributor on that subscription.",
+        "C": "The subscription is Enabled.",
+        "D": "The region has spare quota."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The regex does not prove account access or subscription existence.",
+        "B": "Formatting is not an RBAC query.",
+        "C": "Only Azure context reads confirm its state.",
+        "D": "Quota is a different readiness check."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q23",
+      "learningObjective": "Compare accessible subscriptions",
+      "stem": "The exercise repeats readiness against a second subscription. Which comparison is most useful?",
+      "options": {
+        "A": "Only the README heading.",
+        "B": "Subscription ID, tenant, role scope, and regional quota.",
+        "C": "Only the subscription's display name.",
+        "D": "Only the current local file size."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The heading does not vary with account context.",
+        "B": "These facts determine deployment context and permissions.",
+        "C": "Names can repeat; IDs, tenant, scope, and quota provide stronger evidence.",
+        "D": "File size does not validate cloud context."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        },
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q24",
+      "learningObjective": "Handle stale CLI authentication",
+      "stem": "An account metadata query reports an expired authentication session. What is the appropriate repair?",
+      "options": {
+        "A": "Hardcode the expired token into Terraform.",
+        "B": "Create an Azure resource to refresh the token.",
+        "C": "Reauthenticate with az login and verify context again.",
+        "D": "Disable all Azure permission checks."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Expired credentials remain invalid and should not be committed.",
+        "B": "A deployment is unnecessary and may fail.",
+        "C": "Restoring a valid session does not remove the need to check the target.",
+        "D": "The authentication failure remains unresolved."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q25",
+      "learningObjective": "Avoid authorization assumptions",
+      "stem": "Which statement correctly relates Azure sign-in and resource creation permissions?",
+      "options": {
+        "A": "Every authenticated account has Owner.",
+        "B": "Read permission automatically includes write permission.",
+        "C": "Quota availability grants Contributor.",
+        "D": "Successful authentication does not guarantee create permission."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Login does not grant universal administration.",
+        "B": "Role actions distinguish reads and writes.",
+        "C": "Capacity and authorization are independent.",
+        "D": "RBAC must authorize the action at the target scope."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q26",
+      "learningObjective": "Use current account evidence",
+      "stem": "A learner remembers last week's selected subscription. What is the best evidence immediately before deployment?",
+      "options": {
+        "A": "A fresh az account show result checked against the intended GUID.",
+        "B": "The name in an old CLI export.",
+        "C": "The default environment=dev input.",
+        "D": "The Terraform configuration's filename."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Local context can change between sessions.",
+        "B": "An old export may not reflect current active context.",
+        "C": "Environment labels do not select subscriptions.",
+        "D": "The filename does not authenticate the account."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q27",
+      "learningObjective": "Understand no-resource cleanup",
+      "stem": "After CLZ-110, should the learner issue Azure deletions to remove its readiness reads?",
+      "options": {
+        "A": "Yes, delete the selected subscription.",
+        "B": "No; the reads created no Azure resources.",
+        "C": "Yes, delete every resource in eastus2.",
+        "D": "Yes, revoke all roles shown."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That is unrelated and destructive.",
+        "B": "Only local artifacts and configuration inputs need attention.",
+        "C": "Readiness queries do not establish ownership of those objects.",
+        "D": "Role reads do not create the assignments."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q28",
+      "learningObjective": "Use an explicit plan boundary",
+      "stem": "What prevents a Terraform-only CLZ-110 plan from creating an Azure VM?",
+      "options": {
+        "A": "A standard tag called ManagedBy.",
+        "B": "The success of terraform validate alone.",
+        "C": "The module contains no VM resource or Azure provider.",
+        "D": "A special free Azure region."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Metadata is not a global deployment block.",
+        "B": "Validation does not globally prevent cloud changes; this module's absence of resources does.",
+        "C": "Behavior follows actual configuration, not the lesson title.",
+        "D": "No region makes VM resources inherently nonexistent."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q29",
+      "learningObjective": "Recognize readiness cost classification",
+      "stem": "Why is CLZ-110 classified as having no deployed-resource cost?",
+      "options": {
+        "A": "Every Azure CLI command is always free of resource changes.",
+        "B": "All Windows VMs are free during learning.",
+        "C": "Tags automatically waive Azure billing.",
+        "D": "It uses local outputs and read-only control-plane checks."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "CLI includes deployment and deletion commands too.",
+        "B": "Later Windows deployments incur costs.",
+        "C": "Tagging does not eliminate service charges.",
+        "D": "It provisions no VM, disk, gateway, or storage resource."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ110-Q30",
+      "learningObjective": "Plan responsible onboarding",
+      "stem": "Which addition matches a production-ready process beyond the lab's basic reads?",
+      "options": {
+        "A": "Approved region, quota, policy, and budget review.",
+        "B": "Skip checks when the account is an Owner.",
+        "C": "Allow any region without organizational review.",
+        "D": "Skip quota review for small VM sizes."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The production delta adds governance around deployment readiness.",
+        "B": "High privilege does not remove cost or capacity constraints.",
+        "C": "The lesson calls for approved regions.",
+        "D": "Even small sizes can exceed regional family or total limits."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure VM vCPU quotas",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/quotas"
+        },
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

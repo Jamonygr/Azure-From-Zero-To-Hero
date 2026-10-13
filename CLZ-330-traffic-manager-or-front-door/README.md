@@ -16,6 +16,8 @@ Route clients to two real HTTPS endpoints with priority-based Azure Traffic Mana
 
 Traffic Manager publishes a globally unique DNS name with a stable random suffix. DNS priority routing returns the primary healthy endpoint and fails over to the secondary based on HTTPS probes. Traffic Manager does not proxy traffic, terminate TLS, cache content, or provide WAF.
 
+The distinct-endpoint `check` reports a warning without blocking apply. Stop and resolve warnings before applying. To browse through the profile hostname over HTTPS, the endpoint must also serve that hostname with a valid certificate and correct host routing; an `Online` probe alone does not prove that configuration.
+
 ## Resources And Cost
 
 **Relative cost: Low.** Traffic Manager charges by DNS query and endpoint health check; the external endpoints have their own costs.
@@ -64,6 +66,7 @@ terraform apply tfplan
 $profile = terraform output -raw traffic_manager_profile_name
 $fqdn = terraform output -raw traffic_manager_fqdn
 Resolve-DnsName $fqdn
+# Run only after configuring the profile hostname and its TLS certificate on the endpoints:
 Invoke-WebRequest -Uri "https://$fqdn/" -UseBasicParsing | Select-Object StatusCode,BaseResponse
 az network traffic-manager endpoint list --resource-group (terraform output -raw resource_group_name) --profile-name $profile --type externalEndpoints --query '[].{name:name,target:target,status:endpointMonitorStatus,priority:priority}' --output table
 ```
@@ -79,6 +82,7 @@ Expected result:
 | Symptom | Resolution |
 |---|---|
 | An endpoint remains Degraded | Test public HTTPS `/`, certificate validity, status code, firewall policy, and the exact host name. |
+| HTTPS through the profile hostname fails while probes are Online | Configure that hostname and a valid certificate at the endpoint. Do not bypass TLS validation. |
 | Failover appears slow | Account for probe detection, the profile TTL, and client/recursive resolver caching. |
 | The FQDN changes unexpectedly | Check whether `random_string.suffix` state was lost or intentionally replaced. |
 

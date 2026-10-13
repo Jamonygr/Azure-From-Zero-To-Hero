@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-330",
+  "questions": [
+    {
+      "id": "CLZ330-Q01",
+      "learningObjective": "DNS routing boundary",
+      "stem": "A browser resolves the CLZ-330 profile. Where does its HTTP connection go?",
+      "options": {
+        "A": "Through a Traffic Manager HTTP proxy",
+        "B": "Directly to the selected endpoint",
+        "C": "Through the Terraform workstation",
+        "D": "Through a Traffic Manager WAF"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Traffic Manager does not proxy HTTP.",
+        "B": "Traffic Manager answers DNS; the endpoint receives application traffic.",
+        "C": "Terraform is not a client traffic relay.",
+        "D": "This profile has no WAF."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Traffic Manager overview",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q02",
+      "learningObjective": "Priority selection",
+      "stem": "Both endpoints are healthy. Which target should a fresh priority-routing DNS decision prefer?",
+      "options": {
+        "A": "Secondary with priority 2",
+        "B": "The longest resource name",
+        "C": "Both in round-robin order",
+        "D": "Primary with priority 1"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Priority 2 is the backup.",
+        "B": "Names do not rank targets.",
+        "C": "Round robin is not configured.",
+        "D": "Lower numeric priority wins."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Traffic Manager routing methods",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-routing-methods"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q03",
+      "learningObjective": "Failover prerequisites",
+      "stem": "The primary fails while the secondary stays healthy. What precedes health-based failover?",
+      "options": {
+        "A": "Monitoring detects primary failure",
+        "B": "Terraform deletes the primary registration",
+        "C": "The client reinstalls Azure CLI",
+        "D": "The backup acquires priority 0"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Routing uses observed health.",
+        "B": "Deleting the registration is unnecessary.",
+        "C": "CLI installation does not control health.",
+        "D": "Priority 2 already provides backup preference."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Traffic Manager endpoint monitoring",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-monitoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q04",
+      "learningObjective": "DNS timing",
+      "stem": "Some clients reach the failed primary after the monitor detects failure. What explains this?",
+      "options": {
+        "A": "Standard Load Balancer ignores probes",
+        "B": "Priority permanently binds users",
+        "C": "Cached DNS answers can outlive the health transition",
+        "D": "HTTPS bypasses DNS"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "This lesson does not deploy a Load Balancer.",
+        "B": "No permanent user binding is provided.",
+        "C": "Resolver and client caching delays observed changes.",
+        "D": "HTTPS still resolves hostnames."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "How Traffic Manager works",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-how-it-works"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q05",
+      "learningObjective": "Health probe configuration",
+      "stem": "Which behavior satisfies this lesson's configured endpoint probe?",
+      "options": {
+        "A": "SSH banner on port 22",
+        "B": "HTTP only at /admin on port 80",
+        "C": "Healthy HTTPS response on port 443 at /",
+        "D": "SQL login on port 1433"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "SSH is the wrong protocol.",
+        "B": "Protocol, port, and path differ.",
+        "C": "The monitor explicitly uses HTTPS, 443, and /.",
+        "D": "SQL is unrelated to the monitor."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Traffic Manager endpoint monitoring",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-monitoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q06",
+      "learningObjective": "Hostname input",
+      "stem": "Which input format matches primary_endpoint_fqdn in CLZ-330?",
+      "options": {
+        "A": "Real public hostname without a scheme",
+        "B": "Full https:// URL with a path",
+        "C": "Private 10.40.x.x address",
+        "D": "Resource-group display name"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The variable holds the endpoint host.",
+        "B": "A URL is not just a hostname.",
+        "C": "This pattern requires public endpoints.",
+        "D": "A resource group is not a DNS target."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Traffic Manager overview",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q07",
+      "learningObjective": "Public reachability",
+      "stem": "A proposed target is reachable only inside a private VNet. Why is it unsuitable here?",
+      "options": {
+        "A": "Every endpoint must run Linux",
+        "B": "Terraform cannot store private strings",
+        "C": "Targets must share the profile's region",
+        "D": "Public probes and Internet clients cannot reach that private-only target"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The OS is not the constraint.",
+        "B": "String storage is unrelated.",
+        "C": "External endpoints need not share a region.",
+        "D": "This lesson assumes publicly reachable HTTPS services."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Traffic Manager endpoint monitoring",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-monitoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q08",
+      "learningObjective": "Distinct target intent",
+      "stem": "Both endpoint variables contain the same hostname. What should happen before applying?",
+      "options": {
+        "A": "Apply because two registrations provide redundancy",
+        "B": "Stop and supply genuinely distinct services",
+        "C": "Change only the endpoint resource label",
+        "D": "Disable monitoring to hide the warning"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Both entries still reference one dependency.",
+        "B": "Two entries do not create independent services.",
+        "C": "The resource label does not change the target.",
+        "D": "That weakens monitoring without repairing redundancy."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform configuration validation",
+          "url": "https://developer.hashicorp.com/terraform/language/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q09",
+      "learningObjective": "Check warning semantics",
+      "stem": "The distinct_endpoints check assertion fails. What does that check block itself do?",
+      "options": {
+        "A": "Reports a warning without blocking the operation",
+        "B": "Guarantees apply cannot proceed",
+        "C": "Rewrites the secondary hostname",
+        "D": "Disables both endpoints"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The learner must heed the warning and correct inputs.",
+        "B": "Checks are advisory, unlike blocking conditions.",
+        "C": "Checks do not rewrite variables.",
+        "D": "No endpoint-state mutation is defined."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform configuration validation",
+          "url": "https://developer.hashicorp.com/terraform/language/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q10",
+      "learningObjective": "TLS hostname boundary",
+      "stem": "DNS and probes work, but HTTPS to the trafficmanager.net profile fails certificate validation. What needs review?",
+      "options": {
+        "A": "Only resource-group location",
+        "B": "Terraform indentation",
+        "C": "Endpoint certificate and host configuration for the client-used hostname",
+        "D": "The primary's priority number"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Location cannot fix a certificate name.",
+        "B": "Formatting cannot repair TLS identity.",
+        "C": "DNS selection does not add certificate coverage.",
+        "D": "Priority does not change certificates."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "How Traffic Manager works",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-how-it-works"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q11",
+      "learningObjective": "Probe evidence limits",
+      "stem": "Both endpoints show Online. What conclusion is justified?",
+      "options": {
+        "A": "Traffic Manager terminates browser TLS",
+        "B": "Configured probes are healthy; real client-hostname requests still need testing",
+        "C": "All authenticated transactions work",
+        "D": "All resolver caches are current"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Traffic Manager does not terminate client TLS.",
+        "B": "Probe success is narrower than end-to-end evidence.",
+        "C": "A simple probe cannot test every transaction.",
+        "D": "Monitoring does not inspect every cache."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Traffic Manager endpoint monitoring",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-monitoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q12",
+      "learningObjective": "Front Door fit",
+      "stem": "An application needs a global reverse proxy, WAF, and managed TLS. Which comparison fits?",
+      "options": {
+        "A": "Add endpoint priorities",
+        "B": "Change the random suffix",
+        "C": "Increase DNS record count",
+        "D": "Evaluate Azure Front Door"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Priorities cannot create a proxy.",
+        "B": "Naming cannot provide WAF.",
+        "C": "DNS records do not terminate TLS.",
+        "D": "Front Door provides application-layer capabilities."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Traffic Manager overview",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q13",
+      "learningObjective": "Endpoint lifecycle",
+      "stem": "After CLZ-330 destroy, what happens to the independently hosted target applications?",
+      "options": {
+        "A": "They are deleted automatically",
+        "B": "Their disks become state blobs",
+        "C": "They move to the profile's group",
+        "D": "They remain"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "DNS registration is not service ownership.",
+        "B": "No conversion exists.",
+        "C": "No migration is configured.",
+        "D": "The lesson owns registrations, not application hosting."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Traffic Manager overview",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q14",
+      "learningObjective": "Stable global naming",
+      "stem": "The profile FQDN stays unchanged on no-change plans. What contributes to this?",
+      "options": {
+        "A": "Suffix regenerated per lookup",
+        "B": "Random suffix value retained in state",
+        "C": "Browser stores the resource name",
+        "D": "Endpoint certificate supplies the suffix"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "DNS lookups do not run Terraform.",
+        "B": "Persisted random state stabilizes naming.",
+        "C": "Browser data does not own the resource.",
+        "D": "The suffix is a separate random resource."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q15",
+      "learningObjective": "Lost state consequences",
+      "stem": "Lost suffix state causes a profile replacement proposal. What should precede apply?",
+      "options": {
+        "A": "Apply because published names never matter",
+        "B": "Overwrite the suffix directly in Azure",
+        "C": "Review state recovery and consumer impact",
+        "D": "Remove the endpoint certificate"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Hostnames can be part of consumer configuration.",
+        "B": "Manual edits do not recover Terraform ownership.",
+        "C": "Consumers may depend on the existing FQDN.",
+        "D": "Certificates do not repair state."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q16",
+      "learningObjective": "TTL interpretation",
+      "stem": "The profile has ttl=60. What does that control?",
+      "options": {
+        "A": "Advertised DNS-answer caching lifetime",
+        "B": "Maximum HTTPS session length",
+        "C": "Terraform initialization timeout",
+        "D": "VM reboot interval"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "TTL guides DNS caching.",
+        "B": "Sessions have independent lifetimes.",
+        "C": "Initialization is unrelated.",
+        "D": "No VM reboot schedule is configured."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "How Traffic Manager works",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-how-it-works"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q17",
+      "learningObjective": "Probe diagnosis",
+      "stem": "One target is Degraded. Which investigation follows this lesson?",
+      "options": {
+        "A": "Delete the healthy backup",
+        "B": "Test its public HTTPS host, port, and path",
+        "C": "Disable every certificate",
+        "D": "Add more tags"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That reduces resilience.",
+        "B": "Inspect the path actually monitored.",
+        "C": "It does not diagnose the configured path.",
+        "D": "Tags do not repair responses."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Traffic Manager endpoint monitoring",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-monitoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q18",
+      "learningObjective": "Failure drill safety",
+      "stem": "Which exercise measures failover with a bounded service impact?",
+      "options": {
+        "A": "Stop the primary in a disposable test environment and observe health plus DNS timing",
+        "B": "Disable the production subscription",
+        "C": "Purge every tenant DNS cache",
+        "D": "Destroy both targets together"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Scoped nonproduction testing demonstrates the timing.",
+        "B": "The blast radius is excessive.",
+        "C": "No tenant-wide client-cache control exists.",
+        "D": "Removing both targets cannot prove successful failover."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Traffic Manager endpoint monitoring",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-monitoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q19",
+      "learningObjective": "External endpoint support",
+      "stem": "One service is in Azure and one at another public provider. Can external endpoints represent both?",
+      "options": {
+        "A": "No, they must share an Azure region",
+        "B": "Only after installing a Traffic Manager agent",
+        "C": "Only if both run Windows 2022",
+        "D": "Yes, if both satisfy public HTTPS requirements"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Their location is not constrained that way.",
+        "B": "No application agent is required.",
+        "C": "The OS is not specified here.",
+        "D": "External targets can be outside Azure."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Traffic Manager overview",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q20",
+      "learningObjective": "Routing policy choice",
+      "stem": "Which policy expresses a preferred primary plus backup service?",
+      "options": {
+        "A": "Weighted",
+        "B": "Geographic",
+        "C": "Priority",
+        "D": "Subnet"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Weighted expresses relative distribution.",
+        "B": "Geographic maps DNS-request geography.",
+        "C": "Priority gives ordered failover.",
+        "D": "Subnet maps DNS-request source ranges."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Traffic Manager routing methods",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-routing-methods"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q21",
+      "learningObjective": "Priority number meaning",
+      "stem": "Why does the primary have priority 1 and secondary priority 2?",
+      "options": {
+        "A": "Smaller numbers have higher preference",
+        "B": "Numbers specify HTTPS ports",
+        "C": "Larger numbers receive more traffic",
+        "D": "Priority 2 enables TLS termination"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The numbers order healthy targets.",
+        "B": "Port is configured separately.",
+        "C": "That confuses priority with weights.",
+        "D": "Priority cannot terminate TLS."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Traffic Manager routing methods",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-routing-methods"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q22",
+      "learningObjective": "Cost boundary",
+      "stem": "Beyond profile queries and health checks, what cost should the estimate include?",
+      "options": {
+        "A": "One mandatory VM per DNS client",
+        "B": "Terraform licensing per DNS answer",
+        "C": "Automatically installed Front Door WAF",
+        "D": "Independently hosted endpoint services"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Traffic Manager deploys no client VMs.",
+        "B": "DNS replies do not license Terraform.",
+        "C": "The lesson does not deploy Front Door.",
+        "D": "Targets have separate hosting costs."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Traffic Manager overview",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q23",
+      "learningObjective": "Read-only verification",
+      "stem": "Which documented command reads endpoint priorities and monitor states?",
+      "options": {
+        "A": "terraform destroy",
+        "B": "terraform apply tfplan",
+        "C": "az network traffic-manager endpoint list",
+        "D": "az group delete"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Destroy changes resources.",
+        "B": "Apply executes changes.",
+        "C": "The list operation reads endpoint metadata.",
+        "D": "Group deletion is destructive."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Traffic Manager endpoint monitoring",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-monitoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q24",
+      "learningObjective": "Plan review scope",
+      "stem": "A plan unexpectedly changes the secondary target. What must be verified before apply?",
+      "options": {
+        "A": "Only plan-file existence",
+        "B": "Intended host, independence, and public HTTPS behavior",
+        "C": "Only hostname length",
+        "D": "Terminal color settings"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "File existence is not content review.",
+        "B": "These facts determine backup suitability.",
+        "C": "Length does not establish service health.",
+        "D": "Colors provide no deployment evidence."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q25",
+      "learningObjective": "Live connection behavior",
+      "stem": "DNS routing fails over. What happens to an already established client connection because of DNS alone?",
+      "options": {
+        "A": "Its TLS session transfers to the backup",
+        "B": "Terraform copies its socket state",
+        "C": "It is not moved by the DNS decision",
+        "D": "It changes servers without reconnecting"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "There is no TLS-session proxy.",
+        "B": "Terraform does not own client sockets.",
+        "C": "Applications need their own reconnection behavior.",
+        "D": "DNS does not rewrite established connections."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "How Traffic Manager works",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-how-it-works"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q26",
+      "learningObjective": "Client hostname preservation",
+      "stem": "A browser resolves a CNAME. Which host is normally used in its original HTTP Host header?",
+      "options": {
+        "A": "The Terraform resource address",
+        "B": "The hostname in the requested URL",
+        "C": "The subscription display name",
+        "D": "The recursive resolver's hostname"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Resource addresses are not HTTP hosts.",
+        "B": "DNS aliases do not rewrite the requested URL.",
+        "C": "Subscription names do not set Host headers.",
+        "D": "Resolvers answer DNS, not application host selection."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "How Traffic Manager works",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-how-it-works"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q27",
+      "learningObjective": "Application-layer routing",
+      "stem": "A team wants /images and /checkout routed to different services. What is missing?",
+      "options": {
+        "A": "An application-layer router inspecting URL paths",
+        "B": "A larger DNS TTL",
+        "C": "More suffix characters",
+        "D": "Another group tag"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Traffic Manager cannot inspect HTTP request paths.",
+        "B": "TTL does not expose paths.",
+        "C": "Uniqueness does not add path routing.",
+        "D": "Tags are management metadata."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Traffic Manager overview",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q28",
+      "learningObjective": "Input correction timing",
+      "stem": "An unsafe hostname is corrected after saving tfplan. What is the safe next step?",
+      "options": {
+        "A": "Edit terraform show's displayed text",
+        "B": "Assume tfvars edits rewrite tfplan",
+        "C": "Apply the old plan and rely on checks",
+        "D": "Generate and review a new plan"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Display text is not executable plan data.",
+        "B": "Saved plans retain their planned values.",
+        "C": "Checks do not rewrite saved plans.",
+        "D": "A new plan incorporates corrected inputs."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q29",
+      "learningObjective": "DNS evidence limits",
+      "stem": "Resolve-DnsName returns a profile target. Which follow-up exercises the application?",
+      "options": {
+        "A": "Request the intended client URL and inspect the response",
+        "B": "Count group tags",
+        "C": "Run terraform fmt",
+        "D": "Read the plan filename"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The request tests connectivity, TLS, host routing, and response.",
+        "B": "Tags are not application tests.",
+        "C": "Formatting checks source files.",
+        "D": "Names contain no service evidence."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "How Traffic Manager works",
+          "url": "https://learn.microsoft.com/en-us/azure/traffic-manager/traffic-manager-how-it-works"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ330-Q30",
+      "learningObjective": "Cleanup confirmation",
+      "stem": "After CLZ-330 destroy, which remaining check is documented?",
+      "options": {
+        "A": "Remove organization-wide registrar records",
+        "B": "Confirm az group exists returns false for the captured lesson group",
+        "C": "Disable unrelated target HTTPS",
+        "D": "Delete CLZ-310's account"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The lesson does not own all registrar state.",
+        "B": "Readback checks this lesson's resource-group absence.",
+        "C": "Applications are separately owned.",
+        "D": "Backend cleanup is unrelated here."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

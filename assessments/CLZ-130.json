@@ -1,0 +1,825 @@
+{
+  "lessonId": "CLZ-130",
+  "questions": [
+    {
+      "id": "CLZ130-Q01",
+      "learningObjective": "Separate authentication and targeting",
+      "stem": "In CLZ-130, Azure CLI supplies a user token. What pins the AzureRM target subscription?",
+      "options": {
+        "A": "The environment tag.",
+        "B": "var.subscription_id in the provider block.",
+        "C": "The local lesson number.",
+        "D": "The Terraform output filename."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tags describe resources rather than select subscriptions.",
+        "B": "The provider receives an explicit deployment target.",
+        "C": "Lesson identity affects naming, not authentication.",
+        "D": "File naming does not select cloud context."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q02",
+      "learningObjective": "Distinguish identities from permissions",
+      "stem": "Azure CLI can sign in, but resource-group creation returns 403. Which issue is most relevant?",
+      "options": {
+        "A": "HCL indentation alone.",
+        "B": "The README navigation order.",
+        "C": "Authorization at the target Azure scope.",
+        "D": "The resource group's empty cost."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Formatting is not RBAC.",
+        "B": "Navigation does not grant permissions.",
+        "C": "A valid identity can still lack the required action.",
+        "D": "Low cost does not grant create authority."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q03",
+      "learningObjective": "Verify the provider dependency tree",
+      "stem": "Which command displays the provider requirements used by this configuration?",
+      "options": {
+        "A": "terraform output -raw location",
+        "B": "az account list-locations",
+        "C": "terraform destroy",
+        "D": "terraform providers"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That reads a result, not the dependency tree.",
+        "B": "That reads Azure regions.",
+        "C": "That proposes resource removal.",
+        "D": "It identifies provider dependencies."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q04",
+      "learningObjective": "Read subscription evidence in IDs",
+      "stem": "The created group has an Azure ID beginning /subscriptions/<guid>/. What should <guid> match?",
+      "options": {
+        "A": "The intended subscription_id passed to Terraform.",
+        "B": "The region's name.",
+        "C": "The Environment tag.",
+        "D": "The AzureRM version."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The resource ID exposes the actual subscription boundary.",
+        "B": "Region names are not subscription GUIDs.",
+        "C": "That contains an environment label.",
+        "D": "Provider versions do not identify subscriptions."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q05",
+      "learningObjective": "Select unambiguous account context",
+      "stem": "Several subscriptions share the same visible name. Which selector should the learner use?",
+      "options": {
+        "A": "The first alphabetical display name.",
+        "B": "The immutable subscription GUID.",
+        "C": "The closest region.",
+        "D": "The Project tag."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That can identify the wrong subscription.",
+        "B": "It avoids display-name ambiguity.",
+        "C": "Region proximity does not select a subscription.",
+        "D": "A resource tag is not a subscription identity."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q06",
+      "learningObjective": "Inspect access-token readiness",
+      "stem": "Terraform reports an authentication problem after an earlier CLI login. What read helps diagnose the session?",
+      "options": {
+        "A": "az group delete",
+        "B": "terraform fmt -write=true",
+        "C": "az account get-access-token",
+        "D": "Changing ManagedBy to AzureCLI."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Deleting objects is not authentication diagnosis.",
+        "B": "Formatting does not refresh authentication.",
+        "C": "It tests whether CLI can obtain a token for the active context.",
+        "D": "Tag values do not repair tokens."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q07",
+      "learningObjective": "Avoid credential storage in source",
+      "stem": "Which authentication choice matches the interactive CLZ-130 pattern?",
+      "options": {
+        "A": "Put the access token in locals.tf.",
+        "B": "Store a client secret in README.md.",
+        "C": "Use the group name as a password.",
+        "D": "Use the authenticated Azure CLI session."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tokens should not be committed.",
+        "B": "Documentation is not a secret store.",
+        "C": "Resource names are not credentials.",
+        "D": "The provider can use CLI identity without embedding credentials."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q08",
+      "learningObjective": "Understand subscription format checks",
+      "stem": "The input's GUID regex accepts a value. What remains unproven?",
+      "options": {
+        "A": "Whether the identity has access to that subscription.",
+        "B": "Whether it has GUID-shaped text.",
+        "C": "Whether hexadecimal characters are permitted.",
+        "D": "Whether null is supported by the declaration."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "String validation does not query Azure authorization.",
+        "B": "The regex checks that shape.",
+        "C": "The regex explicitly permits them.",
+        "D": "The nullable input allows null."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q09",
+      "learningObjective": "Know provider configuration scope",
+      "stem": "Which file's provider block directs Azure control-plane operations for the lab?",
+      "options": {
+        "A": "README.md",
+        "B": "providers.tf",
+        "C": "terraform.tfvars.example alone",
+        "D": "The subscription_id variable declaration alone."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Markdown documents rather than configures the provider.",
+        "B": "It configures azurerm and its subscription input.",
+        "C": "An example file is not automatically the live provider block.",
+        "D": "The variable supplies an input, while the provider block consumes it to target requests."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q10",
+      "learningObjective": "Choose an automated identity",
+      "stem": "Interactive user login is unsuitable for unattended CI. Which production pattern fits the lesson?",
+      "options": {
+        "A": "A shared personal token in Git.",
+        "B": "Disable provider authentication.",
+        "C": "OIDC workload identity federation.",
+        "D": "Use the subscription GUID as the only authentication credential."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That exposes credentials and weakens accountability.",
+        "B": "Azure requires an authorized identity.",
+        "C": "Federation provides workload authentication without a stored long-lived secret.",
+        "D": "A target identifier is not proof of identity."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q11",
+      "learningObjective": "Interpret a harmless test object",
+      "stem": "Why does CLZ-130 create an empty resource group?",
+      "options": {
+        "A": "To prove all VM sizes are available.",
+        "B": "To deploy the remote-state backend.",
+        "C": "To issue administrator passwords.",
+        "D": "To exercise authenticated create/read/delete permissions."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A group does not test compute capacity.",
+        "B": "No storage account is declared.",
+        "C": "No password resource exists.",
+        "D": "It provides a small managed object for the authentication path."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q12",
+      "learningObjective": "Understand provider initialization",
+      "stem": "What does terraform init prepare before provider-backed planning?",
+      "options": {
+        "A": "The working directory and required provider dependencies.",
+        "B": "A permanent Owner grant.",
+        "C": "Every future Azure resource.",
+        "D": "The VM's Windows session."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Initialization makes the selected plugins available.",
+        "B": "Provider installation grants no RBAC role.",
+        "C": "Init does not apply the resource plan.",
+        "D": "There is no VM in this module."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform initialization",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q13",
+      "learningObjective": "Review prerequisite cleanup",
+      "stem": "Why destroy CLZ-120 before following CLZ-130's prerequisite guidance?",
+      "options": {
+        "A": "Both lessons require the exact same state file.",
+        "B": "To keep the learning lifecycle and remaining resources understandable.",
+        "C": "Azure allows only one resource group per subscription.",
+        "D": "CLI authentication stops working when two groups exist."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "They are separate root modules.",
+        "B": "The lessons use independent managed boundaries.",
+        "C": "Subscriptions can contain multiple groups.",
+        "D": "Group count does not govern authentication."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q14",
+      "learningObjective": "Apply least-privilege role scopes",
+      "stem": "A production identity only needs to manage one approved resource-group scope. Which choice fits least privilege?",
+      "options": {
+        "A": "Grant tenant-wide rights by default.",
+        "B": "Share a subscription Owner account.",
+        "C": "Grant the required role at that scope.",
+        "D": "Treat location metadata as authorization."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That exceeds the stated need.",
+        "B": "That broadens privilege and reduces accountability.",
+        "C": "Narrow scope limits authority beyond the workload.",
+        "D": "Regions do not grant RBAC permissions."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q15",
+      "learningObjective": "Distinguish provider source and local name",
+      "stem": "What does hashicorp/azurerm identify in required_providers?",
+      "options": {
+        "A": "An Azure tenant.",
+        "B": "A resource-group name.",
+        "C": "A subscription billing account.",
+        "D": "The source address of the AzureRM provider."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "It is a Terraform provider address.",
+        "B": "Resource names are configured separately.",
+        "C": "It does not identify Azure billing.",
+        "D": "The source tells Terraform which provider implementation to install."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        },
+        {
+          "title": "Terraform dependency lock file",
+          "url": "https://developer.hashicorp.com/terraform/language/files/dependency-lock"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q16",
+      "learningObjective": "Recognize token tenant mismatch",
+      "stem": "A valid token belongs to a different tenant than the intended subscription. What should be checked?",
+      "options": {
+        "A": "CLI tenant context and access to the target subscription.",
+        "B": "Only the local prefix length.",
+        "C": "Only the Project tag.",
+        "D": "Only the subscription's display name."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Authentication must align with the deployment boundary.",
+        "B": "Naming cannot repair tenant context.",
+        "C": "Metadata cannot change identity.",
+        "D": "Names can be ambiguous and do not replace tenant and access checks."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        },
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q17",
+      "learningObjective": "Retain target context for destroy",
+      "stem": "Why pass the same intended subscription ID during cleanup?",
+      "options": {
+        "A": "Destroy needs a new subscription every time.",
+        "B": "Destroy must address the same managed Azure boundary.",
+        "C": "It tells Terraform to erase CLI credentials.",
+        "D": "It waives all deletion permissions."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That is not the intended lifecycle.",
+        "B": "Cleanup should not drift to another target.",
+        "C": "Subscription targeting is not credential revocation.",
+        "D": "Deletion remains subject to authorization."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        },
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q18",
+      "learningObjective": "Verify deployed identity boundary",
+      "stem": "Which pair most directly supports that Terraform and CLI target the intended subscription?",
+      "options": {
+        "A": "Provider source address and version constraint.",
+        "B": "Terraform version and CPU count.",
+        "C": "Checked CLI account ID and the deployed group's subscription ID.",
+        "D": "Two identical folder names."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Dependency information does not prove the live subscription boundary.",
+        "B": "Neither proves a subscription match.",
+        "C": "Both expose the real context boundary.",
+        "D": "Local names do not prove cloud targeting."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        },
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q19",
+      "learningObjective": "Protect provider dependency reproducibility",
+      "stem": "Why keep the committed .terraform.lock.hcl when repeating authentication tests?",
+      "options": {
+        "A": "It encrypts the user's CLI token.",
+        "B": "It grants delete access to the group.",
+        "C": "It chooses the active Azure tenant.",
+        "D": "It preserves reviewed provider selections and checksums."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "It is not a credential vault.",
+        "B": "Dependency metadata grants no RBAC role.",
+        "C": "Account context is configured separately.",
+        "D": "The lock file records dependency choices."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform dependency lock file",
+          "url": "https://developer.hashicorp.com/terraform/language/files/dependency-lock"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q20",
+      "learningObjective": "Check source configuration versus schema",
+      "stem": "Does terraform providers schema -json by itself prove which subscription a resource was created in?",
+      "options": {
+        "A": "No; it describes provider schemas rather than live resource targeting.",
+        "B": "Yes, schemas enumerate all deployed subscription IDs.",
+        "C": "Yes, it replaces az account show.",
+        "D": "Only if the output is discarded."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Use actual context and resource IDs for that evidence.",
+        "B": "Schema describes supported structure, not deployment inventory.",
+        "C": "It cannot show the CLI's selected account.",
+        "D": "Discarding schema output supplies no new evidence."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        },
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q21",
+      "learningObjective": "Understand null target behavior",
+      "stem": "The lab input permits null and mentions ARM_SUBSCRIPTION_ID. What is the safe practice for its live exercise?",
+      "options": {
+        "A": "Assume null always means the correct subscription.",
+        "B": "Supply and verify an explicit intended subscription ID.",
+        "C": "Use the tenant ID in its place.",
+        "D": "Remove the provider block."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Implicit context must not substitute for target review.",
+        "B": "The README asks for a pinned target for plan/apply/destroy.",
+        "C": "A tenant ID is not a subscription selector.",
+        "D": "That prevents the intended provider-backed exercise."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q22",
+      "learningObjective": "Separate plan and apply authority",
+      "stem": "Which production design does CLZ-130 recommend for privileged automation?",
+      "options": {
+        "A": "Give every pipeline Owner permanently.",
+        "B": "Use one broad identity with no distinction between preview and execution.",
+        "C": "Separate plan and apply identities where appropriate.",
+        "D": "Store all tokens in public plan logs."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That ignores least privilege.",
+        "B": "The production guidance calls for deliberate privilege separation.",
+        "C": "Their required permissions can differ.",
+        "D": "That exposes credentials."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q23",
+      "learningObjective": "Interpret resource-group creation access",
+      "stem": "A user has Reader on the target subscription. What does that role normally allow here?",
+      "options": {
+        "A": "Creating and deleting any group.",
+        "B": "Assigning Owner to themselves.",
+        "C": "Rotating every workload secret.",
+        "D": "Reading metadata, not creating the resource group."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Those need write/delete permissions.",
+        "B": "Reader does not grant role-assignment writes.",
+        "C": "That is beyond Reader's actions.",
+        "D": "Reader excludes resource write operations."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Azure built-in roles",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q24",
+      "learningObjective": "Choose safe error handling",
+      "stem": "Provider authentication fails repeatedly. What should precede changing Terraform source?",
+      "options": {
+        "A": "Inspect the error, active account, tenant, and role scope.",
+        "B": "Disable all safety checks.",
+        "C": "Commit a coworker's credentials.",
+        "D": "Switch to any working production subscription."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Diagnose context before altering reviewed configuration.",
+        "B": "That conceals rather than resolves the cause.",
+        "C": "Credential sharing is not the intended fix.",
+        "D": "A convenient subscription may be unauthorized for the lab."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        },
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q25",
+      "learningObjective": "Validate group absence after cleanup",
+      "stem": "What does az group exists returning false after the documented destroy support?",
+      "options": {
+        "A": "Every object in every subscription is gone.",
+        "B": "The named group is absent in the checked subscription.",
+        "C": "The CLI user's account was deleted.",
+        "D": "The provider was uninstalled."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The query is scoped to a group and context.",
+        "B": "This is independent Azure cleanup evidence.",
+        "C": "Group existence does not test account deletion.",
+        "D": "Azure reads do not report local plugin installation."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q26",
+      "learningObjective": "Use configuration-backed credentials",
+      "stem": "Why is no authentication credential placed in the lesson's Terraform code?",
+      "options": {
+        "A": "Terraform supports only anonymous Azure calls.",
+        "B": "The resource group never requires access control.",
+        "C": "The CLI session supplies identity outside source.",
+        "D": "No credential is needed because the group is empty."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Azure operations need authentication.",
+        "B": "Resource groups remain RBAC-protected.",
+        "C": "The example avoids embedding a credential in versioned files.",
+        "D": "An empty group is still an authenticated Azure control-plane resource."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q27",
+      "learningObjective": "Interpret the AzureRM features block",
+      "stem": "Does features {} in this provider automatically grant extra Azure permissions?",
+      "options": {
+        "A": "Yes, it grants Contributor at subscription scope.",
+        "B": "Yes, it disables tenant checks.",
+        "C": "Only when environment=prod.",
+        "D": "No; provider settings do not create role assignments."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A provider block is not an RBAC grant.",
+        "B": "It does not replace identity context.",
+        "C": "An environment label cannot grant authority.",
+        "D": "Authorization is controlled by Azure RBAC."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        },
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q28",
+      "learningObjective": "Handle scope grant propagation",
+      "stem": "An authorized owner just granted the needed role, but plan still fails. Which response is reasonable?",
+      "options": {
+        "A": "Recheck scope and allow the grant time to propagate.",
+        "B": "Broaden public RDP access.",
+        "C": "Change resource tags to Owner.",
+        "D": "Delete the dependency lock file to get permissions."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Fresh grants can take time before requests succeed.",
+        "B": "No RDP resource is involved.",
+        "C": "A metadata label is not a role.",
+        "D": "Provider selection does not create RBAC rights."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q29",
+      "learningObjective": "Differentiate source variables and environment",
+      "stem": "Changing location to westeurope should change which authentication fact?",
+      "options": {
+        "A": "The signed-in user automatically.",
+        "B": "None by itself; it changes deployment location.",
+        "C": "The tenant automatically.",
+        "D": "The user's built-in role automatically."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Identity comes from authentication context.",
+        "B": "Region input does not change identity or subscription selection.",
+        "C": "Location does not choose a directory.",
+        "D": "Roles are separate assignments."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ130-Q30",
+      "learningObjective": "Compare read and write authorization",
+      "stem": "The CLI can read the subscription but Terraform cannot delete its group. What is the key distinction?",
+      "options": {
+        "A": "Successful reads imply all writes.",
+        "B": "Terraform never deletes Azure objects.",
+        "C": "Read access and delete permission are separate actions.",
+        "D": "Deleting local tfplan grants delete permission."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "RBAC does not work that way.",
+        "B": "It can when authorized.",
+        "C": "A role must authorize the needed operation at scope.",
+        "D": "A local file cannot alter Azure authorization."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

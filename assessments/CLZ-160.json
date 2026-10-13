@@ -1,0 +1,829 @@
+{
+  "lessonId": "CLZ-160",
+  "questions": [
+    {
+      "id": "CLZ160-Q01",
+      "learningObjective": "Understand Terraform state bindings",
+      "stem": "What does CLZ-160's local state connect?",
+      "options": {
+        "A": "azurerm_resource_group.lab to its actual Azure object ID.",
+        "B": "A provider version to its package checksum.",
+        "C": "A subnet name to its packet-filter priorities.",
+        "D": "Every subscription to one Terraform tenant."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "State maps configuration addresses to managed objects.",
+        "B": "Provider dependency checksums belong to the dependency lock file.",
+        "C": "There is no subnet or NSG in this lesson; state records the managed group.",
+        "D": "State does not merge identity boundaries."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q02",
+      "learningObjective": "Identify the state location",
+      "stem": "Which backend pattern does the supplied CLZ-160 lesson use?",
+      "options": {
+        "A": "A required Azure blob backend already deployed here.",
+        "B": "Local terraform.tfstate in its working context.",
+        "C": "State embedded in README.md.",
+        "D": "Browser localStorage as Terraform state."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "No storage account/backend is declared here.",
+        "B": "Remote Azure Storage is introduced later.",
+        "C": "Markdown is not the backend.",
+        "D": "Learner progress is not infrastructure state."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q03",
+      "learningObjective": "List managed addresses",
+      "stem": "Which command checks the state inventory without deleting bindings?",
+      "options": {
+        "A": "terraform state rm azurerm_resource_group.lab",
+        "B": "terraform destroy",
+        "C": "terraform state list",
+        "D": "Remove-Item terraform.tfstate"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That removes a binding.",
+        "B": "That proposes removal of resources.",
+        "C": "It lists resource addresses.",
+        "D": "That deletes a local artifact and loses tracking."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform state list",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/list"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q04",
+      "learningObjective": "Inspect a specific state record",
+      "stem": "Which command shows this lesson's stored resource-group attributes?",
+      "options": {
+        "A": "terraform output azurerm_resource_group.lab",
+        "B": "az account clear",
+        "C": "terraform fmt -check",
+        "D": "terraform state show azurerm_resource_group.lab"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Output takes an output name, not this address.",
+        "B": "That clears CLI account cache.",
+        "C": "That checks source formatting.",
+        "D": "It inspects the specified managed address."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform state show",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/show"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q05",
+      "learningObjective": "Compare stored and live IDs",
+      "stem": "Why compare terraform state show with az group show?",
+      "options": {
+        "A": "To confirm both describe the same Azure resource.",
+        "B": "To prove every tag is a secret.",
+        "C": "To increase the group quota.",
+        "D": "To migrate the backend automatically."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The Azure ID ties state ownership to the live object.",
+        "B": "Tags are not inherently secrets.",
+        "C": "Inspection does not raise quotas.",
+        "D": "These reads do not migrate state."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform state show",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/show"
+        },
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q06",
+      "learningObjective": "Recognize concurrent-write hazards",
+      "stem": "What is the purpose of a state lock during a state-changing operation?",
+      "options": {
+        "A": "Guarantee that nobody can read the file.",
+        "B": "Prevent concurrent writers from corrupting or conflicting over state.",
+        "C": "Prevent all Azure Portal changes forever.",
+        "D": "Pin provider package versions."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Locks are not access-control encryption.",
+        "B": "Locking protects a shared state context.",
+        "C": "Backend locks do not lock every Azure operation.",
+        "D": "The dependency lock file serves that purpose."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Terraform state locking",
+          "url": "https://developer.hashicorp.com/terraform/language/state/locking"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q07",
+      "learningObjective": "Handle an active local lock",
+      "stem": "A second terminal cannot obtain a local state lock while the first Terraform operation is running. What should happen?",
+      "options": {
+        "A": "Delete the lock and run both applies.",
+        "B": "Edit both state files simultaneously.",
+        "C": "Wait for or safely stop the active operation.",
+        "D": "Rename the resource group in Azure."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That risks competing writes.",
+        "B": "Manual concurrent editing is unsafe.",
+        "C": "Do not remove protection while another writer is active.",
+        "D": "That does not resolve the active writer."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform state locking",
+          "url": "https://developer.hashicorp.com/terraform/language/state/locking"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q08",
+      "learningObjective": "Use force-unlock cautiously",
+      "stem": "When is force-unlock appropriate for a backend that supports it?",
+      "options": {
+        "A": "Whenever a plan takes longer than expected.",
+        "B": "Before every apply.",
+        "C": "To unlock another active local process's state.",
+        "D": "Only after proving the lock is stale and no writer remains."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A long operation may still be active.",
+        "B": "That removes normal locking protection.",
+        "C": "Local state held by another process cannot be safely cleared this way.",
+        "D": "It is a recovery action, not routine contention handling."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform force-unlock",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/force-unlock"
+        },
+        {
+          "title": "Terraform state locking",
+          "url": "https://developer.hashicorp.com/terraform/language/state/locking"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q09",
+      "learningObjective": "Respond to missing local state",
+      "stem": "terraform.tfstate was deleted but the Azure group still exists. What is the safe recovery approach?",
+      "options": {
+        "A": "Restore a known backup or import the known object.",
+        "B": "Assume the group was deleted too.",
+        "C": "Create a new group with the same name blindly.",
+        "D": "Write an invented Azure ID into JSON."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Recover the binding before managing its lifecycle.",
+        "B": "Deleting state does not delete Azure resources.",
+        "C": "That can collide with the existing object.",
+        "D": "Manual fabricated state is unsafe."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform import",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/import"
+        },
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q10",
+      "learningObjective": "Distinguish forgetting from deletion",
+      "stem": "What does terraform state rm do to a managed object's binding?",
+      "options": {
+        "A": "Delete the Azure object automatically.",
+        "B": "Remove the state record while leaving the remote object.",
+        "C": "Rotate every resource password.",
+        "D": "Encrypt the remaining state."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "State removal is not cloud deletion.",
+        "B": "It makes Terraform stop tracking that object.",
+        "C": "It does not perform credential rotation.",
+        "D": "It is not an encryption command."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform state rm",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/rm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q11",
+      "learningObjective": "Protect sensitive operational data",
+      "stem": "Why restrict access to Terraform state even when source marks outputs sensitive?",
+      "options": {
+        "A": "Sensitive always means the value is absent from state.",
+        "B": "Only the state filename can reveal data.",
+        "C": "State can still contain sensitive values.",
+        "D": "Public state is required for provider verification."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That is false for ordinary sensitive values.",
+        "B": "The contents also matter.",
+        "C": "Display redaction does not remove stored data.",
+        "D": "Provider verification does not require publishing state."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q12",
+      "learningObjective": "Keep state outside Git",
+      "stem": "Which result should git status show for state, saved plans, and .terraform runtime files?",
+      "options": {
+        "A": "All must be added to the public repository.",
+        "B": "Only state should be committed.",
+        "C": "Plans should be committed because they only contain change counts.",
+        "D": "They should not appear as tracked lesson source."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "They can contain sensitive or machine-specific data.",
+        "B": "State should remain protected outside Git.",
+        "C": "Plans can include full values and sensitive data.",
+        "D": "The lesson expects generated runtime data excluded."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        },
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q13",
+      "learningObjective": "Differentiate dependency and state locks",
+      "stem": "What should remain committed after CLZ-160 cleanup?",
+      "options": {
+        "A": "The provider dependency lock file.",
+        "B": "The live terraform.tfstate containing secrets.",
+        "C": "A manually cleared state-lock marker.",
+        "D": "The latest binary tfplan."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It preserves reviewed dependencies.",
+        "B": "State is excluded from source control.",
+        "C": "Transient locking data is not committed configuration.",
+        "D": "Plans are generated operational artifacts."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform dependency lock file",
+          "url": "https://developer.hashicorp.com/terraform/language/files/dependency-lock"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q14",
+      "learningObjective": "Understand refresh during planning",
+      "stem": "Azure tags were changed outside Terraform. What should the learner run to inspect the resulting difference?",
+      "options": {
+        "A": "Edit terraform.tfstate by hand.",
+        "B": "terraform plan",
+        "C": "terraform fmt alone.",
+        "D": "Rename the README."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The lesson explicitly avoids manual state edits.",
+        "B": "Normal planning reads live objects and proposes reconciliation.",
+        "C": "Formatting does not refresh Azure attributes.",
+        "D": "Documentation names do not refresh infrastructure."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q15",
+      "learningObjective": "Avoid cross-folder cleanup",
+      "stem": "Why use only CLZ-160's folder for its apply and destroy?",
+      "options": {
+        "A": "Azure authenticates based only on folder names.",
+        "B": "All folders must have identical state.",
+        "C": "It holds this lesson's configuration and state context.",
+        "D": "The region prohibits commands from other paths."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Authentication comes from identity context.",
+        "B": "Independent lessons have separate contexts.",
+        "C": "Wrong context can target unrelated managed objects.",
+        "D": "Azure does not enforce repository paths."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        },
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q16",
+      "learningObjective": "Interpret a state address",
+      "stem": "In azurerm_resource_group.lab, what does lab identify?",
+      "options": {
+        "A": "The Azure region.",
+        "B": "The user's tenant.",
+        "C": "The backend password.",
+        "D": "The local resource name in Terraform configuration."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Location is a separate attribute.",
+        "B": "Identity context is separate.",
+        "C": "It is not a credential.",
+        "D": "It is part of the address, not necessarily the Azure group's name."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform state show",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/show"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q17",
+      "learningObjective": "Separate source and state",
+      "stem": "Which statement correctly distinguishes configuration from state?",
+      "options": {
+        "A": "Configuration expresses intent; state records managed bindings and attributes.",
+        "B": "State replaces the need for source code.",
+        "C": "Configuration lists every live Azure object automatically.",
+        "D": "State is only a formatting cache."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Both are used to determine lifecycle actions.",
+        "B": "Intent remains in configuration.",
+        "C": "Only declared/imported management is represented.",
+        "D": "It contains operational object data."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q18",
+      "learningObjective": "Understand state JSON inspection",
+      "stem": "terraform show -json returns state values for PowerShell inspection. What kind of operation is that?",
+      "options": {
+        "A": "Automatic resource recreation.",
+        "B": "Read-only serialization of the selected Terraform data.",
+        "C": "An Azure RBAC grant.",
+        "D": "A remote-backend migration."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Show is inspection.",
+        "B": "It does not apply Azure changes.",
+        "C": "Serialization grants no access.",
+        "D": "No init migration is invoked."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform show command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/show"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q19",
+      "learningObjective": "Verify deletion beyond state",
+      "stem": "After destroy, state is empty but az group exists returns true. What should the learner conclude?",
+      "options": {
+        "A": "Empty state proves Azure must be wrong.",
+        "B": "The group is free and may always be ignored.",
+        "C": "Cleanup is not independently confirmed.",
+        "D": "Terraform automatically owns all remaining resources."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "State absence cannot overrule live existence.",
+        "B": "Ownership and cleanup still need resolution.",
+        "C": "Azure still reports the named group in that context.",
+        "D": "Bindings are not inferred from every Azure object."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        },
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q20",
+      "learningObjective": "Know state separation boundaries",
+      "stem": "Why separate production state by environment?",
+      "options": {
+        "A": "Because Terraform cannot store more than one resource.",
+        "B": "Because dev tags automatically encrypt data.",
+        "C": "To make every resource globally anonymous.",
+        "D": "To reduce accidental cross-environment management and access."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "State can contain multiple resources.",
+        "B": "Tags are not encryption.",
+        "C": "Environment separation is not anonymization.",
+        "D": "Different environments need distinct ownership contexts."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q21",
+      "learningObjective": "Recover before destroying",
+      "stem": "An Azure object exists, but the current state inventory is empty because a local file was lost. Why not assume destroy will find it?",
+      "options": {
+        "A": "Destroy acts on managed state bindings.",
+        "B": "Destroy scans all subscriptions automatically.",
+        "C": "Azure names are universal Terraform addresses.",
+        "D": "Terraform infers ownership from the Lab tag automatically."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Recover or import before state-driven cleanup.",
+        "B": "It does not discover and delete all Azure objects.",
+        "C": "A name is not a recovered binding.",
+        "D": "A tag does not reconstruct a missing state binding."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        },
+        {
+          "title": "Terraform import",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/import"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q22",
+      "learningObjective": "Avoid lock bypass",
+      "stem": "A user suggests -lock=false to bypass another teammate's backend operation. What is the safer choice?",
+      "options": {
+        "A": "Always bypass because plans are cheap.",
+        "B": "Resolve the contention instead of disabling the lock.",
+        "C": "Copy the state into a public issue.",
+        "D": "Delete the teammate's resources."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Cost does not remove concurrency risk.",
+        "B": "Concurrent changes can conflict over the same state.",
+        "C": "That can expose sensitive data.",
+        "D": "That is unrelated and destructive."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform state locking",
+          "url": "https://developer.hashicorp.com/terraform/language/state/locking"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q23",
+      "learningObjective": "Understand backend versus resource identity",
+      "stem": "Changing backend storage location is conceptually different from changing which Azure group?",
+      "options": {
+        "A": "The backend is always the resource group itself.",
+        "B": "Moving state always deletes the subscription.",
+        "C": "The backend stores tracking data; resources remain separately managed.",
+        "D": "Backends only store README text."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The group is a managed object, not local storage.",
+        "B": "Migration does not imply subscription deletion.",
+        "C": "A migration need not rename or recreate the object.",
+        "D": "They store Terraform operational state."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform Azure backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        },
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q24",
+      "learningObjective": "Restrict team state access",
+      "stem": "Which production control fits the lesson's remote-state guidance?",
+      "options": {
+        "A": "A publicly readable blob with no versioning.",
+        "B": "A shared state file emailed to everyone.",
+        "C": "Only a renamed state file.",
+        "D": "Restricted Azure AD authorization and recovery controls."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That exposes data and weakens recovery.",
+        "B": "That loses centralized access/concurrency controls.",
+        "C": "Obscure naming is not authorization.",
+        "D": "State readers and writers need deliberate access."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform Azure backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q25",
+      "learningObjective": "Recognize local lock scope",
+      "stem": "Does CLZ-160's local lock coordinate independent copied state files on two different workstations?",
+      "options": {
+        "A": "No; each copy can become an independent management context.",
+        "B": "Yes; local files communicate automatically.",
+        "C": "Only if both folders have the same name.",
+        "D": "Only if both copies use the same Azure credentials."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Use an appropriate shared backend for team coordination.",
+        "B": "No such remote coordination is configured.",
+        "C": "Names do not create a shared backend.",
+        "D": "Matching credentials do not make independent local state files share a lock."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform state locking",
+          "url": "https://developer.hashicorp.com/terraform/language/state/locking"
+        },
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q26",
+      "learningObjective": "Treat imported resources deliberately",
+      "stem": "What should exist in configuration before importing a known lost resource binding?",
+      "options": {
+        "A": "An arbitrary output named import.",
+        "B": "The intended resource block and correct ownership context.",
+        "C": "A publicly posted access token.",
+        "D": "A deleted subscription."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Outputs do not define resource ownership.",
+        "B": "Import records the object under a chosen configuration address.",
+        "C": "Authentication secrets should remain private.",
+        "D": "Import needs access to the actual object."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform import",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/import"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q27",
+      "learningObjective": "Interpret current inventory scope",
+      "stem": "terraform state list shows one resource group. Does that mean the Azure subscription has only one group?",
+      "options": {
+        "A": "Yes; state lists every accessible object.",
+        "B": "Only if environment=dev.",
+        "C": "No; it lists this state context's managed addresses.",
+        "D": "Yes, because AzureRM is installed."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Terraform state is scoped to managed bindings.",
+        "B": "Environment values do not expand inventory.",
+        "C": "It is not a complete subscription inventory.",
+        "D": "A plugin does not imply discovery of all objects."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform state list",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/list"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q28",
+      "learningObjective": "Keep backups protected",
+      "stem": "Why should a Terraform state backup receive similar protection as the current state?",
+      "options": {
+        "A": "Backups always contain only file dates.",
+        "B": "Backups are automatically public-safe.",
+        "C": "Backup names grant encryption.",
+        "D": "It may retain the same sensitive operational data."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "They can hold complete prior state.",
+        "B": "No such guarantee exists.",
+        "C": "Filenames do not encrypt contents.",
+        "D": "Older copies can still contain credentials and resource attributes."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        },
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q29",
+      "learningObjective": "Understand state after successful destroy",
+      "stem": "Which result should successful CLZ-160 cleanup leave in the managed inventory?",
+      "options": {
+        "A": "No managed resource addresses.",
+        "B": "A phantom address for every old tag.",
+        "C": "A stored VM password.",
+        "D": "The old group as still managed and running."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The group binding is removed after deletion.",
+        "B": "Tags are attributes, not standalone resource addresses.",
+        "C": "This lesson creates no VM password.",
+        "D": "That contradicts successful destruction."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        },
+        {
+          "title": "Terraform state list",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/list"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ160-Q30",
+      "learningObjective": "Plan a lock observation exercise",
+      "stem": "How should two terminals demonstrate locking without defeating it?",
+      "options": {
+        "A": "Force-unlock as soon as the second terminal waits.",
+        "B": "Observe contention during a state-changing operation and let the owner finish.",
+        "C": "Manually edit JSON in both terminals.",
+        "D": "Delete all lock files while applying."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That may disrupt an active writer.",
+        "B": "The exercise is about protection, not concurrent bypass.",
+        "C": "That does not safely exercise Terraform locking.",
+        "D": "That risks state integrity."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform state locking",
+          "url": "https://developer.hashicorp.com/terraform/language/state/locking"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

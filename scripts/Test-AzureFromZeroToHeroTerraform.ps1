@@ -177,7 +177,11 @@ if ($PlanAuthenticatedLessons) {
 Push-Location $Root
 try {
   if ($Format) {
-    Invoke-RepoStep -Mode "format" -Lesson "." -WorkingDirectory $Root -Command "terraform" -Arguments @("fmt", "-check", "-recursive")
+    Invoke-RepoStep -Mode "format" -Lesson "." -WorkingDirectory $Root -Command "terraform" -Arguments @("fmt", "-check")
+    $formatFolders = @(Get-LessonFolder) + @(Get-Item -LiteralPath (Join-Path $Root "modules"))
+    foreach ($formatFolder in $formatFolders) {
+      Invoke-RepoStep -Mode "format" -Lesson $formatFolder.Name -WorkingDirectory $formatFolder.FullName -Command "terraform" -Arguments @("fmt", "-check", "-recursive")
+    }
   }
 
   if ($Validate) {

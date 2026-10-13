@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-350",
+  "questions": [
+    {
+      "id": "CLZ350-Q01",
+      "learningObjective": "Private service path",
+      "stem": "What does the blob Private Endpoint place inside CLZ-350's data subnet?",
+      "options": {
+        "A": "The whole Azure Storage service",
+        "B": "A public Internet load balancer",
+        "C": "A Terraform state server",
+        "D": "A private network interface and address for the service connection"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Storage remains a managed service, not a subnet VM.",
+        "B": "This path is private.",
+        "C": "The endpoint is not a Terraform backend server.",
+        "D": "The endpoint provides a private service access point."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q02",
+      "learningObjective": "Service subresource",
+      "stem": "Which Private Endpoint target subresource does this lesson configure?",
+      "options": {
+        "A": "file",
+        "B": "blob",
+        "C": "queue",
+        "D": "sqlServer"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Files need their own service connection.",
+        "B": "The connection explicitly selects blob.",
+        "C": "Queues are a different Storage subresource.",
+        "D": "sqlServer is for Azure SQL."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q03",
+      "learningObjective": "Public access independence",
+      "stem": "A private endpoint is added to a Storage account. What separate setting enforces this lesson's private-only intent?",
+      "options": {
+        "A": "An account-name suffix",
+        "B": "A longer DNS TTL",
+        "C": "Public network access disabled",
+        "D": "A tag named private"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Uniqueness does not restrict networking.",
+        "B": "TTL controls caching, not admission.",
+        "C": "Private Endpoint creation alone does not disable public access.",
+        "D": "Tags do not enforce access."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q04",
+      "learningObjective": "Private DNS zone name",
+      "stem": "Which zone does CLZ-350 link for Blob Storage private resolution?",
+      "options": {
+        "A": "privatelink.blob.core.windows.net",
+        "B": "privatelink.database.windows.net",
+        "C": "trafficmanager.net",
+        "D": "core.windows.net"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "This is the configured Blob Private Link zone.",
+        "B": "That zone serves Azure SQL.",
+        "C": "Traffic Manager is unrelated.",
+        "D": "The broad public domain is not this private overlay."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q05",
+      "learningObjective": "Client hostname choice",
+      "stem": "A private client wants to access the account's blob service. Which hostname should its application normally use?",
+      "options": {
+        "A": "The normal <account>.blob.core.windows.net host",
+        "B": "A hard-coded private IP in the TLS URL",
+        "C": "The resource-group name",
+        "D": "The Terraform resource address"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "DNS maps the regular service hostname to the private path.",
+        "B": "An IP can break hostname-based TLS validation.",
+        "C": "A resource-group name is not a service URL.",
+        "D": "Terraform addresses are not application endpoints."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q06",
+      "learningObjective": "Control plane evidence",
+      "stem": "Azure shows Succeeded and Approved for the endpoint. Which claim is still unproven?",
+      "options": {
+        "A": "The endpoint resource exists",
+        "B": "The connection is approved",
+        "C": "A real client's DNS and blob access work",
+        "D": "Its provisioning completed"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The returned resource proves existence.",
+        "B": "The status directly records approval.",
+        "C": "Resource state does not prove the client's complete data path.",
+        "D": "Succeeded is the provisioning result."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q07",
+      "learningObjective": "Private client prerequisite",
+      "stem": "Which environment can perform the documented private DNS and TCP checks?",
+      "options": {
+        "A": "Any Internet laptop with no private connection",
+        "B": "A client in the linked VNet or correctly connected network",
+        "C": "The MkDocs hosting server by default",
+        "D": "Any browser after changing its theme"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Public access is disabled.",
+        "B": "Routing and DNS must reach the private endpoint.",
+        "C": "Documentation hosting does not imply VNet access.",
+        "D": "Theme choice does not create network connectivity."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q08",
+      "learningObjective": "Expected laptop failure",
+      "stem": "A normal Internet laptop cannot reach the blob service after apply. What is the appropriate interpretation?",
+      "options": {
+        "A": "Proof the endpoint deployment failed",
+        "B": "Proof the account needs anonymous containers",
+        "C": "Proof TLS must be disabled",
+        "D": "Expected isolation unless it has the private network and DNS path"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Internet failure alone does not establish endpoint failure.",
+        "B": "Anonymous access does not fix private routing.",
+        "C": "TLS is still required.",
+        "D": "Private-only networking intentionally excludes that path."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q09",
+      "learningObjective": "DNS result diagnosis",
+      "stem": "A client inside the intended VNet gets a public address for the blob host. What should be investigated first?",
+      "options": {
+        "A": "Only the generated suffix length",
+        "B": "Only account replication",
+        "C": "Zone group, VNet link, and its DNS resolver path",
+        "D": "Only the Markdown architecture image"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Suffix length does not make a DNS link.",
+        "B": "Replication does not select the client's resolver.",
+        "C": "Those components determine private name resolution.",
+        "D": "An image cannot configure DNS."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q10",
+      "learningObjective": "VNet link role",
+      "stem": "Why create a Private DNS virtual-network link?",
+      "options": {
+        "A": "Make the zone's records resolvable through that VNet's supported DNS path",
+        "B": "Grant every user Blob Data Owner",
+        "C": "Open public network access",
+        "D": "Copy the Storage account into the VNet"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The link scopes zone resolution to the network.",
+        "B": "DNS links do not grant identity roles.",
+        "C": "Public access is independently disabled.",
+        "D": "Managed Storage is not copied into a subnet."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q11",
+      "learningObjective": "Zone group role",
+      "stem": "What does the endpoint's private_dns_zone_group associate?",
+      "options": {
+        "A": "The VMSS with a load balancer",
+        "B": "The public registrar with Azure DNS",
+        "C": "All tenant users with blob permissions",
+        "D": "The endpoint with the appropriate private DNS zone"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "No VMSS is created here.",
+        "B": "Private zones do not require registrar delegation.",
+        "C": "DNS association is not identity authorization.",
+        "D": "It integrates the connection with the selected zone."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q12",
+      "learningObjective": "Network and authorization",
+      "stem": "TCP 443 to the private blob host succeeds but a blob read is denied. What still requires verification?",
+      "options": {
+        "A": "Only whether the port is 443",
+        "B": "The caller's data authorization",
+        "C": "Only whether DNS returned a private IP",
+        "D": "Only the SVG caption"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The successful TCP test already confirms that port path.",
+        "B": "Connectivity does not grant blob data permissions.",
+        "C": "Private resolution is not permission.",
+        "D": "Documentation cannot grant access."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Storage authorization",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/authorize-data-access"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q13",
+      "learningObjective": "Private address observation",
+      "stem": "Which DNS result matches the lesson's expected private endpoint placement?",
+      "options": {
+        "A": "The workstation's public egress IP",
+        "B": "An address within data-snet's 10.40.3.0/24",
+        "C": "A Traffic Manager profile name without an address",
+        "D": "The resource group's subscription GUID"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The client's egress IP is not the service NIC.",
+        "B": "The endpoint receives a private address from the data subnet.",
+        "C": "This lesson does not create a Traffic Manager target.",
+        "D": "A GUID is not an IP address."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q14",
+      "learningObjective": "Pending connection",
+      "stem": "An endpoint connection is Pending. What should be examined?",
+      "options": {
+        "A": "The companion book's page count",
+        "B": "The VM's RDP credentials",
+        "C": "The Traffic Manager priority",
+        "D": "Connection approval and blob subresource selection"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Book metadata is unrelated.",
+        "B": "No VM is created by this lesson.",
+        "C": "No Traffic Manager profile is created here.",
+        "D": "Approval and the chosen service affect connection establishment."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q15",
+      "learningObjective": "Service-specific coverage",
+      "stem": "A blob Private Endpoint is healthy. Does that prove a private file-share connection is configured?",
+      "options": {
+        "A": "No; file is a distinct target subresource",
+        "B": "Yes; blob includes every Storage protocol",
+        "C": "Yes; all storage DNS zones are identical",
+        "D": "Only if the account name starts with st"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Private endpoints are service-specific.",
+        "B": "A blob connection does not automatically cover file.",
+        "C": "Service DNS overlays differ.",
+        "D": "Naming does not change endpoint coverage."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q16",
+      "learningObjective": "TLS validation evidence",
+      "stem": "Why test the normal blob FQDN rather than disable certificate checks against a private IP?",
+      "options": {
+        "A": "It removes the need for authorization",
+        "B": "It guarantees account failover",
+        "C": "It validates the intended hostname and private path together",
+        "D": "It makes transactions free"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Authorization remains required.",
+        "B": "Connectivity testing does not establish disaster recovery.",
+        "C": "Hostname-based tests preserve meaningful TLS evidence.",
+        "D": "Tests may still incur service transactions."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q17",
+      "learningObjective": "Deployment resource scope",
+      "stem": "Which resource is required for validation but intentionally not deployed by CLZ-350?",
+      "options": {
+        "A": "A blob Private Endpoint",
+        "B": "A Private DNS zone",
+        "C": "A Storage account",
+        "D": "An in-VNet test client"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The endpoint is in the Terraform configuration.",
+        "B": "The zone is explicitly created.",
+        "C": "The account is explicitly created.",
+        "D": "The prerequisites ask for an existing private client."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q18",
+      "learningObjective": "Custom DNS forwarding",
+      "stem": "The VNet uses a custom resolver that ignores its Azure Private DNS link. What design work may be needed?",
+      "options": {
+        "A": "Changing Storage tags to DNS",
+        "B": "Removing the Private Endpoint",
+        "C": "Correct forwarding or private resolution integration",
+        "D": "Publishing the private IP as a credential"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Tags do not configure resolvers.",
+        "B": "Removing the endpoint defeats the private path.",
+        "C": "A custom DNS path must reach the private zone appropriately.",
+        "D": "An IP is neither a DNS integration nor a credential."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q19",
+      "learningObjective": "Cost estimate",
+      "stem": "Which billable component remains relevant even with little blob capacity?",
+      "options": {
+        "A": "A mandatory Bastion host",
+        "B": "Private Endpoint hours and data processing",
+        "C": "Every Markdown page",
+        "D": "Terraform variable names"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Bastion is not deployed in this lesson.",
+        "B": "The private connectivity service has its own charges.",
+        "C": "Documentation pages do not incur Azure service charges.",
+        "D": "Variable names are not usage meters."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q20",
+      "learningObjective": "Redundancy scope",
+      "stem": "Standard LRS is used here. What should precede choosing geo-redundancy for production?",
+      "options": {
+        "A": "Match durability and recovery requirements with costs",
+        "B": "Assume Private Endpoint makes all storage geo-redundant",
+        "C": "Change only the DNS caption",
+        "D": "Delete all backup plans"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Replication choice is a separate production design decision.",
+        "B": "Private connectivity is not a replication mode.",
+        "C": "A caption cannot change durability.",
+        "D": "Backup and recovery requirements still matter."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Storage redundancy",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q21",
+      "learningObjective": "No anonymous data exposure",
+      "stem": "allow_nested_items_to_be_public=false contributes to which restriction?",
+      "options": {
+        "A": "Granting every VNet user write access",
+        "B": "Replacing Entra authorization",
+        "C": "Preventing public container-level access configuration",
+        "D": "Disabling TLS"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Private connectivity does not grant all users permissions.",
+        "B": "Identity authorization remains separate.",
+        "C": "It restricts anonymous/public data exposure.",
+        "D": "TLS settings are separately configured."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Storage authorization",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/authorize-data-access"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q22",
+      "learningObjective": "Plan acceptance",
+      "stem": "A reviewed plan unexpectedly enables Storage public networking. What should the learner do?",
+      "options": {
+        "A": "Apply because the endpoint hides the public path",
+        "B": "Stop and correct the configuration before a new plan",
+        "C": "Ignore the change if tags say private",
+        "D": "Run the Internet test and accept any success"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "An endpoint does not hide an enabled public access path.",
+        "B": "It conflicts with the lesson's explicit private-only setting.",
+        "C": "Tags are not security enforcement.",
+        "D": "Successful public access contradicts the stated intent."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q23",
+      "learningObjective": "Validation sequence",
+      "stem": "Which pair separates resource provisioning evidence from a representative data path?",
+      "options": {
+        "A": "Inspect endpoint state, then test DNS and TCP from the private client",
+        "B": "Inspect tags, then count Terraform files",
+        "C": "Read README, then assume Approved means all clients work",
+        "D": "Run fmt twice and skip network tests"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The pair covers control-plane state and client connectivity.",
+        "B": "Those checks do not test the private path.",
+        "C": "Approval does not test every resolver and route.",
+        "D": "Formatting is a source check."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q24",
+      "learningObjective": "DNS chain observation",
+      "stem": "Which exercise records how the service hostname maps to a private address?",
+      "options": {
+        "A": "Print every Storage access key",
+        "B": "Read only the account's tags",
+        "C": "Resolve the unrelated GitHub Pages host",
+        "D": "Trace the blob hostname's CNAME and A records from an in-VNet client"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Keys are unnecessary sensitive evidence.",
+        "B": "Tags do not show DNS resolution.",
+        "C": "The site hostname is not the blob data path.",
+        "D": "The exercise inspects the actual private DNS chain."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q25",
+      "learningObjective": "Cleanup ownership",
+      "stem": "What should this lesson's successful destroy remove?",
+      "options": {
+        "A": "Its account, endpoint, private zone/link, and network resources",
+        "B": "Every Storage account in the tenant",
+        "C": "An unrelated DNS resolver in another group",
+        "D": "The external validation client by assumption"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Destroy follows this configuration's managed resource ownership.",
+        "B": "Tenant-wide deletion is outside scope.",
+        "C": "An unrelated resolver is not managed here.",
+        "D": "The client is a prerequisite, not a deployed resource."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q26",
+      "learningObjective": "Cleanup Azure readback",
+      "stem": "Which check verifies active resource-group removal after destroy?",
+      "options": {
+        "A": "A valid public DNS answer for GitHub",
+        "B": "A count of quiz questions",
+        "C": "A new screenshot of the diagram",
+        "D": "az group exists for the captured lesson group returns false"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "GitHub DNS is unrelated.",
+        "B": "Assessments do not inspect Azure.",
+        "C": "Diagrams are explanatory, not live evidence.",
+        "D": "The Azure query checks the actual lesson lifecycle boundary."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q27",
+      "learningObjective": "DNS independence",
+      "stem": "A public resolver can still resolve the account hostname while public network access is disabled. What does that mean?",
+      "options": {
+        "A": "The private access setting must have reverted",
+        "B": "Anonymous downloads are guaranteed",
+        "C": "DNS visibility alone does not grant blob access",
+        "D": "The private IP must be exposed to every resolver"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Resolution alone does not prove a setting change.",
+        "B": "Authorization and network admission still apply.",
+        "C": "Name existence and service access are independent.",
+        "D": "Public resolution need not disclose the private endpoint IP."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q28",
+      "learningObjective": "Private validation readiness",
+      "stem": "Why arrange a private client before testing a public-disabled deployment?",
+      "options": {
+        "A": "Terraform requires a client VM resource in every plan",
+        "B": "Otherwise the learner lacks a representative data-plane test path",
+        "C": "The endpoint must copy data from the client",
+        "D": "The private client replaces all access roles"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The lesson deliberately creates no client.",
+        "B": "The control plane can succeed while the learner cannot reach the data path.",
+        "C": "No client-to-service migration is configured.",
+        "D": "Client location does not replace identity permissions."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q29",
+      "learningObjective": "Security boundary comparison",
+      "stem": "Which statement distinguishes a service endpoint from this Private Endpoint pattern?",
+      "options": {
+        "A": "Both patterns always deploy a private service VM",
+        "B": "This pattern needs registrar delegation",
+        "C": "This pattern exposes a private service NIC/IP in the subnet",
+        "D": "Both patterns automatically grant data roles"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Managed services are not deployed as subnet VMs.",
+        "B": "Private DNS links are not public delegation.",
+        "C": "The endpoint is a private network interface for the service.",
+        "D": "Network paths do not assign data roles automatically."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ350-Q30",
+      "learningObjective": "Operational availability",
+      "stem": "What production check goes beyond merely recording Approved once?",
+      "options": {
+        "A": "Continuously regenerate the suffix",
+        "B": "Disable public access checks after the first plan",
+        "C": "Treat every 403 as successful availability",
+        "D": "Continuously test private DNS and TLS from representative clients"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Name churn is not monitoring.",
+        "B": "Settings and data paths can drift.",
+        "C": "A 403 may indicate authorization or network issues.",
+        "D": "Availability depends on the ongoing real client path."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Private endpoints for Azure Storage",
+          "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

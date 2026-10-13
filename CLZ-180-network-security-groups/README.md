@@ -37,6 +37,8 @@ The CLZ-170 network is recreated in this independent lesson. A web NSG is associ
 
 Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
+The CIDR validation verifies IPv4 `/32` syntax, not public routability. Confirm that the value is your actual current public administrator address.
+
 ## Deploy
 
 Run from the repository root in PowerShell 7:

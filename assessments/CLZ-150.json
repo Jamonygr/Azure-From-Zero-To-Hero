@@ -1,0 +1,825 @@
+{
+  "lessonId": "CLZ-150",
+  "questions": [
+    {
+      "id": "CLZ150-Q01",
+      "learningObjective": "Separate interface layers",
+      "stem": "Which CLZ-150 structure is intended for learner-supplied configuration values?",
+      "options": {
+        "A": "Local values only.",
+        "B": "State resource addresses.",
+        "C": "The architecture image.",
+        "D": "Input variables."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Locals derive internal values rather than accept -var overrides.",
+        "B": "Addresses identify managed objects.",
+        "C": "It explains the system but supplies no Terraform inputs.",
+        "D": "Variables define the module's public input interface."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q02",
+      "learningObjective": "Reference a derived local",
+      "stem": "Which expression references the derived naming prefix in CLZ-150?",
+      "options": {
+        "A": "local.prefix",
+        "B": "var.local.prefix",
+        "C": "output.prefix",
+        "D": "azurerm_resource_group.prefix"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The local namespace exposes named local values.",
+        "B": "That is not a valid reference to this local.",
+        "C": "Outputs do not use this namespace.",
+        "D": "The resource is named lab, not prefix."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q03",
+      "learningObjective": "Recognize fixed internal identity",
+      "stem": "What happens when a learner tries to override local.lab_id using -var?",
+      "options": {
+        "A": "It overrides every local automatically.",
+        "B": "It is not a declared input to override that way.",
+        "C": "It changes the Azure tenant.",
+        "D": "It silently renames all lessons in the repository."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Locals are not command-line input variables.",
+        "B": "Change supported input values, not an undeclared variable assignment.",
+        "C": "Lesson IDs do not select a directory.",
+        "D": "The CLI evaluates the current module only."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        },
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q04",
+      "learningObjective": "Expose results intentionally",
+      "stem": "What is the role of output resource_group_name in this lesson?",
+      "options": {
+        "A": "Set the input's default value.",
+        "B": "Install AzureRM.",
+        "C": "Expose the deployed group's name for validation and scripts.",
+        "D": "Set the resource's location."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Input defaults are declared in variable blocks.",
+        "B": "Provider installation belongs to init.",
+        "C": "It is an observable result of the managed resource.",
+        "D": "The output exposes a result; the resource property is configured separately."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q05",
+      "learningObjective": "Validate allowed environments",
+      "stem": "Which environment input is accepted by CLZ-150's contains validation?",
+      "options": {
+        "A": "production",
+        "B": "staging",
+        "C": "DEV",
+        "D": "test"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The documented string is prod.",
+        "B": "Staging is not in the allowed set.",
+        "C": "The allowed strings are lowercase.",
+        "D": "The list permits dev, test, and prod."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q06",
+      "learningObjective": "Read JSON output structure",
+      "stem": "Why use terraform output -json with ConvertFrom-Json?",
+      "options": {
+        "A": "To parse stored output values and metadata in PowerShell.",
+        "B": "To automatically deploy all JSON keys.",
+        "C": "To encrypt values before display.",
+        "D": "To replace variable type constraints."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "JSON is suitable for structured consumption.",
+        "B": "Parsing output does not apply resources.",
+        "C": "JSON serialization is not encryption.",
+        "D": "Outputs do not change input declarations."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q07",
+      "learningObjective": "Handle unknown planned outputs",
+      "stem": "An output depends on a value Azure assigns during creation and appears unknown in plan. What does that mean?",
+      "options": {
+        "A": "The output block is always invalid.",
+        "B": "Terraform expects the value to become available after apply.",
+        "C": "The subscription has been deleted.",
+        "D": "The value must be hardcoded into state."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Unknown planned values can be valid.",
+        "B": "Some provider results are not known during planning.",
+        "C": "Unknown output text does not prove that.",
+        "D": "Do not manually edit state to invent a result."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        },
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q08",
+      "learningObjective": "Avoid duplicated expressions",
+      "stem": "What is the main benefit of using local.tags across multiple resource declarations?",
+      "options": {
+        "A": "It prevents all Azure Policy effects.",
+        "B": "It makes all tags immutable.",
+        "C": "One shared expression keeps metadata consistent.",
+        "D": "It encrypts each tag value."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Policies still apply.",
+        "B": "Configuration can be changed and applied.",
+        "C": "Consumers can reference the same derived map.",
+        "D": "Locals are not an encryption feature."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q09",
+      "learningObjective": "Understand variable precedence",
+      "stem": "environment=dev is the declared default, but the plan supplies -var='environment=test'. Which value does that input use?",
+      "options": {
+        "A": "dev",
+        "B": "Both values simultaneously.",
+        "C": "prod",
+        "D": "test"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The default applies when no higher-precedence value is supplied.",
+        "B": "The string input has one selected value.",
+        "C": "No input source supplied prod.",
+        "D": "An explicit command-line assignment overrides the default."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q10",
+      "learningObjective": "Choose a nonsensitive interface",
+      "stem": "Which added output best fits this lesson's validation-friendly public results?",
+      "options": {
+        "A": "A derived resource-name preview.",
+        "B": "The user's live access token.",
+        "C": "An administrator password without sensitive=true.",
+        "D": "A shared client secret in plaintext."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It is useful and does not contain a credential.",
+        "B": "Credentials do not belong in a public result.",
+        "C": "That would expose secret data.",
+        "D": "It is not a safe validation interface."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        },
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q11",
+      "learningObjective": "Recognize sensitive output limits",
+      "stem": "A production author marks an output sensitive. What protection does that provide?",
+      "options": {
+        "A": "Automatic state encryption in every backend.",
+        "B": "Redaction in ordinary displays, not removal from state.",
+        "C": "Permanent prevention of all raw output access.",
+        "D": "Deletion of the secret from Azure."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The sensitive flag is not backend encryption.",
+        "B": "Sensitive values can remain in Terraform artifacts.",
+        "C": "Explicit raw/JSON output can reveal values.",
+        "D": "The flag is display/data-flow metadata."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        },
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q12",
+      "learningObjective": "Inspect Terraform expressions",
+      "stem": "Which command opens the interactive evaluator used to inspect local.prefix?",
+      "options": {
+        "A": "az account set",
+        "B": "terraform state rm",
+        "C": "terraform console",
+        "D": "terraform destroy"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That changes CLI context.",
+        "B": "That removes state bindings.",
+        "C": "Console evaluates expressions in the current module.",
+        "D": "That removes managed resources."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform console",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/console"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q13",
+      "learningObjective": "Understand input types",
+      "stem": "Why declare name_prefix as type=string?",
+      "options": {
+        "A": "To create a storage account.",
+        "B": "To guarantee the name exists in Azure.",
+        "C": "To prohibit using the input in locals.",
+        "D": "To constrain the input interface to a string value."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A type declaration does not create resources.",
+        "B": "Type checking is not a cloud lookup.",
+        "C": "Locals can reference inputs.",
+        "D": "Type constraints clarify and validate module arguments."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q14",
+      "learningObjective": "Avoid local override misconceptions",
+      "stem": "A learner wants a different prefix without editing local.prefix. What is the supported approach?",
+      "options": {
+        "A": "Change name_prefix or environment, then review a plan.",
+        "B": "Assign -var='prefix=anything'.",
+        "C": "Edit terraform.tfstate by hand.",
+        "D": "Rename outputs.tf."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The local expression derives its value from those inputs.",
+        "B": "No prefix input is declared.",
+        "C": "State is not the input interface.",
+        "D": "Filename changes do not alter the expression."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q15",
+      "learningObjective": "Review interface changes",
+      "stem": "In a reusable production module, why document renamed inputs and outputs as breaking changes?",
+      "options": {
+        "A": "Azure forces every output to have the same name.",
+        "B": "Consumers may depend on the existing interface.",
+        "C": "A renamed output grants new permissions.",
+        "D": "The website will automatically migrate all callers."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Output names are authored in Terraform.",
+        "B": "Inputs and outputs form a contract between modules and callers.",
+        "C": "Names do not grant RBAC roles.",
+        "D": "Documentation cannot update Terraform consumers automatically."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q16",
+      "learningObjective": "Understand nullable subscription inputs",
+      "stem": "The subscription variable permits null but its validation checks non-null values for GUID shape. Which result matches that design?",
+      "options": {
+        "A": "Null becomes a tenant ID.",
+        "B": "Null creates a new subscription.",
+        "C": "Null passes this format validation.",
+        "D": "Null always selects prod."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "No conversion is defined.",
+        "B": "Input validation does not provision subscriptions.",
+        "C": "The conditional explicitly permits it.",
+        "D": "Environment selection is separate."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q17",
+      "learningObjective": "Distinguish validation and existence",
+      "stem": "A location passes the configured lowercase/alphanumeric regex. What does that prove?",
+      "options": {
+        "A": "The region supports every VM size.",
+        "B": "The region has spare quota.",
+        "C": "The learner has Contributor there.",
+        "D": "It satisfies the local format rule."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Availability is external evidence.",
+        "B": "Quota requires separate inspection.",
+        "C": "RBAC is not a string-pattern test.",
+        "D": "The pattern does not query the Azure region catalog."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q18",
+      "learningObjective": "Read output value sources",
+      "stem": "Where does the location output get its value in the supplied module?",
+      "options": {
+        "A": "azurerm_resource_group.lab.location",
+        "B": "The Environment tag's value.",
+        "C": "The Terraform provider's default region.",
+        "D": "The current PowerShell hostname."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It exposes the managed group's location attribute.",
+        "B": "Environment and location are separate properties.",
+        "C": "This output references the managed resource attribute, not a provider default-region setting.",
+        "D": "Hostnames do not supply this output."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q19",
+      "learningObjective": "Use naming constraints",
+      "stem": "Why does the lab reject name_prefix='TEAM'?",
+      "options": {
+        "A": "All Terraform strings must be lowercase.",
+        "B": "Its validation requires lowercase permitted characters.",
+        "C": "Azure forbids uppercase tag values.",
+        "D": "The prefix must be a GUID."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Terraform supports uppercase strings in general.",
+        "B": "The regex encodes the intended naming interface.",
+        "C": "That is not the cause here.",
+        "D": "Only subscription_id has the GUID format."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q20",
+      "learningObjective": "Preserve lesson identity in names",
+      "stem": "Which fixed code must appear in local.prefix for CLZ-150?",
+      "options": {
+        "A": "clz140",
+        "B": "dev only.",
+        "C": "clz150",
+        "D": "The tenant's display name."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That belongs to the previous lesson.",
+        "B": "The prefix also includes the lesson code.",
+        "C": "It derives from the local CLZ-150 identifier.",
+        "D": "Tenant metadata is not part of this expression."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q21",
+      "learningObjective": "Protect local values files",
+      "stem": "Why copy terraform.tfvars.example to an untracked local terraform.tfvars?",
+      "options": {
+        "A": "To automatically obtain Azure credentials.",
+        "B": "To replace provider dependency locking.",
+        "C": "To make every output sensitive.",
+        "D": "To supply local inputs without rewriting the shared template."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Copying a file does not authenticate.",
+        "B": "tfvars and lock files serve different purposes.",
+        "C": "Input-file placement does not mark outputs sensitive.",
+        "D": "The template documents placeholders and example values."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q22",
+      "learningObjective": "Distinguish variables from outputs",
+      "stem": "Which declaration accepts a caller's environment choice rather than returns a result?",
+      "options": {
+        "A": "variable \"environment\"",
+        "B": "output \"location\"",
+        "C": "output \"resource_group_name\"",
+        "D": "local.tags"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Variable blocks define incoming arguments.",
+        "B": "Outputs return evaluated results.",
+        "C": "That is a result interface.",
+        "D": "That is internal derived data."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q23",
+      "learningObjective": "Evaluate tag source composition",
+      "stem": "The Environment tag changes after environment=test is supplied. Why?",
+      "options": {
+        "A": "Azure guesses the environment from the user.",
+        "B": "local.tags references var.environment.",
+        "C": "Changing a variable automatically edits every source file.",
+        "D": "The Terraform output command changes tags."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The value is explicit configuration.",
+        "B": "The map is computed from the selected input.",
+        "C": "Evaluation does not rewrite Terraform source.",
+        "D": "Reading outputs is not an Azure write."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q24",
+      "learningObjective": "Inspect expressions without mutation",
+      "stem": "What does evaluating local.tags in terraform console do?",
+      "options": {
+        "A": "Apply each tag to every subscription.",
+        "B": "Rename the resource group.",
+        "C": "Display the evaluated map without applying Azure changes.",
+        "D": "Migrate state to Azure Storage."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Console does not run a resource apply.",
+        "B": "No apply happens.",
+        "C": "Expression evaluation is not resource deployment.",
+        "D": "No backend migration is invoked."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform console",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/console"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q25",
+      "learningObjective": "Assess unsupported inputs",
+      "stem": "A learner adds a custom value to tfvars but no corresponding variable declaration. What should a reusable module author do?",
+      "options": {
+        "A": "Assume every file key is an implicit local.",
+        "B": "Embed the value in state JSON.",
+        "C": "Add only a matching output block.",
+        "D": "Declare and document a supported input if it is needed."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Terraform does not create locals from arbitrary keys.",
+        "B": "State is not a public argument contract.",
+        "C": "An output exposes a result rather than declares an accepted input.",
+        "D": "The interface should explicitly define accepted arguments."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q26",
+      "learningObjective": "Understand dependencies of outputs",
+      "stem": "The output name references the managed resource rather than duplicates its naming string. What does that achieve?",
+      "options": {
+        "A": "It exposes the resource's actual attribute through its dependency.",
+        "B": "It prevents Terraform from tracking the resource.",
+        "C": "It moves the object into another subscription.",
+        "D": "It makes group tags inherit everywhere."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The result follows the managed object.",
+        "B": "Resource references create dependencies, not remove tracking.",
+        "C": "A reference does not change target context.",
+        "D": "Tag inheritance is unrelated."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q27",
+      "learningObjective": "Read one scalar result",
+      "stem": "A script only needs the group's name. Which output mode avoids parsing the complete JSON object?",
+      "options": {
+        "A": "terraform output -json",
+        "B": "terraform output -raw resource_group_name",
+        "C": "terraform providers schema -json",
+        "D": "az account show --query tenantId"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That emits structured JSON rather than a single raw value.",
+        "B": "It emits the named scalar for shell use.",
+        "C": "That reports schema metadata.",
+        "D": "That reads the directory ID."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q28",
+      "learningObjective": "Design clear interfaces",
+      "stem": "Which production module change best reflects this lesson's separation of concerns?",
+      "options": {
+        "A": "Place every value in outputs and accept no inputs.",
+        "B": "Duplicate naming expressions in every resource.",
+        "C": "Document inputs, derive repeated expressions in locals, and expose intentional outputs.",
+        "D": "Treat state JSON as the only public API."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Outputs are not caller-supplied arguments.",
+        "B": "That increases inconsistency risk.",
+        "C": "These layers keep the configuration understandable.",
+        "D": "State is not the intended module interface."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        },
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q29",
+      "learningObjective": "Inspect clean deletion results",
+      "stem": "After CLZ-150 cleanup, which result is expected for the managed-resource inventory?",
+      "options": {
+        "A": "local.tags is erased from source.",
+        "B": "The dependency lock file is deleted.",
+        "C": "The environment default disappears.",
+        "D": "terraform state list is empty."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Destroy does not rewrite locals.tf.",
+        "B": "Keep the committed dependency file.",
+        "C": "Configuration declarations remain.",
+        "D": "The group's state binding is removed by successful destroy."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        },
+        {
+          "title": "Terraform state list",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/list"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ150-Q30",
+      "learningObjective": "Use validation to reject bad input",
+      "stem": "The exercise adds a custom prefix validation. How should the learner test it safely?",
+      "options": {
+        "A": "Run a plan with an intentionally invalid value and expect rejection.",
+        "B": "Apply the invalid value first.",
+        "C": "Edit state until the value looks valid.",
+        "D": "Disable all original constraints."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The check should fail before apply.",
+        "B": "That bypasses the purpose of pre-deployment validation.",
+        "C": "Do not fake input acceptance in state.",
+        "D": "That weakens rather than tests the interface."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

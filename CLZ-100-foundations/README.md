@@ -53,15 +53,18 @@ Do not run `az login`; this lesson is intentionally credential-free.
 
 ```powershell
 terraform providers
-terraform output -json
-terraform show -json tfplan | ConvertFrom-Json | Select-Object -ExpandProperty resource_changes
+$previewPlan = terraform show -json tfplan | ConvertFrom-Json
+$previewPlan.output_changes.configuration_preview.after
+@($previewPlan.resource_changes).Where({ $null -ne $_ }).Count
 ```
 
 Expected result:
 
 - `terraform providers` lists no Azure provider requirement.
 - `configuration_preview` shows the expected prefix, location, and four standard tags.
-- `resource_changes` is empty because no resource is declared.
+- The resource-change count is zero because no resource is declared. The JSON property may be absent.
+
+`terraform output` reads outputs already stored in state. For this plan-only exercise, inspect the proposed outputs in the saved plan instead.
 
 ## Troubleshooting
 

@@ -1,15 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="470" viewBox="0 0 1100 470" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="565" viewBox="0 0 1100 565" role="img" aria-labelledby="title desc">
   <title id="title">Private endpoint service access</title>
   <desc id="desc">Private DNS resolves a platform service to a private endpoint inside the VNet.</desc>
-  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#0e7490;stroke-width:3}.zone{fill:#cffafe}.svc{fill:#ecfeff}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#0e7490;stroke-width:4;marker-end:url(#arrow)}</style>
-  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0e7490"/></marker></defs>
-  <rect class="bg" width="1100" height="470" rx="18"/>
+  <metadata>{"preserves": "labels, coordinates, resource shapes, and service connections", "sourceSha256": "91813a5c73974807c48a6b8486fcf6a87d9b10fe7906a3090323972662399c91"}</metadata><style>.bg{fill:#080e1b}.box{fill:#101d32;stroke:#60e0e5;stroke-width:3}.zone{fill:#12303d}.svc{fill:#122b3f}.text{font:700 24px "Segoe UI",Arial,sans-serif;fill:#eff5ff}.small{font:18px "Segoe UI",Arial,sans-serif;fill:#bcd0eb}.arrow{stroke:#60e0e5;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#60e0e5" /></marker></defs>
+  <rect class="bg" width="1100" height="470" rx="18" />
   <text class="text" x="40" y="55">Private Endpoint And Private DNS</text>
-  <rect class="box" x="80" y="160" width="210" height="120" rx="12"/><text class="text" x="125" y="212">Workload</text><text class="small" x="120" y="245">inside VNet</text>
-  <line class="arrow" x1="310" y1="220" x2="430" y2="220"/>
-  <rect class="box zone" x="455" y="95" width="230" height="110" rx="12"/><text class="text" x="500" y="150">Private DNS</text>
-  <rect class="box" x="455" y="255" width="230" height="110" rx="12"/><text class="text" x="500" y="313">Endpoint</text>
-  <line class="arrow" x1="705" y1="310" x2="825" y2="310"/>
-  <rect class="box svc" x="850" y="230" width="200" height="160" rx="12"/><text class="text" x="905" y="295">Azure</text><text class="text" x="885" y="330">Service</text>
-</svg>
-
+  <rect class="box" x="80" y="160" width="210" height="120" rx="12" /><text class="text" x="125" y="212">Workload</text><text class="small" x="120" y="245">inside VNet</text>
+  <line class="arrow" x1="310" y1="220" x2="430" y2="220" />
+  <rect class="box zone" x="455" y="95" width="230" height="110" rx="12" /><text class="text" x="500" y="150">Private DNS</text>
+  <rect class="box" x="455" y="255" width="230" height="110" rx="12" /><text class="text" x="500" y="313">Endpoint</text>
+  <line class="arrow" x1="705" y1="310" x2="825" y2="310" />
+  <rect class="box svc" x="850" y="230" width="200" height="160" rx="12" /><text class="text" x="905" y="295">Azure</text><text class="text" x="885" y="330">Service</text>
+<g><rect y="470.0" width="1100.0" height="95" fill="#080e1b" /><g transform="translate(25 483.0) scale(0.75)" fill="none" stroke="#60e0e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 60h39c25 0 25-34 2-37-8-24-40-22-46 1C-3 30 0 60 24 60Z" /><path d="m30 40 12 12 15-22" /></g><g transform="translate(112 483.0) scale(0.75)" fill="none" stroke="#b39bff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="29" y="29" width="26" height="26" rx="5" /><path d="M42 29V12m0 43v17M29 42H12m43 0h17" /><circle cx="42" cy="9" r="5" /><circle cx="42" cy="75" r="5" /><circle cx="9" cy="42" r="5" /><circle cx="75" cy="42" r="5" /></g><text x="210" y="512.0" fill="#eaf2ff" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="500">Azure + Terraform learning architecture</text><text x="210" y="540.0" fill="#bdd0ec" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Follow the lesson for exact resource settings and deployment mode.</text></g></svg>

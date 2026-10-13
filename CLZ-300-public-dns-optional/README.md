@@ -4,7 +4,7 @@
 
 ## Goal
 
-Model an Azure public DNS zone safely: the default creates no zone, while an explicit opt-in requires a domain you actually own and never accepts `example.com`.
+Model an Azure public DNS zone: the default creates no zone. Enable it only for a domain you actually own. The Terraform `check` warns about placeholders but does not block apply; stop and resolve every warning yourself.
 
 ## Prerequisites
 
@@ -35,7 +35,7 @@ A boolean controls whether Terraform creates one Azure DNS zone. When disabled, 
 | `location` | Select a supported region with sufficient quota. |
 | `name_prefix` | Use a short lowercase prefix. |
 | `create_public_dns_zone` | Keep `false` for the safe path; set `true` only when you own and intend to manage the domain. |
-| `dns_zone_name` | Replace `example.com` with the owned apex domain before enabling creation; placeholder use is rejected. |
+| `dns_zone_name` | Replace `example.com` with the owned apex domain before enabling creation; a check warning is not an execution barrier. |
 
 Keep real subscription IDs, CIDRs, domains, endpoint names, and secrets in untracked local files or environment variables.
 
@@ -69,14 +69,14 @@ az network dns zone list --resource-group $resourceGroup --query '[].{name:name,
 Expected result:
 
 - Default mode returns an empty name-server list and creates no DNS zone.
-- The deliberately unsafe `example.com` enablement fails before Azure is changed.
+- The deliberately unsafe `example.com` plan reports a failed check warning. Do not apply it: `check` blocks do not stop Terraform operations.
 - Enabled owned-domain mode returns Azure authoritative name servers; public lookup still requires registrar delegation.
 
 ## Troubleshooting
 
 | Symptom | Resolution |
 |---|---|
-| The safety check rejects the plan | Use an owned domain, or keep zone creation disabled. |
+| The domain check reports a warning | Stop before apply. Use an owned domain, or keep zone creation disabled. |
 | The zone exists but Internet DNS does not resolve | Compare registrar delegation with the Azure name-server output and allow for DNS TTL/propagation. |
 | A parent zone is already managed elsewhere | Coordinate delegation; do not create conflicting authorities. |
 

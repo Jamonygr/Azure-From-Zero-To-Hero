@@ -77,7 +77,7 @@ $requiredLessonSections = @(
 Push-Location $Root
 try {
   $markdownFiles = Get-ChildItem -Path $Root -Recurse -File -Filter "*.md" |
-    Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\' }
+    Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\' }
 
   foreach ($file in $markdownFiles) {
     $content = Get-Content -Raw -Path $file.FullName
@@ -100,7 +100,7 @@ try {
   }
 
   $powerShellFiles = Get-ChildItem -Path $Root -Recurse -File -Include "*.ps1", "*.psm1", "*.psd1" |
-    Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\' }
+    Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\' }
 
   foreach ($file in $powerShellFiles) {
     $tokens = $null
@@ -162,7 +162,7 @@ try {
   $editableFiles = Get-ChildItem -Path $Root -Recurse -File |
     Where-Object {
       $_.Extension -in @(".md", ".ps1", ".psd1", ".tf", ".tfvars", ".hcl", ".yml", ".yaml", ".json", ".jsonc") -and
-      $_.FullName -notmatch '\\.terraform\\|\\artifacts\\'
+      $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\'
     }
   $staleReferences = @($editableFiles | Select-String -SimpleMatch $legacyPath)
   if ($staleReferences.Count -eq 0) {

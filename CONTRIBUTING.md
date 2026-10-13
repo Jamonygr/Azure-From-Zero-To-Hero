@@ -70,3 +70,31 @@ Before opening a pull request, confirm the change does not include:
 - The validation and cleanup steps still work.
 - The change fits the Windows and PowerShell path.
 
+
+## Illustrated Website Contributions
+
+`curriculum/lessons.psd1` remains the lesson catalog. Import it through
+`scripts/Export-LearningCatalog.ps1`; do not maintain a second editable list.
+Website staging, builds, virtual environments, plans, state, and learner exports
+are local generated data and must remain ignored.
+
+```powershell
+python -m pip install -r requirements-site.txt
+python tools/validate_assessments.py
+python tools/render_site_visuals.py --check
+node --test tools/tests/browser_learning.test.cjs
+python tools/build_docs_site.py
+python -m mkdocs build --strict
+python tools/check_built_site.py
+```
+
+Question banks contain 30 original questions per assessed lesson, with four
+options, one answer, explanations, official references, and a lesson remediation
+anchor. Validate against `assessments/question-bank.schema.json`; review accuracy
+against the lesson Terraform and current official documentation. CLZ-090 uses a
+setup checklist. Never add an assessment that claims live Azure validation.
+
+Progress uses `azureZeroToHeroLearnerProgress.v1` and version `1.0.0` JSON exports.
+Quiz scoring must preserve lesson status and self-reported exercise and cleanup
+fields. The website sends no progress to a server. Retain this format when
+changing the learning interface.

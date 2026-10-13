@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-370",
+  "questions": [
+    {
+      "id": "CLZ370-Q01",
+      "learningObjective": "Credential-free validation",
+      "stem": "Which operation belongs in CLZ-370's pull-request workflow without Azure credentials?",
+      "options": {
+        "A": "Azure resource apply",
+        "B": "Backend-free init, fmt, and validate",
+        "C": "Secret retrieval from Key Vault",
+        "D": "Subscription-wide destroy"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Apply needs authorization and changes Azure.",
+        "B": "These checks examine Terraform configuration without deploying.",
+        "C": "Key Vault retrieval is an authenticated data operation.",
+        "D": "Destroy is outside credential-free source checks."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform validate command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q02",
+      "learningObjective": "Plan versus apply",
+      "stem": "What Azure resource does the manual OIDC example actually create as written?",
+      "options": {
+        "A": "The tagged resource group automatically",
+        "B": "A Windows VMSS",
+        "C": "An Azure Bastion host",
+        "D": "None; it stops at a plan"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A proposed change is not deployed by plan.",
+        "B": "The target contains only a resource-group proposal.",
+        "C": "Bastion is not in the target.",
+        "D": "The workflow contains no apply step."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q03",
+      "learningObjective": "Federated authentication",
+      "stem": "What replaces a stored client secret in the manual example's authentication path?",
+      "options": {
+        "A": "A federated OIDC token exchange",
+        "B": "A password committed in tfvars",
+        "C": "Anonymous subscription access",
+        "D": "A Key Vault secret printed into a plan"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Federation uses the configured identity trust.",
+        "B": "Committed credentials are explicitly avoided.",
+        "C": "Azure access still requires authentication.",
+        "D": "Printing a secret is unnecessary disclosure."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q04",
+      "learningObjective": "Token permission",
+      "stem": "Why does the OIDC workflow request id-token: write?",
+      "options": {
+        "A": "To make GITHUB_TOKEN a subscription Owner",
+        "B": "To allow Terraform apply automatically",
+        "C": "To request an OIDC token for federation",
+        "D": "To publish all repository secrets"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Azure role assignments remain separate.",
+        "B": "No apply is added by this permission.",
+        "C": "It permits token issuance for the configured trust.",
+        "D": "The permission is not blanket secret publication."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q05",
+      "learningObjective": "Repository permission",
+      "stem": "Why is contents: read appropriate for these examples?",
+      "options": {
+        "A": "It grants Contributor on every Azure resource",
+        "B": "It gives secret purge permission",
+        "C": "Checkout needs repository reads while no source-write operation is required",
+        "D": "It creates GitHub environment reviewers"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "GitHub permissions do not assign Azure RBAC.",
+        "B": "Key Vault authorization is separate.",
+        "C": "Repository and cloud permissions are distinct.",
+        "D": "Reviewers need separate environment configuration."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q06",
+      "learningObjective": "Environment gate",
+      "stem": "What must an authorized owner configure for azure-lab-plan before enabling the authenticated example?",
+      "options": {
+        "A": "Environment approval policy and scoped federation settings",
+        "B": "Only a matching CSS color",
+        "C": "Only an action-group display name",
+        "D": "Only a new Markdown title"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The plan requires a deliberate cloud trust and approval boundary.",
+        "B": "Design colors do not grant cloud identity trust.",
+        "C": "Monitor resources do not define GitHub environment approval.",
+        "D": "A title does not configure security."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q07",
+      "learningObjective": "Trust claim diagnosis",
+      "stem": "OIDC login fails. Which values should be compared with the federated credential?",
+      "options": {
+        "A": "Only the Terraform resource tags",
+        "B": "Only workspace retention days",
+        "C": "Only the VMSS count",
+        "D": "Issuer, subject, and audience"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags do not establish the token trust.",
+        "B": "Retention is unrelated.",
+        "C": "No VMSS is planned here.",
+        "D": "Federation relies on matching token claims and trust configuration."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q08",
+      "learningObjective": "Environment subject",
+      "stem": "A credential trusts one branch subject but the workflow uses a protected environment. What is the likely issue?",
+      "options": {
+        "A": "Terraform cannot run on Windows",
+        "B": "The expected OIDC subject may not match the environment-based token",
+        "C": "The action group blocks all logins",
+        "D": "The DNS TTL is too long"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "These examples explicitly use Windows runners.",
+        "B": "The federated subject must match the actual workflow context.",
+        "C": "No action group is part of the login path.",
+        "D": "DNS TTL is not this claim mismatch."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q09",
+      "learningObjective": "Required variables",
+      "stem": "Which trio supplies the cloud identity context in the manual workflow?",
+      "options": {
+        "A": "AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID",
+        "B": "VM_SIZE, INSTANCE_COUNT, SITE_MESSAGE",
+        "C": "DNS_TTL, PRIMARY_PRIORITY, SECONDARY_PRIORITY",
+        "D": "QUIZ_SCORE, LESSON_STATUS, THEME"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Those variables identify the federated application, tenant, and subscription.",
+        "B": "These VM inputs are unrelated to login.",
+        "C": "Traffic-routing inputs are unrelated.",
+        "D": "Browser fields cannot authenticate to Azure."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q10",
+      "learningObjective": "Subscription selection",
+      "stem": "Why use the exact subscription ID variable instead of relying on a display name?",
+      "options": {
+        "A": "Display names automatically encrypt state",
+        "B": "The ID removes Azure role checks",
+        "C": "It makes the intended cloud scope explicit",
+        "D": "The variable creates the subscription"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Names do not encrypt state.",
+        "B": "RBAC still applies.",
+        "C": "An exact GUID avoids ambiguity about the target.",
+        "D": "Selecting an ID does not create a subscription."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q11",
+      "learningObjective": "Immutable action pins",
+      "stem": "The examples reference full action commit SHAs. What benefit is intended?",
+      "options": {
+        "A": "Guaranteed freedom from every future vulnerability",
+        "B": "A reviewed immutable action version",
+        "C": "Automatic approval for Terraform apply",
+        "D": "Permanent removal of update maintenance"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Pinned code can still need security updates.",
+        "B": "SHA pinning stabilizes the code being executed.",
+        "C": "Action pins do not approve cloud mutations.",
+        "D": "Pins still require reviewed maintenance."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q12",
+      "learningObjective": "Pinned action maintenance",
+      "stem": "A new security fix is available for a pinned action. What should maintainers do?",
+      "options": {
+        "A": "Replace it with an unreviewed floating branch",
+        "B": "Remove every workflow permission limit",
+        "C": "Ignore it because pins never need changes",
+        "D": "Review and update its full commit pin"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Floating code loses the reviewed version boundary.",
+        "B": "Permission expansion is unrelated.",
+        "C": "Pinning does not eliminate maintenance.",
+        "D": "Immutable pins need deliberate upgrades."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q13",
+      "learningObjective": "Trigger separation",
+      "stem": "What starts the authenticated Azure plan example?",
+      "options": {
+        "A": "Every documentation page view",
+        "B": "Every pull request from any fork automatically",
+        "C": "Terraform fmt detecting whitespace",
+        "D": "Manual workflow_dispatch"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Site viewing cannot dispatch it.",
+        "B": "It is separate from credential-free PR validation.",
+        "C": "Formatting does not trigger authenticated cloud plans.",
+        "D": "The example is manually triggered behind its environment gate."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q14",
+      "learningObjective": "Backend-free init",
+      "stem": "Why initialize with -backend=false for credential-free checks?",
+      "options": {
+        "A": "Disable all provider installation",
+        "B": "Avoid configuring a cloud state backend for syntax validation",
+        "C": "Erase all Terraform state",
+        "D": "Force an Azure apply"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Providers may still need installation for validation.",
+        "B": "It supports checks without remote backend access.",
+        "C": "The flag does not erase state.",
+        "D": "Initialization never becomes apply because of that flag."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q15",
+      "learningObjective": "Lockfile intent",
+      "stem": "What does -lockfile=readonly enforce during the example initialization?",
+      "options": {
+        "A": "Do not read any configuration file",
+        "B": "Make Azure resources immutable",
+        "C": "Do not modify the dependency lock file",
+        "D": "Disable every provider checksum"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Configuration is still read.",
+        "B": "This is not an Azure resource lock.",
+        "C": "It uses the recorded dependency selections without rewriting them.",
+        "D": "Dependency verification remains relevant."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q16",
+      "learningObjective": "Formatting failure exercise",
+      "stem": "A branch deliberately contains unformatted Terraform. What should the credential-free workflow demonstrate?",
+      "options": {
+        "A": "A failing fmt check without an Azure deployment",
+        "B": "A newly created resource group",
+        "C": "A deleted state backend",
+        "D": "An email containing Azure credentials"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The exercise isolates a source-quality failure.",
+        "B": "The validation workflow does not apply.",
+        "C": "No backend deletion is configured.",
+        "D": "Credentials are not required or emailed."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform validate command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q17",
+      "learningObjective": "Configuration validation boundary",
+      "stem": "terraform validate succeeds. What has it not proven?",
+      "options": {
+        "A": "The configuration was checked for internal validity",
+        "B": "A future Azure apply will satisfy permissions, quota, and live service conditions",
+        "C": "Terraform parsed the module configuration",
+        "D": "Referenced expressions were statically examined"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Configuration validation is its purpose.",
+        "B": "Static validation is not a live deployment guarantee.",
+        "C": "Parsing is part of validation.",
+        "D": "Static expression checks are part of validation."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform validate command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q18",
+      "learningObjective": "Workflow file placement",
+      "stem": "Why copy the selected example into the repository root's .github/workflows as .yml?",
+      "options": {
+        "A": "That is the location used for enabled repository workflows",
+        "B": "Terraform automatically discovers .example files everywhere",
+        "C": "MkDocs runs every file under a lesson folder",
+        "D": "Azure Portal imports all YAML on login"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The lesson's examples are inert until deliberately enabled there.",
+        "B": "The .example files are teaching material.",
+        "C": "Docs hosting does not execute lesson workflows.",
+        "D": "Azure login does not import repository YAML."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q19",
+      "learningObjective": "Working-directory diagnosis",
+      "stem": "A copied workflow cannot find Terraform files. What should be checked?",
+      "options": {
+        "A": "The lesson's browser theme",
+        "B": "The storage redundancy tier",
+        "C": "The Traffic Manager endpoint health",
+        "D": "Its working-directory relative to repository root"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Theme does not select runner paths.",
+        "B": "Storage replication is unrelated.",
+        "C": "Routing health does not locate configuration files.",
+        "D": "Copying the example changes its enabled location, so paths must still resolve."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q20",
+      "learningObjective": "Plan refresh limitation",
+      "stem": "The manual plan uses -refresh=false. What evidence limitation follows?",
+      "options": {
+        "A": "It guarantees all Azure APIs are never contacted",
+        "B": "It automatically bypasses authorization",
+        "C": "It does not refresh existing remote object state for this plan",
+        "D": "It applies the proposed resource group"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Providers may still interact with APIs during planning.",
+        "B": "Authentication remains necessary.",
+        "C": "Skipping refresh can omit current external changes.",
+        "D": "The command is still plan-only."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q21",
+      "learningObjective": "Concurrency intent",
+      "stem": "Why define workflow concurrency for this plan example?",
+      "options": {
+        "A": "Avoid overlapping runs in the defined group",
+        "B": "Grant a state lock across every repository",
+        "C": "Create approval reviewers",
+        "D": "Guarantee no human can run Terraform locally"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Workflow concurrency coordinates runs, not all possible Terraform writers.",
+        "B": "It is not universal backend locking.",
+        "C": "Approval policy is separately configured.",
+        "D": "Local commands remain outside that workflow group."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q22",
+      "learningObjective": "Timeout purpose",
+      "stem": "What risk does a bounded job timeout reduce?",
+      "options": {
+        "A": "All Azure authorization errors",
+        "B": "Every malicious source change",
+        "C": "Every DNS failover delay",
+        "D": "A stuck workflow consuming runner time indefinitely"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "It does not grant permissions.",
+        "B": "It cannot replace review.",
+        "C": "DNS timing is outside runner lifetime controls.",
+        "D": "A timeout bounds how long the runner job can remain active."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q23",
+      "learningObjective": "Cloud RBAC refusal",
+      "stem": "OIDC login succeeds but the resource-group plan is forbidden. What needs review?",
+      "options": {
+        "A": "Only contents: write on GitHub",
+        "B": "Only the CSS stylesheet",
+        "C": "The application's required Azure role and intended scope",
+        "D": "Only actionlint installation"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Repository write permission does not assign cloud rights.",
+        "B": "CSS has no cloud authorization role.",
+        "C": "Successful identity authentication does not guarantee Azure authorization.",
+        "D": "Workflow syntax checking is separate."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q24",
+      "learningObjective": "Plan artifact sensitivity",
+      "stem": "A workflow is extended to save a binary plan. What handling should be assessed?",
+      "options": {
+        "A": "Automatic public download for every user",
+        "B": "Restricted access and short retention because plans may contain secrets",
+        "C": "Embedding it in an SVG",
+        "D": "Assuming sensitive output redaction removes all values"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Public publication can leak planned secret values.",
+        "B": "Plans require secret-aware artifact handling.",
+        "C": "Artwork is not protected plan storage.",
+        "D": "Redaction does not remove plan values."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q25",
+      "learningObjective": "No client secret evidence",
+      "stem": "Which inspection follows the lesson's workflow acceptance criteria?",
+      "options": {
+        "A": "Print all environment credentials",
+        "B": "Run destroy in the root folder",
+        "C": "Check examples contain no terraform apply or client-secret step",
+        "D": "Rename all workflow variables to password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Printing credentials defeats safe validation.",
+        "B": "Destroy is unrelated to workflow acceptance.",
+        "C": "The lesson explicitly checks plan-only and secret-free workflow structure.",
+        "D": "Misleading names do not verify security."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q26",
+      "learningObjective": "Apply approval boundary",
+      "stem": "A team now needs deployment automation. What should be designed beyond this example?",
+      "options": {
+        "A": "Add apply to every fork PR immediately",
+        "B": "A separately approved apply operation with reviewed plan and scoped identity",
+        "C": "Disable environment review before deploying",
+        "D": "Treat a successful quiz as Azure approval"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Untrusted PRs should not automatically mutate cloud resources.",
+        "B": "The lesson intentionally provides no apply implementation.",
+        "C": "Removing the gate weakens the intended boundary.",
+        "D": "Learner progress is not deployment authorization."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q27",
+      "learningObjective": "Credential-free cleanup",
+      "stem": "What does cleanup remove after using only the validation example?",
+      "options": {
+        "A": "Test workflow copies and local plan artifacts, with no Azure resources to destroy",
+        "B": "Every resource in the subscription",
+        "C": "The CLZ-310 backend account",
+        "D": "All repository branches"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The examples do not deploy Azure resources.",
+        "B": "Subscription-wide deletion is outside scope.",
+        "C": "The backend belongs to another lesson.",
+        "D": "Branches are not the documented cleanup target."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q28",
+      "learningObjective": "Federated credential lifecycle",
+      "stem": "An owner created a test federated credential for this lesson. Does removing the local YAML automatically delete it?",
+      "options": {
+        "A": "Yes; every file deletion calls Azure",
+        "B": "Yes; terraform fmt destroys identity trusts",
+        "C": "Only if the browser closes",
+        "D": "No; remove that external test configuration separately when appropriate"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "File deletion is not an Azure API operation.",
+        "B": "Formatting does not mutate identity trust.",
+        "C": "Browser state has no identity lifecycle role.",
+        "D": "Federated identity configuration is outside the workflow-copy lifecycle."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Azure GitHub Actions OIDC",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q29",
+      "learningObjective": "Validation command choice",
+      "stem": "Which tool checks the syntax and expressions of the supplied workflow examples?",
+      "options": {
+        "A": "actionlint",
+        "B": "Resolve-DnsName",
+        "C": "az keyvault secret show",
+        "D": "Test-NetConnection"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The lesson invokes actionlint on both example files.",
+        "B": "DNS lookup does not lint workflow YAML.",
+        "C": "Secret reads do not lint actions.",
+        "D": "TCP checks do not inspect workflow syntax."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "GitHub Actions with Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/github/github-actions"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ370-Q30",
+      "learningObjective": "Boundary verification",
+      "stem": "A passing authenticated workflow ends after terraform plan. What is valid to report?",
+      "options": {
+        "A": "The resource group was deployed and validated",
+        "B": "The plan ran; deployment remains unperformed",
+        "C": "The capstone is now operational",
+        "D": "All Azure costs have ended"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "No apply evidence exists.",
+        "B": "A plan reports proposed changes without applying them.",
+        "C": "This example does not deploy the capstone.",
+        "D": "Planning does not prove unrelated cost cleanup."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

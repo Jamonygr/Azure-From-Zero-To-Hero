@@ -1,22 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="615" viewBox="0 0 1200 615" role="img" aria-labelledby="title desc">
   <title id="title">Windows workstation toolchain</title>
   <desc id="desc">A Windows workstation setup flow for VS Code, PowerShell, Terraform, Azure CLI, Git, and Azure From Zero To Hero validation.</desc>
-  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#2563eb;stroke-width:3}.tool{fill:#dbeafe}.check{fill:#ecfdf5;stroke:#059669;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
-  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
-  <rect class="bg" width="1200" height="520" rx="18"/>
+  <metadata>{"preserves": "labels, coordinates, resource shapes, and service connections", "sourceSha256": "3c448ef35b5e0eef04289e7f098141626077914d997f052f7334312f0cbc51ff"}</metadata><style>.bg{fill:#080e1b}.box{fill:#101d32;stroke:#61caff;stroke-width:3}.tool{fill:#172747}.check{fill:#11332f;stroke:#60e0e5;stroke-width:3}.text{font:700 24px "Segoe UI",Arial,sans-serif;fill:#eff5ff}.small{font:18px "Segoe UI",Arial,sans-serif;fill:#bcd0eb}.arrow{stroke:#60e0e5;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#60e0e5" /></marker></defs>
+  <rect class="bg" width="1200" height="520" rx="18" />
   <text class="text" x="40" y="55">Optional Windows Workstation Toolchain</text>
   <g transform="translate(65 110)">
-    <rect class="box tool" width="180" height="110" rx="12"/><text class="text" x="44" y="46">WinGet</text><text class="small" x="35" y="78">package install</text>
-    <line class="arrow" x1="200" y1="55" x2="265" y2="55"/>
-    <rect class="box" x="290" width="180" height="110" rx="12"/><text class="text" x="337" y="46">VS Code</text><text class="small" x="325" y="78">editor + path</text>
-    <line class="arrow" x1="490" y1="55" x2="555" y2="55"/>
-    <rect class="box tool" x="580" width="180" height="110" rx="12"/><text class="text" x="620" y="46">Tools</text><text class="small" x="603" y="78">tf + az + git</text>
-    <line class="arrow" x1="780" y1="55" x2="845" y2="55"/>
-    <rect class="box" x="870" width="210" height="110" rx="12"/><text class="text" x="915" y="46">PowerShell</text><text class="small" x="920" y="78">terminal profile</text>
+    <rect class="box tool" width="180" height="110" rx="12" /><text class="text" x="44" y="46">WinGet</text><text class="small" x="35" y="78">package install</text>
+    <line class="arrow" x1="200" y1="55" x2="265" y2="55" />
+    <rect class="box" x="290" width="180" height="110" rx="12" /><text class="text" x="337" y="46">VS Code</text><text class="small" x="325" y="78">editor + path</text>
+    <line class="arrow" x1="490" y1="55" x2="555" y2="55" />
+    <rect class="box tool" x="580" width="180" height="110" rx="12" /><text class="text" x="620" y="46">Tools</text><text class="small" x="603" y="78">tf + az + git</text>
+    <line class="arrow" x1="780" y1="55" x2="845" y2="55" />
+    <rect class="box" x="870" width="210" height="110" rx="12" /><text class="text" x="915" y="46">PowerShell</text><text class="small" x="920" y="78">terminal profile</text>
   </g>
   <g transform="translate(170 300)">
-    <rect class="box" width="260" height="110" rx="12"/><text class="text" x="54" y="47">Extensions</text><text class="small" x="44" y="80">Terraform + Azure</text>
-    <line class="arrow" x1="285" y1="55" x2="415" y2="55"/>
-    <rect class="box check" x="440" width="310" height="110" rx="12"/><text class="text" x="520" y="47">Validate</text><text class="small" x="480" y="80">versions, auth, formatting</text>
+    <rect class="box" width="260" height="110" rx="12" /><text class="text" x="54" y="47">Extensions</text><text class="small" x="44" y="80">Terraform + Azure</text>
+    <line class="arrow" x1="285" y1="55" x2="415" y2="55" />
+    <rect class="box check" x="440" width="310" height="110" rx="12" /><text class="text" x="520" y="47">Validate</text><text class="small" x="480" y="80">versions, auth, formatting</text>
   </g>
-</svg>
+<g><rect y="520.0" width="1200.0" height="95" fill="#080e1b" /><g transform="translate(25 533.0) scale(0.75)" fill="none" stroke="#60e0e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 60h39c25 0 25-34 2-37-8-24-40-22-46 1C-3 30 0 60 24 60Z" /><path d="m30 40 12 12 15-22" /></g><g transform="translate(112 533.0) scale(0.75)" fill="none" stroke="#b39bff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="29" y="29" width="26" height="26" rx="5" /><path d="M42 29V12m0 43v17M29 42H12m43 0h17" /><circle cx="42" cy="9" r="5" /><circle cx="42" cy="75" r="5" /><circle cx="9" cy="42" r="5" /><circle cx="75" cy="42" r="5" /></g><text x="210" y="562.0" fill="#eaf2ff" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="500">Azure + Terraform learning architecture</text><text x="210" y="590.0" fill="#bdd0ec" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Follow the lesson for exact resource settings and deployment mode.</text></g></svg>

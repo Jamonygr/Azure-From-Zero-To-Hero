@@ -2,11 +2,22 @@
 
 [![Repository quality](https://github.com/Jamonygr/Azure-From-Zero-To-Hero/actions/workflows/terraform-validate.yml/badge.svg)](https://github.com/Jamonygr/Azure-From-Zero-To-Hero/actions/workflows/terraform-validate.yml)
 
-![Azure From Zero To Hero roadmap](assets/images/azure-from-zero-to-hero-roadmap.png)
+![Azure From Zero To Hero illustrated cloud and Terraform cover](assets/illustrations/zero-to-hero-cover.png)
+
+Original conceptual cover illustration. [Open the cover at full size](assets/illustrations/zero-to-hero-cover.png).
 
 A Windows-first path from Terraform fundamentals to a private, monitored Azure
 reference architecture. The 31 lessons use PowerShell, Azure CLI, Terraform,
 Windows Server, IIS, networking, state, security, operations, and CI.
+
+**[Open the illustrated learning website](https://jamonygr.github.io/Azure-From-Zero-To-Hero/)** ·
+[Practice 900 original questions](https://jamonygr.github.io/Azure-From-Zero-To-Hero/practice/) ·
+[Download Beyond Clickopz](ClickopzBook.pdf)
+
+The website brings together all 31 lessons, six learning phases, 55 SVG teaching
+visuals, search, quizzes with explanations, and browser-local progress. Black/navy
+is the default theme, with a remembered light-mode option. Exercise and cleanup
+completion are self-reported; the website does not run Terraform or create Azure resources.
 
 > [!CAUTION]
 > Many lessons create billable Azure resources. Nothing in this repository runs

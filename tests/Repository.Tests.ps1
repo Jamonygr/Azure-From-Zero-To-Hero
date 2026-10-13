@@ -41,7 +41,7 @@ Describe "Pinned tool policy" {
   It "keeps Terraform constraints on the tested minor line" {
     $expectedConstraint = "~> $(([version]$script:ToolManifest.Runtime.Terraform).Major).$(([version]$script:ToolManifest.Runtime.Terraform).Minor).0"
     $versionFiles = Get-ChildItem -Path $script:RepoRoot -Recurse -File -Filter "versions.tf" |
-      Where-Object { $_.FullName -notmatch '\\.terraform\\' }
+      Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\' }
 
     foreach ($file in $versionFiles) {
       (Get-Content -Raw -LiteralPath $file.FullName) | Should -Match ([regex]::Escape("required_version = `"$expectedConstraint`""))
@@ -81,7 +81,7 @@ Describe "Terraform reproducibility and mock tests" {
     )
     $script:TerraformTestFiles = @(
       Get-ChildItem -Path $script:RepoRoot -Recurse -File -Filter "*.tftest.hcl" |
-        Where-Object { $_.FullName -notmatch '\\.terraform\\' } |
+        Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\' } |
         ForEach-Object { [System.IO.Path]::GetRelativePath($script:RepoRoot, $_.FullName) }
     )
   }
@@ -239,7 +239,7 @@ Describe "Repository safety and drift" {
     $extensions = @("*.md", "*.ps1", "*.psd1", "*.tf", "*.tfvars", "*.hcl", "*.yml", "*.yaml", "*.json", "*.jsonc")
     $files = foreach ($extension in $extensions) {
       Get-ChildItem -Path $script:RepoRoot -Recurse -File -Filter $extension |
-        Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\' }
+        Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\' }
     }
     $legacyPath = "Chriz" + " Labz"
     $stale = @($files | Select-String -SimpleMatch $legacyPath)

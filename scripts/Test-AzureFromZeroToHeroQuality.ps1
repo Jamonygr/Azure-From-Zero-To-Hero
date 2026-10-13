@@ -241,8 +241,8 @@ try {
         ConvertTo-Json -Depth 4 |
         Set-Content -Path (Join-Path $reportDirectory "pester-summary.json") -Encoding utf8
 
-      if ($pesterResult.FailedCount -gt 0) {
-        throw "$($pesterResult.FailedCount) Pester test(s) failed."
+      if (-not $pesterResult -or $pesterResult.Result -ne "Passed" -or $pesterResult.TotalCount -eq 0 -or $pesterResult.FailedCount -gt 0) {
+        throw "Pester did not complete successfully. Inspect the test result and any framework errors."
       }
     }
   }
@@ -279,7 +279,13 @@ try {
     Invoke-QualityStep -Name "tflint" -ScriptBlock {
       Confirm-MinimumToolVersion -Command "tflint" -Arguments @("--version") -MinimumVersion ([version]$toolManifest.Runtime.TFLint)
       Invoke-LoggedCommand -Name "tflint-init" -Command "tflint" -Arguments @("--init", "--config", (Join-Path $Root ".tflint.hcl")) -LogFile "tflint-init-report.txt"
-      Invoke-LoggedCommand -Name "tflint" -Command "tflint" -Arguments @("--recursive", "--config", (Join-Path $Root ".tflint.hcl"), "--minimum-failure-severity=warning", "--format", "compact") -LogFile "tflint-report.txt"
+      $lintFolders = @(
+        Get-ChildItem -Path $Root -Directory -Filter "CLZ-*"
+        Get-Item -LiteralPath (Join-Path $Root "modules")
+      )
+      foreach ($lintFolder in $lintFolders) {
+        Invoke-LoggedCommand -Name "tflint" -Command "tflint" -Arguments @("--chdir=$($lintFolder.FullName)", "--recursive", "--config", (Join-Path $Root ".tflint.hcl"), "--minimum-failure-severity=warning", "--format", "compact") -LogFile "tflint-$($lintFolder.Name)-report.txt"
+      }
     }
   }
 
@@ -288,6 +294,7 @@ try {
       Confirm-ExactToolVersion -Command "trivy" -Arguments @("--version") -ExpectedVersion ([version]$toolManifest.Runtime.Trivy)
       Invoke-LoggedCommand -Name "trivy" -Command "trivy" -Arguments @(
         "config",
+        "--skip-dirs", ".site-docs,.site-docs.tmp,site,.venv,venv,artifacts,.terraform",
         "--ignorefile", (Join-Path $Root ".trivyignore"),
         "--severity", "MEDIUM,HIGH,CRITICAL",
         "--format", "table",

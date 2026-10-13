@@ -14,7 +14,7 @@ Serve one public HTTP endpoint from multiple IIS Windows backends and define bot
 
 ## Architecture
 
-A zone-redundant Standard public IP fronts a Standard Load Balancer. Its backend pool contains multiple private NICs. A TCP health probe gates an HTTP rule, and an outbound rule explicitly supplies SNAT; the inbound rule disables implicit outbound SNAT.
+A Standard public IP fronts a Standard Load Balancer. Its backend pool contains two private NICs. The configuration does not explicitly select availability zones. A TCP health probe gates an HTTP rule, and an outbound rule explicitly supplies SNAT; the inbound rule disables implicit outbound SNAT.
 
 ## Resources And Cost
 
@@ -35,10 +35,11 @@ A zone-redundant Standard public IP fronts a Standard Load Balancer. Its backend
 | `location` | Select a supported region with adequate quota. |
 | `name_prefix` | Use a short lowercase prefix for derived names. |
 | `admin_username` | Nonreserved local administrator name used on each backend. |
-| `instance_count` | Keep the small default; each additional instance adds VM and disk cost. |
 | `vm_size` | Use a small regionally available Windows size. |
 
 Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
+
+The configuration fixes the backend count at two; it does not expose an `instance_count` input.
 
 ## Deploy
 
@@ -79,7 +80,7 @@ Expected result:
 
 | Symptom | Resolution |
 |---|---|
-| The frontend returns 502/timeout | Wait for IIS bootstrap, then inspect probe health, NSG port 80, and backend-pool associations. |
+| Connections time out or a backend returns an HTTP error | Wait for IIS bootstrap, then inspect probe health, NSG port 80, backend-pool associations, and the application's response. The layer-4 load balancer does not generate HTTP 502 responses. |
 | A backend cannot download bootstrap content | Verify the outbound rule and backend pool membership. |
 | Only one page appears repeatedly | Load Balancer distribution is flow based; use new TCP connections and verify both backends are healthy. |
 

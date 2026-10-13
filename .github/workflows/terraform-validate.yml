@@ -1,6 +1,7 @@
 name: repo-quality
 
 on:
+  workflow_call:
   workflow_dispatch:
   pull_request:
   push:
@@ -21,6 +22,53 @@ env:
   NODE_VERSION: 24
 
 jobs:
+  learning-site:
+    name: Website, assessments, visuals, and progress
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-site.txt
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install pinned site dependencies and verified check tools
+        run: |
+          python -m pip install -r requirements-site.txt
+          python tools/install_check_tools.py
+
+      - name: Validate original questions and synchronized visuals
+        run: |
+          python tools/validate_assessments.py
+          python tools/render_site_visuals.py --check
+          node --check docs/site-assets/progress.js
+          node --check docs/site-assets/quiz.js
+          node --test tools/tests/browser_learning.test.cjs
+
+      - name: Stage and strictly validate the complete site
+        run: |
+          python tools/build_docs_site.py
+          python -m mkdocs build --strict
+          python tools/check_built_site.py
+
+      - name: Scan committed history for secrets
+        run: ./.check-tools/gitleaks.exe git . --redact --no-banner
+
   terraform-validate:
     name: Terraform format, lock, validate, and test
     runs-on: windows-latest

@@ -64,6 +64,18 @@ terraform apply tfplan
 
 ## Validate
 
+The shared VMSS module uses a **Manual** upgrade policy. An IIS extension added to the model may require explicitly updating existing instances. Review the instance model and extension status before expecting healthy HTTP responses:
+
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+$scaleSetName = az vmss list --resource-group $resourceGroup --query '[0].name' --output tsv
+az vmss list-instances --resource-group $resourceGroup --name $scaleSetName --expand instanceView --output json
+# Deliberate Azure change: update these lab instances to the latest model after review.
+az vmss update-instances --resource-group $resourceGroup --name $scaleSetName --instance-ids '*'
+```
+
+Follow Microsoft's [VMSS application deployment guidance](https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-deploy-app). Wait for successful extension execution and probe health before checking HTTP.
+
 ```powershell
 $resourceGroup = terraform output -raw resource_group_name
 $url = terraform output -raw capstone_load_balancer_url

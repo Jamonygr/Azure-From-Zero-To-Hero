@@ -1,0 +1,813 @@
+{
+  "lessonId": "CLZ-170",
+  "questions": [
+    {
+      "id": "CLZ170-Q01",
+      "learningObjective": "Identify declared network topology",
+      "stem": "What topology does the supplied CLZ-170 configuration create?",
+      "options": {
+        "A": "Four VNets connected by peering.",
+        "B": "One VNet and four distinct subnets.",
+        "C": "One VM in each subnet.",
+        "D": "A public load balancer and Bastion."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Only one VNet is declared.",
+        "B": "The subnets represent web, app, data, and management roles.",
+        "C": "No workloads are deployed.",
+        "D": "Neither service is declared."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Virtual Network overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q02",
+      "learningObjective": "Understand address-space containment",
+      "stem": "Why must 10.40.1.0/24 fit inside the VNet's 10.40.0.0/16?",
+      "options": {
+        "A": "A /24 always requires a public IP.",
+        "B": "The numbers encode Azure region eastus2.",
+        "C": "A subnet prefix must be contained in the VNet address space.",
+        "D": "Terraform tags impose that prefix."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Private subnet ranges do not require public addresses.",
+        "B": "CIDRs are independent of region names.",
+        "C": "The subnet partitions that network's configured address range.",
+        "D": "Tags do not define subnet containment."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q03",
+      "learningObjective": "Avoid overlapping subnet ranges",
+      "stem": "A new app subnet reuses the web subnet's exact prefix. What is the problem?",
+      "options": {
+        "A": "Their tags must have matching case.",
+        "B": "Both need a public IP before creation.",
+        "C": "The subscription requires a Windows image.",
+        "D": "The two subnet ranges overlap."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tag case is unrelated to address overlap.",
+        "B": "Subnets can exist without public IPs.",
+        "C": "There is no workload image requirement here.",
+        "D": "The address plan must keep them distinct."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q04",
+      "learningObjective": "Interpret tier labels",
+      "stem": "Do the names web, app, data, and mgmt alone enforce firewall policy between those tiers?",
+      "options": {
+        "A": "No; names and subnet separation are not an NSG policy.",
+        "B": "Yes; data automatically denies all inbound packets.",
+        "C": "Yes; mgmt automatically enables Bastion.",
+        "D": "Only web automatically opens HTTP."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "This lesson deliberately adds no NSGs.",
+        "B": "A name does not create rules.",
+        "C": "Bastion is not declared.",
+        "D": "No port-opening rule is created."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Virtual Network overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+        },
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q05",
+      "learningObjective": "Read live VNet address space",
+      "stem": "Which validation query checks the deployed VNet's address prefixes?",
+      "options": {
+        "A": "terraform fmt -check only.",
+        "B": "az network vnet show with addressSpace.addressPrefixes.",
+        "C": "az account show --query tenantId.",
+        "D": "terraform output windows_admin_password."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Formatting does not query Azure.",
+        "B": "It reads the VNet configuration from Azure.",
+        "C": "That reads directory context.",
+        "D": "No password output exists here."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Virtual Network overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q06",
+      "learningObjective": "Recognize management subnet values",
+      "stem": "Which prefix does the provided mgmt subnet use?",
+      "options": {
+        "A": "10.40.3.0/24",
+        "B": "10.40.0.0/16",
+        "C": "10.40.10.0/24",
+        "D": "0.0.0.0/0"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That belongs to data-snet.",
+        "B": "That is the VNet's complete address space.",
+        "C": "It is explicitly declared for mgmt-snet.",
+        "D": "That is not the management subnet declaration."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q07",
+      "learningObjective": "Separate network from compute",
+      "stem": "Why can CLZ-170 be validated without checking VM power state?",
+      "options": {
+        "A": "All its VMs are hidden.",
+        "B": "VNet creation automatically deallocates VMs.",
+        "C": "Terraform cannot read VM properties.",
+        "D": "It declares no virtual machines."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "There are no VM resources.",
+        "B": "It does not create or deallocate hidden VMs.",
+        "C": "Later lessons can inspect them.",
+        "D": "Validation focuses on address-space and subnet properties."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Virtual Network overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q08",
+      "learningObjective": "Inspect a fifth subnet proposal",
+      "stem": "Which proposed extra subnet is contained in the lesson's 10.40.0.0/16 VNet and does not overlap its four supplied /24 ranges?",
+      "options": {
+        "A": "10.40.4.0/24",
+        "B": "10.40.1.128/25",
+        "C": "10.41.4.0/24",
+        "D": "10.40.10.0/24"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It remains inside the /16 and outside the existing four ranges.",
+        "B": "It overlaps the existing web /24.",
+        "C": "It is outside the VNet's configured /16.",
+        "D": "It repeats the management range."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q09",
+      "learningObjective": "Plan peering compatibility",
+      "stem": "A candidate peered VNet uses 10.40.0.0/16 too. What must be resolved first?",
+      "options": {
+        "A": "Only its Project tag.",
+        "B": "Its overlapping address space.",
+        "C": "Only whether the candidate uses the same region.",
+        "D": "Only the README title."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tags do not solve routing ambiguity.",
+        "B": "Peering requires nonoverlapping address spaces.",
+        "C": "Region choice does not repair overlapping address spaces.",
+        "D": "A title does not change network prefixes."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure virtual network peering",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q10",
+      "learningObjective": "Distinguish IP plan and location",
+      "stem": "The learner changes location to an approved alternative region. Must the private CIDR change solely for that reason?",
+      "options": {
+        "A": "Yes; eastus2 owns the 10.40 range.",
+        "B": "Yes; Terraform maps every region to one /16.",
+        "C": "No; region and IP addressing are separate choices.",
+        "D": "Only the management CIDR must become public."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Private ranges are not assigned to regions that way.",
+        "B": "No such map is defined.",
+        "C": "The address plan is not encoded by the location string.",
+        "D": "That is not required."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Virtual Network concepts",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/concepts-and-best-practices"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q11",
+      "learningObjective": "Understand private address planning",
+      "stem": "Why allocate from an organization-wide IP plan for production?",
+      "options": {
+        "A": "To replace RBAC authentication.",
+        "B": "To guarantee every VM is free.",
+        "C": "To make subnet names immutable.",
+        "D": "To avoid overlap across connected networks."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "IP planning does not grant permissions.",
+        "B": "Addresses do not waive billing.",
+        "C": "The purpose is coordinated addressing.",
+        "D": "Later hub, peering, and hybrid paths need compatible addressing."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Virtual Network concepts",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/concepts-and-best-practices"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q12",
+      "learningObjective": "Recognize independent lesson ownership",
+      "stem": "CLZ-170's VNet is under a CLZ-170 group. Should the learner assume it modifies CLZ-160's group?",
+      "options": {
+        "A": "No; this lesson declares its own lifecycle boundary.",
+        "B": "Yes; every lesson shares the same resource group.",
+        "C": "Only when the Environment tag matches.",
+        "D": "Yes; prerequisite order automatically imports resources."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Its naming uses a different fixed lesson code.",
+        "B": "The source uses independent declarations and names.",
+        "C": "A shared tag does not merge ownership.",
+        "D": "Navigation does not perform import."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        },
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q13",
+      "learningObjective": "Count subnet validation results",
+      "stem": "What should az network vnet subnet list show after the supplied deployment?",
+      "options": {
+        "A": "One subnet per Azure region.",
+        "B": "Four subnet entries with distinct prefixes.",
+        "C": "No subnets until a VM is attached.",
+        "D": "Thirty entries matching practice questions."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Subnets belong to the chosen VNet.",
+        "B": "Exactly four subnet resources are declared.",
+        "C": "Empty subnets can be deployed.",
+        "D": "Assessments do not create networks."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q14",
+      "learningObjective": "Avoid assumed public exposure",
+      "stem": "Does this configuration create a public IP for the web subnet?",
+      "options": {
+        "A": "Yes; web subnets always get one.",
+        "B": "Only if the VNet prefix is /16.",
+        "C": "No; no public IP resource is declared.",
+        "D": "Yes; Azure bills one IP for every subnet."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Public IPs are separately configured resources.",
+        "B": "CIDR size does not create public IPs.",
+        "C": "The word web is a role label only.",
+        "D": "That is not the declared architecture."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure public IP addresses",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses"
+        },
+        {
+          "title": "Azure Virtual Network overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q15",
+      "learningObjective": "Understand implicit resource dependencies",
+      "stem": "Each subnet references azurerm_virtual_network.main.name. What does that reference establish in Terraform?",
+      "options": {
+        "A": "An automatic NSG association.",
+        "B": "A public DNS zone.",
+        "C": "A dependency on every repository lesson.",
+        "D": "A dependency on the VNet's configured result."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That needs its own declaration.",
+        "B": "No DNS zone is declared.",
+        "C": "The reference is in this module.",
+        "D": "Terraform can order related resource actions from references."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q16",
+      "learningObjective": "Separate routing and filtering",
+      "stem": "Which production addition controls custom traffic paths rather than simply naming subnet tiers?",
+      "options": {
+        "A": "Route tables with deliberate routes.",
+        "B": "An Environment tag.",
+        "C": "A subnet name changed to default-route.",
+        "D": "A longer management subnet name."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Routes express next-hop decisions.",
+        "B": "Tags classify metadata.",
+        "C": "Renaming does not create route entries.",
+        "D": "Names are not routes."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure virtual network routing",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q17",
+      "learningObjective": "Understand usable IPv4 capacity",
+      "stem": "Why are not all 256 addresses in an Azure IPv4 /24 subnet available for workloads?",
+      "options": {
+        "A": "A /24 contains only four addresses.",
+        "B": "Azure reserves five addresses per subnet.",
+        "C": "Every address is reserved for Terraform.",
+        "D": "Tags consume one address each."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A /24 contains 256 IPv4 addresses.",
+        "B": "The remaining capacity is reduced by reserved platform addresses.",
+        "C": "Terraform does not reserve the whole subnet.",
+        "D": "Tags are not IP endpoints."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q18",
+      "learningObjective": "Review planned network additions",
+      "stem": "Before applying the fifth-subnet exercise, what should be reviewed?",
+      "options": {
+        "A": "Only the presence of the new subnet name.",
+        "B": "The password rotation setting.",
+        "C": "Containment, overlap, and the proposed subnet-only change.",
+        "D": "Only the resource-group tags."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A name alone does not prove range containment or nonoverlap.",
+        "B": "No password resource is declared.",
+        "C": "Review ensures the address plan and scope match intent.",
+        "D": "Metadata does not validate the new subnet range."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        },
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q19",
+      "learningObjective": "Interpret subnet name uniqueness",
+      "stem": "Two subnets in the same VNet are both named web-snet. What is the design issue?",
+      "options": {
+        "A": "Azure resolves them by tag automatically.",
+        "B": "Only their regions distinguish them.",
+        "C": "Terraform randomly chooses one name.",
+        "D": "Subnet names identify distinct children and must be unique within that VNet."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags do not distinguish identical child names.",
+        "B": "They belong to the same regional VNet.",
+        "C": "Names are explicitly supplied.",
+        "D": "Use separate names for separate child resources."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q20",
+      "learningObjective": "Verify converged network configuration",
+      "stem": "A repeat plan reports no changes after live prefix verification. What does that indicate?",
+      "options": {
+        "A": "The evaluated managed network matches the current configuration.",
+        "B": "The network is now globally secure.",
+        "C": "Every future peering is valid.",
+        "D": "All downstream compute exists."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It supports convergence at the time checked.",
+        "B": "No security policy is declared here.",
+        "C": "Future address plans still need review.",
+        "D": "No compute is in this lesson."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q21",
+      "learningObjective": "Avoid subnet security assumptions",
+      "stem": "A learner claims the data tier is inaccessible because it is a separate subnet. What is the correct response?",
+      "options": {
+        "A": "Agree because the name data blocks packets.",
+        "B": "Evaluate actual routing and security policies.",
+        "C": "Assume every subnet is Internet-facing.",
+        "D": "Delete every app subnet immediately."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Names do not filter traffic.",
+        "B": "Separate subnets alone are not isolation rules.",
+        "C": "No public endpoint is declared.",
+        "D": "Review the intended policy instead."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure virtual network routing",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview"
+        },
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q22",
+      "learningObjective": "Recognize VNet cost class",
+      "stem": "Why is CLZ-170's relative cost low?",
+      "options": {
+        "A": "Every network-connected service is free.",
+        "B": "The Lab tag waives charges.",
+        "C": "VNets and subnets have no direct hourly resource charge.",
+        "D": "Terraform automatically refunds networking costs."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Later services can be billable.",
+        "B": "Metadata does not change billing.",
+        "C": "Later gateways, peering, and traffic can add charges.",
+        "D": "Terraform is not a billing refund mechanism."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Virtual Network overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q23",
+      "learningObjective": "Use the correct VNet identifier",
+      "stem": "The validation script assigns terraform output -raw vnet_name to $vnet. Why use that result?",
+      "options": {
+        "A": "It obtains a secret administrator password.",
+        "B": "It changes the network's name.",
+        "C": "It grants read permission.",
+        "D": "It reads the deployment's configured VNet name."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The output is a network name.",
+        "B": "Output is a read.",
+        "C": "RBAC authorization remains separate.",
+        "D": "This avoids guessing a derived name in the CLI query."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q24",
+      "learningObjective": "Plan safe address changes",
+      "stem": "Why choose a nonoverlapping production range before workloads depend on the VNet?",
+      "options": {
+        "A": "Later changes can disrupt connected resources and routes.",
+        "B": "Terraform forbids every future variable change.",
+        "C": "The website cannot show another range.",
+        "D": "Every /16 is globally unique automatically."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Early planning reduces migration complexity.",
+        "B": "It allows changes, but consequences need review.",
+        "C": "Documentation can display other values.",
+        "D": "Private ranges can be reused elsewhere and overlap."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Virtual Network concepts",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/concepts-and-best-practices"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q25",
+      "learningObjective": "Recognize what is absent",
+      "stem": "Which combination is intentionally absent from this address-planning lesson?",
+      "options": {
+        "A": "Resource group and VNet.",
+        "B": "NSG, route table, VM, and public IP.",
+        "C": "Web and application subnets.",
+        "D": "Data and management subnets."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Both are declared.",
+        "B": "The lesson isolates the network address model.",
+        "C": "Both are declared.",
+        "D": "Both are declared."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Virtual Network overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q26",
+      "learningObjective": "Distinguish topology from management access",
+      "stem": "Does mgmt-snet provide a Bastion session by itself?",
+      "options": {
+        "A": "Yes; all management subnets are Bastion hosts.",
+        "B": "Only if local.tags includes ManagedBy.",
+        "C": "No; a management subnet name does not deploy Bastion.",
+        "D": "Yes; the /24 prefix acts as a credential."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Naming alone does not create the host.",
+        "B": "That tag identifies tooling.",
+        "C": "Bastion is a separate service with its own requirements.",
+        "D": "Addresses are not authentication."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q27",
+      "learningObjective": "Validate full lifecycle cleanup",
+      "stem": "What should remain after successful CLZ-170 destroy and readback?",
+      "options": {
+        "A": "The VNet forever, because CIDRs are reserved.",
+        "B": "A Windows VM in mgmt-snet.",
+        "C": "A public load balancer.",
+        "D": "No managed state addresses and no lab group in Azure."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A deleted VNet is not a permanent owned object.",
+        "B": "No VM was created.",
+        "C": "No load balancer was created.",
+        "D": "The network boundary is disposable."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        },
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q28",
+      "learningObjective": "Recognize subnet resource identity",
+      "stem": "A subnet's Terraform resource references both group and VNet name. What does that describe?",
+      "options": {
+        "A": "Its parent network's Azure management path.",
+        "B": "An independent subscription.",
+        "C": "A generated administrator identity.",
+        "D": "A global DNS record."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A subnet is a child resource of a VNet.",
+        "B": "It does not create a subscription.",
+        "C": "No identity resource is declared.",
+        "D": "It is not a DNS record."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage Azure subnets",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-subnet"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q29",
+      "learningObjective": "Choose layered production controls",
+      "stem": "Which production enhancement follows the address foundation appropriately?",
+      "options": {
+        "A": "Assume four subnet names are complete security.",
+        "B": "Add designed DNS, NSGs, routes, and hub connectivity.",
+        "C": "Open all ports before planning routes.",
+        "D": "Commit workstation credentials as tags."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Labels are insufficient.",
+        "B": "These layers build on the reviewed IP plan.",
+        "C": "That disregards least exposure.",
+        "D": "Metadata must not store secrets."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Virtual Network concepts",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/concepts-and-best-practices"
+        },
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ170-Q30",
+      "learningObjective": "Understand peering limitations",
+      "stem": "After choosing compatible ranges, should the learner assume VNet peering is automatically transitive through a third VNet?",
+      "options": {
+        "A": "Yes; any two peers inherit all other peers.",
+        "B": "Only if subnet names match.",
+        "C": "No; peering relationships are not automatically transitive.",
+        "D": "Yes; the Project tag enables global routing."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Peering does not work that way.",
+        "B": "Names do not create transit.",
+        "C": "A hub design needs deliberate routing/connectivity.",
+        "D": "Tags do not establish connectivity."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure virtual network peering",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-310",
+  "questions": [
+    {
+      "id": "CLZ310-Q01",
+      "learningObjective": "Backend bootstrap",
+      "stem": "Why does CLZ-310 initialize with -backend=false before its first apply?",
+      "options": {
+        "A": "It disables all provider downloads",
+        "B": "It encrypts the local state automatically",
+        "C": "The Storage backend does not exist yet",
+        "D": "It creates the blob container itself"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Provider installation still occurs.",
+        "B": "The flag only skips backend initialization.",
+        "C": "Bootstrap creates the backend resources first.",
+        "D": "Initialization does not provision Azure Storage."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q02",
+      "learningObjective": "Real backend coordinates",
+      "stem": "Where should backend.hcl account and container values come from?",
+      "options": {
+        "A": "The applied backend_configuration output",
+        "B": "An unchanged placeholder example",
+        "C": "A guessed account from another lab",
+        "D": "The public DNS name-server output"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It supplies the actual created resources.",
+        "B": "Example values are not deployed coordinates.",
+        "C": "The backend must match its own state.",
+        "D": "DNS servers are unrelated to Storage state."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q03",
+      "learningObjective": "Migration command",
+      "stem": "Which command copies existing local state to the configured Azure backend?",
+      "options": {
+        "A": "terraform fmt -recursive",
+        "B": "terraform init -migrate-state -backend-config=backend.hcl",
+        "C": "terraform state rm",
+        "D": "terraform init -reconfigure only"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Formatting cannot transfer state.",
+        "B": "Migration transfers state between backends.",
+        "C": "Removing addresses does not migrate objects.",
+        "D": "Reconfiguration does not copy existing state."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q04",
+      "learningObjective": "Migration approval",
+      "stem": "What should be checked before accepting the state-copy prompt?",
+      "options": {
+        "A": "Only the resource group's tag color",
+        "B": "Only the workstation's username",
+        "C": "Whether an unrelated DNS zone exists",
+        "D": "Resource group, account, container, and key"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags do not identify the state blob fully.",
+        "B": "Identity alone does not verify destination.",
+        "C": "DNS hosting is not state migration evidence.",
+        "D": "All coordinates must match the intended backend."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q05",
+      "learningObjective": "Blob identity",
+      "stem": "Which key does this lesson use for its state blob?",
+      "options": {
+        "A": "index.html",
+        "B": "CLZ-320/README.md",
+        "C": "terraform.lock.hcl",
+        "D": "clz310.tfstate"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That is web content, not this state key.",
+        "B": "The consumer README is not a state blob.",
+        "C": "The dependency lock file is not state.",
+        "D": "The backend output documents that key."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q06",
+      "learningObjective": "Private container",
+      "stem": "What does container_access_type=private protect against?",
+      "options": {
+        "A": "All authorized identity access",
+        "B": "Anonymous reading of the container",
+        "C": "Terraform's need for state",
+        "D": "Any Storage charge"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Private does not mean inaccessible to authorized users.",
+        "B": "Access still needs authenticated authorization.",
+        "C": "Terraform still reads and writes state.",
+        "D": "Access type is not a pricing exemption."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q07",
+      "learningObjective": "Data-plane permissions",
+      "stem": "An identity can inspect the account but receives 403 reading the state blob. What permission may be missing?",
+      "options": {
+        "A": "A suitable blob-data role",
+        "B": "Permission to change a registrar",
+        "C": "RDP rights on a Windows VM",
+        "D": "A Traffic Manager priority"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Management visibility does not imply blob access.",
+        "B": "That does not authorize Storage blobs.",
+        "C": "RDP is unrelated to backend authorization.",
+        "D": "Routing priority grants no permissions."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q08",
+      "learningObjective": "Narrow firewall input",
+      "stem": "What value satisfies backend_access_cidr's intended access boundary?",
+      "options": {
+        "A": "0.0.0.0/0",
+        "B": "A VNet name without CIDR",
+        "C": "The runner's current public IPv4 /32",
+        "D": "A registrar name-server address list"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The variable rejects broad access.",
+        "B": "It is not the required IPv4 /32.",
+        "C": "It admits one known public source.",
+        "D": "Those are not the runner's public CIDR."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q09",
+      "learningObjective": "Changed public IP",
+      "stem": "A previously working backend returns 403 after a network switch. What should be inspected?",
+      "options": {
+        "A": "The public DNS record TTL",
+        "B": "Current egress IP versus the storage firewall rule",
+        "C": "The VMSS instance count",
+        "D": "The action group's display name"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "DNS TTL does not admit the new IP.",
+        "B": "The source address may have changed.",
+        "C": "There is no VMSS backend dependency here.",
+        "D": "It does not govern Storage access."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q10",
+      "learningObjective": "State lineage",
+      "stem": "Why compare state lineage before and after migration?",
+      "options": {
+        "A": "To measure VM CPU",
+        "B": "To prove the registrar changed",
+        "C": "To select an Azure billing currency",
+        "D": "To confirm continuity of the same managed state"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Lineage is state identity, not telemetry.",
+        "B": "It contains no DNS delegation proof.",
+        "C": "State lineage does not set billing.",
+        "D": "A different lineage suggests a wrong or fresh state."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q11",
+      "learningObjective": "State serial",
+      "stem": "What does the serial in a pulled state snapshot help identify?",
+      "options": {
+        "A": "The Storage account's monthly price",
+        "B": "The Azure region's latitude",
+        "C": "The state snapshot's revision sequence",
+        "D": "The number of HTTP listeners"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Serial does not encode cost.",
+        "B": "It is not geographical metadata.",
+        "C": "It is useful alongside lineage for comparison.",
+        "D": "It is not a load-balancer setting."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q12",
+      "learningObjective": "Unexpected recreation",
+      "stem": "After migration, a plan wants to recreate backend resources. What should happen next?",
+      "options": {
+        "A": "Stop and compare lineage and resource addresses",
+        "B": "Apply immediately to restore everything",
+        "C": "Delete the original local state backup",
+        "D": "Change every resource name randomly"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Do not apply with possibly missing state.",
+        "B": "That risks conflicting or duplicated resources.",
+        "C": "It may be essential for recovery.",
+        "D": "That hides rather than diagnoses the mismatch."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q13",
+      "learningObjective": "State inspection",
+      "stem": "Which command lists the resource addresses tracked by the initialized backend?",
+      "options": {
+        "A": "terraform state list",
+        "B": "terraform fmt -check",
+        "C": "az account list",
+        "D": "Resolve-DnsName"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It reads the selected state addresses.",
+        "B": "It checks source formatting.",
+        "C": "It lists subscriptions, not Terraform addresses.",
+        "D": "It resolves DNS names."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q14",
+      "learningObjective": "Locking purpose",
+      "stem": "What risk does Azure backend state locking reduce?",
+      "options": {
+        "A": "All Azure outages",
+        "B": "Expired application TLS certificates",
+        "C": "Concurrent writes corrupting or conflicting with state",
+        "D": "Unreviewed DNS delegation changes"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A state lock cannot prevent platform failure.",
+        "B": "Locking does not renew certificates.",
+        "C": "The blob lease coordinates state-changing operations.",
+        "D": "Registrar actions are outside the backend lock."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q15",
+      "learningObjective": "Lock contention",
+      "stem": "A second Terraform writer cannot obtain the lock while the first is active. What is the safe interpretation?",
+      "options": {
+        "A": "Both processes should use -lock=false",
+        "B": "The state blob must be deleted",
+        "C": "Azure requires a new Storage account per command",
+        "D": "The backend is preventing simultaneous state writes"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That removes concurrency protection.",
+        "B": "Deletion loses ownership information.",
+        "C": "One backend supports serialized operations.",
+        "D": "Wait or investigate the active operation."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q16",
+      "learningObjective": "No committed state",
+      "stem": "Which file must stay out of the public repository?",
+      "options": {
+        "A": "README.md",
+        "B": "terraform.tfstate",
+        "C": "versions.tf",
+        "D": "An unchanged backend.hcl.example"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The public lesson documentation is intended to be tracked.",
+        "B": "State can contain credentials and resource details.",
+        "C": "Provider requirements belong in source control.",
+        "D": "The example intentionally contains placeholders."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q17",
+      "learningObjective": "Transport protection",
+      "stem": "Why is min_tls_version=TLS1_2 configured on the account?",
+      "options": {
+        "A": "To encrypt a local Git repository",
+        "B": "To turn all state values into passwords",
+        "C": "To require supported secure transport for Storage access",
+        "D": "To disable Microsoft Entra authentication"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "It is an Azure Storage setting.",
+        "B": "TLS does not change state content.",
+        "C": "It constrains the minimum TLS version.",
+        "D": "Transport and identity are separate controls."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q18",
+      "learningObjective": "Replication choice",
+      "stem": "What does the lab's LRS setting describe?",
+      "options": {
+        "A": "Global active-active Terraform applies",
+        "B": "Local redundancy within the storage region",
+        "C": "A GitHub pull-request reviewer role",
+        "D": "Automatic local state migration"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "LRS does not enable concurrent writers.",
+        "B": "It is the selected Storage replication class.",
+        "C": "It is not an identity permission.",
+        "D": "Replication is not backend migration."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q19",
+      "learningObjective": "Stable naming",
+      "stem": "Why retain the random suffix's state across no-change plans?",
+      "options": {
+        "A": "To keep the global Storage account name stable",
+        "B": "To force replacement on every plan",
+        "C": "To make the blob public",
+        "D": "To remove the account name length limit"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Persisted random state avoids new names every run.",
+        "B": "That would defeat stable naming.",
+        "C": "Suffixes do not change container permissions.",
+        "D": "Azure naming constraints still apply."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q20",
+      "learningObjective": "Backend configuration safety",
+      "stem": "Why avoid storing access keys in backend.hcl?",
+      "options": {
+        "A": "Because backend.hcl cannot contain strings",
+        "B": "Because access keys create DNS records",
+        "C": "Because Terraform cannot use Azure Storage",
+        "D": "Use identity-based access and avoid secret-bearing backend files"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "It is a backend configuration file.",
+        "B": "Keys authorize Storage, not DNS.",
+        "C": "AzureRM is a supported backend.",
+        "D": "Entra authorization reduces static credential handling."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q21",
+      "learningObjective": "Backend dependency order",
+      "stem": "Which lesson must be destroyed before removing the CLZ-310 backend?",
+      "options": {
+        "A": "Every foundational lesson in any subscription",
+        "B": "CLZ-320, the remote-state consumer",
+        "C": "The optional workstation setup only",
+        "D": "No consumer needs consideration"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Cleanup stays within the actual dependency graph.",
+        "B": "Its dependency must be removed first.",
+        "C": "Local setup is not the state consumer.",
+        "D": "The consumer still depends on the live blob."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q22",
+      "learningObjective": "Migration back",
+      "stem": "Why rename backend.tf and run init -migrate-state during cleanup?",
+      "options": {
+        "A": "To copy state to local storage before deleting its Azure host",
+        "B": "To bypass all destroy authorization",
+        "C": "To make CLZ-320 own the account",
+        "D": "To purge every soft-deleted vault"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Terraform must retain state while destroying the backend.",
+        "B": "Migration does not grant Azure permissions.",
+        "C": "Ownership remains in CLZ-310's state.",
+        "D": "This is backend migration, not Key Vault cleanup."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q23",
+      "learningObjective": "Self-owned backend risk",
+      "stem": "Why is production backend ownership often separated from workload state?",
+      "options": {
+        "A": "Remote state always needs a Windows VM",
+        "B": "Workloads cannot use tags with remote state",
+        "C": "All workloads must share the same state key",
+        "D": "A normal workload destroy should not remove its own backend"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Azure Blob Storage needs no client VM service.",
+        "B": "Tags are unaffected.",
+        "C": "Distinct state boundaries avoid collisions.",
+        "D": "Separate lifecycles protect state availability."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q24",
+      "learningObjective": "Rollback source",
+      "stem": "What should be protected until migration is verified?",
+      "options": {
+        "A": "Only the terminal's command history",
+        "B": "An Internet screenshot of another backend",
+        "C": "A secure backup of the original state",
+        "D": "A public copy of the password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "History is not a state snapshot.",
+        "B": "It cannot restore managed addresses.",
+        "C": "It supports recovery if migration is wrong.",
+        "D": "Publishing secrets adds risk rather than recovery."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q25",
+      "learningObjective": "Read-only blob check",
+      "stem": "What does az storage blob show --auth-mode login validate here?",
+      "options": {
+        "A": "That no state contains sensitive data",
+        "B": "That Azure resources were destroyed",
+        "C": "That CLZ-320 owns the blob",
+        "D": "That the authenticated identity can inspect the migrated blob"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Metadata cannot prove state contents are harmless.",
+        "B": "The existence check happens before cleanup.",
+        "C": "The consumer only reads producer state.",
+        "D": "The query checks the intended key's metadata."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q26",
+      "learningObjective": "Costs of remote storage",
+      "stem": "Which cost remains relevant for this low-cost backend?",
+      "options": {
+        "A": "Bastion's hourly charge",
+        "B": "Windows VMSS compute",
+        "C": "Blob capacity and transactions",
+        "D": "Public domain renewal by Terraform"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "This lesson creates no Bastion.",
+        "B": "No scale set is deployed here.",
+        "C": "Small usage is still a Storage workload.",
+        "D": "No registrar resource is configured."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q27",
+      "learningObjective": "Restore testing",
+      "stem": "What production activity complements versioning and soft delete?",
+      "options": {
+        "A": "Deleting backups after every apply",
+        "B": "Testing state restoration procedures",
+        "C": "Giving anonymous readers the state URL",
+        "D": "Using random keys without documentation"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That weakens recovery.",
+        "B": "Recovery settings need a practiced recovery path.",
+        "C": "That exposes sensitive state.",
+        "D": "That makes state hard to locate."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q28",
+      "learningObjective": "Cleanup completion",
+      "stem": "After migration back and destroy, which result is expected from local state list?",
+      "options": {
+        "A": "No managed resource addresses",
+        "B": "Every CLZ-320 resource address",
+        "C": "A list of registrar name servers",
+        "D": "A required active Azure blob lease"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The backend resources were destroyed from local state.",
+        "B": "The consumer has its own state.",
+        "C": "State list reports Terraform addresses.",
+        "D": "Cleanup no longer depends on the remote backend."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q29",
+      "learningObjective": "Blocked bootstrap",
+      "stem": "A learner adds an active Azure backend block before creating Storage. What is the likely issue?",
+      "options": {
+        "A": "Terraform will create Storage during init automatically",
+        "B": "Initialization cannot reach nonexistent backend resources",
+        "C": "The README becomes invalid HTML",
+        "D": "Resource tags choose a different tenant"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Providers create resources during apply, not init.",
+        "B": "Bootstrap must precede remote initialization.",
+        "C": "That is unrelated to backend existence.",
+        "D": "Tags do not select authentication context."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ310-Q30",
+      "learningObjective": "State confidentiality",
+      "stem": "A remote backend is used successfully. What security claim is still wrong?",
+      "options": {
+        "A": "Backend readers need carefully scoped permissions",
+        "B": "State recovery needs testing",
+        "C": "State no longer contains generated secrets",
+        "D": "A protected transport path matters"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Least privilege remains appropriate.",
+        "B": "Restoration is an operational requirement.",
+        "C": "Remote storage does not remove secret values.",
+        "D": "TLS and network controls still matter."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

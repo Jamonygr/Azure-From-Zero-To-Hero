@@ -1,0 +1,817 @@
+{
+  "lessonId": "CLZ-210",
+  "questions": [
+    {
+      "id": "CLZ210-Q01",
+      "learningObjective": "Understand private workload administration",
+      "stem": "What management exposure does CLZ-210 remove from the Windows workload compared with CLZ-200?",
+      "options": {
+        "A": "The VM's private IP address",
+        "B": "The administrator's need to authenticate",
+        "C": "The VM's public IP and direct Internet RDP path",
+        "D": "Every public address from the resource group"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A private address is required for Bastion-to-VM connectivity.",
+        "B": "Bastion provides a path but does not remove authentication requirements.",
+        "C": "Bastion reaches the workload through its private network address.",
+        "D": "This lesson still creates a public IP for the Bastion host."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q02",
+      "learningObjective": "Recognize the dedicated Bastion subnet",
+      "stem": "Which subnet name must be used by this lesson's deployed Bastion host?",
+      "options": {
+        "A": "AzureBastionSubnet",
+        "B": "web-snet",
+        "C": "AzureFirewallSubnet",
+        "D": "bastion-management"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The dedicated subnet uses this required service name.",
+        "B": "The workload subnet hosts the VM rather than the Bastion service.",
+        "C": "That name is reserved for a different network service.",
+        "D": "An arbitrary descriptive name does not satisfy the required Bastion subnet name."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion configuration settings",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/configuration-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q03",
+      "learningObjective": "Plan sufficient Bastion subnet space",
+      "stem": "The lesson uses 10.40.20.0/26 for Bastion. Which proposed replacement is too small for a new non-Developer Bastion deployment?",
+      "options": {
+        "A": "A /25 subnet",
+        "B": "A /24 subnet",
+        "C": "The original /26 subnet",
+        "D": "A /27 subnet"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A /25 provides more addresses than the minimum /26.",
+        "B": "A /24 is larger than the required minimum space.",
+        "C": "The current lesson subnet meets the documented minimum size.",
+        "D": "New deployments require a dedicated /26 or larger subnet."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion configuration settings",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/configuration-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q04",
+      "learningObjective": "Select compatible Bastion public IP settings",
+      "stem": "Which public IP combination matches bastion.tf?",
+      "options": {
+        "A": "Basic SKU with Dynamic allocation",
+        "B": "Standard SKU with Static allocation",
+        "C": "Standard SKU attached directly to the Windows NIC",
+        "D": "A public DNS CNAME without a public IP resource"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "This combination does not meet the lesson's Bastion public IP requirements.",
+        "B": "These settings match the deployed Bastion host's public IP requirements.",
+        "C": "The public IP belongs to Bastion, not the private workload NIC.",
+        "D": "A DNS record is not a substitute for the host's public IP resource."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion configuration settings",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/configuration-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q05",
+      "learningObjective": "Trace browser administration traffic",
+      "stem": "Which path represents the lesson's browser-based management session?",
+      "options": {
+        "A": "Administrator connects to Bastion, which reaches the VM's private RDP endpoint",
+        "B": "Administrator connects directly to a VM public IP on 3389",
+        "C": "Bastion assigns the VM an Internet-routable address temporarily",
+        "D": "A Load Balancer selects one VM for each RDP packet"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Bastion mediates the session over a private workload connection.",
+        "B": "The Windows NIC has no public IP in this lesson.",
+        "C": "The VM remains private during the management session.",
+        "D": "This lesson does not deploy a Load Balancer for administration."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q06",
+      "learningObjective": "Scope the VM's RDP source rule",
+      "stem": "What source is used by allow_admin_rdp in CLZ-210's workload NSG?",
+      "options": {
+        "A": "The Internet service tag",
+        "B": "The learner's previous admin_cidr variable",
+        "C": "The address prefix of AzureBastionSubnet",
+        "D": "The VM's public IP address"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The lesson explicitly restricts the management source to Bastion.",
+        "B": "CLZ-210 uses the Bastion subnet reference for this rule.",
+        "C": "The guest admits RDP from Bastion's subnet rather than arbitrary Internet sources.",
+        "D": "No public IP is attached to the workload VM."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        },
+        {
+          "title": "Azure Bastion configuration settings",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/configuration-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q07",
+      "learningObjective": "Understand ordered RDP filtering",
+      "stem": "How do priority 110 Allow and priority 120 Deny rules protect the private VM's RDP port?",
+      "options": {
+        "A": "Permit every source because both rules mention 3389",
+        "B": "Permit Bastion-sourced RDP first, then deny other RDP sources",
+        "C": "Deny Bastion because 120 is evaluated before 110",
+        "D": "Translate RDP into outbound HTTP automatically"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Source conditions and ascending priority determine the matching action.",
+        "B": "The earlier specific match permits the intended management path.",
+        "C": "NSG rules use lower numbers first.",
+        "D": "NSGs filter traffic; they do not translate application protocols."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q08",
+      "learningObjective": "Distinguish ingress from egress",
+      "stem": "A learner can use Bastion RDP but cannot download an Internet file from the VM. What best explains this result?",
+      "options": {
+        "A": "A successful RDP session guarantees unrestricted outbound Internet access",
+        "B": "Bastion automatically blocks all files downloaded with PowerShell",
+        "C": "The VM must have a public IP to use any approved outbound design",
+        "D": "Management ingress exists while general workload Internet egress is intentionally absent"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Management connectivity and outbound connectivity are separate network concerns.",
+        "B": "The architecture lacks egress; it is not a PowerShell-specific download policy.",
+        "C": "Private VMs can use NAT Gateway or a controlled firewall path.",
+        "D": "Bastion access does not supply a general outbound network path."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        },
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q09",
+      "learningObjective": "Read explicit private subnet settings",
+      "stem": "Why does web-snet set default_outbound_access_enabled to false?",
+      "options": {
+        "A": "To disable RDP from Bastion inside the VNet",
+        "B": "To avoid relying on implicit default outbound access for the private workload",
+        "C": "To encrypt the administrator password in Terraform state",
+        "D": "To create a NAT Gateway automatically"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The setting concerns default outbound access rather than private management ingress.",
+        "B": "The lesson makes the absence of general Internet egress explicit.",
+        "C": "Subnet settings do not change Terraform state encryption.",
+        "D": "An explicit NAT Gateway must be declared and associated separately."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q10",
+      "learningObjective": "Validate public address ownership",
+      "stem": "The resource-group public IP list contains one address. Which ownership result matches CLZ-210?",
+      "options": {
+        "A": "The Windows VM owns that address directly",
+        "B": "The address belongs to the web NSG",
+        "C": "The address proves all subnets have Internet egress",
+        "D": "The address belongs to Bastion rather than the Windows NIC"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The workload NIC declares only a dynamic private address.",
+        "B": "NSGs do not own public IP address resources.",
+        "C": "Public IP existence does not establish every subnet's outbound route.",
+        "D": "The host has the only public IP while the VM stays private."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Bastion configuration settings",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/configuration-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q11",
+      "learningObjective": "Confirm the intended workload state",
+      "stem": "Which combination matches the lesson's expected az vm show validation?",
+      "options": {
+        "A": "A stopped VM with both private and public addresses",
+        "B": "A running VM with only a public address",
+        "C": "A running VM with a private IP and no public IP",
+        "D": "A deleted VM with a Succeeded Bastion host"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That does not match the required running private workload.",
+        "B": "Bastion needs private connectivity and the lesson omits workload public exposure.",
+        "C": "These observations support the intended private workload deployment.",
+        "D": "A provisioned Bastion cannot administer a VM that no longer exists."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q12",
+      "learningObjective": "Choose the correct initial access method",
+      "stem": "After Bastion is Succeeded, how should a learner initiate the introductory session?",
+      "options": {
+        "A": "Use the VM's Bastion connection action in the Azure portal",
+        "B": "Run mstsc directly to a public VM address",
+        "C": "Navigate to an IIS HTTP output from CLZ-200",
+        "D": "Connect to the Terraform state file over RDP"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The lesson validates the browser-mediated management experience.",
+        "B": "No such VM address is allocated in this architecture.",
+        "C": "CLZ-210 does not expose the earlier public IIS validation pattern.",
+        "D": "State is metadata and credentials, not a guest remote desktop endpoint."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q13",
+      "learningObjective": "Avoid assuming advanced SKU features",
+      "stem": "The Terraform Bastion resource does not explicitly enable native-client tunneling. What should a learner assume about the documented test?",
+      "options": {
+        "A": "Any Bastion host automatically provides every Standard and Premium feature",
+        "B": "Native RDP requires attaching a public IP to the workload",
+        "C": "The Azure CLI turns Basic Bastion into Premium for one session",
+        "D": "Use the portal Bastion action; verify SKU/features before expecting native-client support"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Feature availability differs by SKU and configuration.",
+        "B": "Bastion's supported native client path can keep the workload private.",
+        "C": "A client command does not implicitly upgrade the host SKU.",
+        "D": "Native-client features depend on appropriate Bastion configuration and SKU."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Bastion configuration settings",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/configuration-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q14",
+      "learningObjective": "Diagnose a failed Bastion session",
+      "stem": "Bastion is ready, but RDP fails. Which set of checks best follows the lesson?",
+      "options": {
+        "A": "Only the homepage image and quiz score",
+        "B": "Only the resource-group tags",
+        "C": "VM power state, source subnet NSG rule, credentials, and guest RDP service",
+        "D": "Only the width of AzureBastionSubnet's label in the diagram"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Learning UI state cannot validate the Azure RDP path.",
+        "B": "Tags identify resources but do not prove VM or RDP readiness.",
+        "C": "Each check addresses a required part of the management connection.",
+        "D": "A diagram label does not establish actual network or guest configuration."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        },
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q15",
+      "learningObjective": "Handle normal deployment latency",
+      "stem": "Bastion is still provisioning without an Azure failure. Which action is most appropriate?",
+      "options": {
+        "A": "Wait for provisioning completion while inspecting reported state",
+        "B": "Repeatedly destroy and recreate the host every minute",
+        "C": "Connect directly to a temporary public VM IP",
+        "D": "Remove the dedicated subnet requirement"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Bastion creation can take time and should not be interrupted prematurely.",
+        "B": "Repeated interruptions delay completion and discard useful evidence.",
+        "C": "That changes the lesson's intended private management boundary.",
+        "D": "The host still requires its correctly configured dedicated subnet."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Bastion configuration settings",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/configuration-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q16",
+      "learningObjective": "Protect administrator credentials",
+      "stem": "Why should the generated Windows password remain out of shared progress exports and screenshots?",
+      "options": {
+        "A": "Passwords become public when the VM has no public IP",
+        "B": "It grants guest administrator access and can also reside in Terraform state",
+        "C": "Bastion authentication automatically erases the Terraform password resource",
+        "D": "The sensitive output flag prevents deliberate raw retrieval"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Private networking does not make credential disclosure acceptable.",
+        "B": "Learning evidence should not expose credentials or sensitive state.",
+        "C": "The generated credential remains part of the configuration and state.",
+        "D": "Explicit output commands can reveal sensitive values to an authorized caller."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q17",
+      "learningObjective": "Separate control-plane roles from guest login",
+      "stem": "A user can read the VM resource in Azure but supplies the wrong Windows password. What outcome is expected?",
+      "options": {
+        "A": "Reader access always replaces the local administrator password",
+        "B": "The resource-group name becomes the guest password",
+        "C": "Resource visibility alone does not establish a successful guest RDP login",
+        "D": "A private IP bypasses every Windows credential check"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Reading Azure metadata does not authenticate the Windows account.",
+        "B": "Resource naming does not derive valid guest credentials.",
+        "C": "Azure authorization and Windows guest authentication are distinct checks.",
+        "D": "Private connectivity does not disable the guest's authentication requirements."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q18",
+      "learningObjective": "Account for idle Bastion charges",
+      "stem": "The VM is unused for the afternoon while Bastion stays deployed. Which cost expectation is correct?",
+      "options": {
+        "A": "Bastion becomes free whenever no browser session is open",
+        "B": "Bastion can continue accruing its provisioned-service hourly charge",
+        "C": "Deleting the browser's saved progress stops Bastion billing",
+        "D": "The Terraform extension charges replace every Bastion charge"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Service billing is not limited to minutes of active user interaction.",
+        "B": "Closing or idling a session does not remove the deployed host.",
+        "C": "Local browser storage cannot change Azure service resources.",
+        "D": "The architecture's Bastion service has its own cost drivers."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q19",
+      "learningObjective": "Avoid incomplete cost cleanup",
+      "stem": "Why is stopping only the Windows guest insufficient as final cleanup for this lesson?",
+      "options": {
+        "A": "Stopping Windows also deletes every VNet resource automatically",
+        "B": "Azure removes Bastion as soon as its VM has no open session",
+        "C": "Only HTML files create costs in this lesson",
+        "D": "Bastion, its public IP, and managed disks can remain deployed and billable"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Guest shutdown does not delete the resource group's network services.",
+        "B": "The Bastion host persists until deliberately deleted.",
+        "C": "Compute, disks, Bastion, and the public IP are infrastructure cost drivers.",
+        "D": "The documented destroy removes the entire managed lesson footprint."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        },
+        {
+          "title": "Azure virtual machine states and billing",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q20",
+      "learningObjective": "Retain evidence for residual verification",
+      "stem": "Before destroy, why store resource_group_name in a PowerShell variable?",
+      "options": {
+        "A": "To verify the same lesson group no longer exists after outputs disappear",
+        "B": "To make Bastion's host subnet reusable by unrelated resources during deletion",
+        "C": "To skip subscription selection during all future deployments",
+        "D": "To back up the Windows disk automatically"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The group name is needed for the final Azure existence query.",
+        "B": "Saving a variable does not safely reassign service subnets.",
+        "C": "The next operation still requires the intended Azure subscription context.",
+        "D": "Reading a resource-group output does not create a disk backup."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        },
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q21",
+      "learningObjective": "Design production workload egress",
+      "stem": "Windows updates and endpoint-protection downloads are needed in production. What change fits the lesson's guidance?",
+      "options": {
+        "A": "Add an explicit approved outbound design such as governed NAT or firewall routing",
+        "B": "Enable public VM RDP for every source to fix outbound updates",
+        "C": "Use Bastion's public IP as a guest default gateway by editing a tag",
+        "D": "Assume Bastion forwards all guest application traffic"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Required egress should be designed and controlled rather than assumed.",
+        "B": "Inbound administration exposure does not provide a controlled outbound design.",
+        "C": "Tags do not create a supported network egress path.",
+        "D": "Bastion provides administrative sessions, not general-purpose guest Internet routing."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        },
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q22",
+      "learningObjective": "Choose a private management alternative",
+      "stem": "Which option is a meaningful private-management comparison to Bastion in the lesson's exercise?",
+      "options": {
+        "A": "Removing the VM's NSG while keeping Internet RDP",
+        "B": "Publishing the generated password in a public DNS record",
+        "C": "Setting the Windows size to a larger SKU",
+        "D": "VPN-based administration with its own routing and trust boundary"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That weakens controls rather than offering a private management alternative.",
+        "B": "DNS publication does not provide an appropriate administration channel.",
+        "C": "Compute size does not define the management access path.",
+        "D": "VPN can provide private reachability but introduces different client and network controls."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q23",
+      "learningObjective": "Understand subnet resource separation",
+      "stem": "Why should an unrelated application VM not be placed in AzureBastionSubnet?",
+      "options": {
+        "A": "Every VM in that subnet is automatically converted into a Bastion host",
+        "B": "The dedicated Bastion subnet must be reserved for the Bastion deployment",
+        "C": "Only domain controllers may share the subnet with Bastion",
+        "D": "The subnet's name causes Windows to reinstall IIS"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Subnet membership does not convert a workload into the managed service.",
+        "B": "Workloads belong in separate subnets such as web-snet.",
+        "C": "The dedicated subnet is not a general guest hosting subnet.",
+        "D": "Azure subnet names do not execute guest installation commands."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion configuration settings",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/configuration-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q24",
+      "learningObjective": "Confirm the NIC design from source",
+      "stem": "Which omission in private_web's ip_configuration prevents a direct VM public-IP association?",
+      "options": {
+        "A": "No private_ip_address_allocation is specified",
+        "B": "No subnet_id is specified",
+        "C": "No public_ip_address_id is specified",
+        "D": "No NSG is applied to the NIC"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The source explicitly sets dynamic private allocation.",
+        "B": "The NIC explicitly references the web subnet.",
+        "C": "The NIC is configured with a private address allocation only.",
+        "D": "A separate association applies the workload NSG."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q25",
+      "learningObjective": "Interpret the workload output",
+      "stem": "What does private_windows_vm_id represent in the validation commands?",
+      "options": {
+        "A": "The Bastion public IPv4 address",
+        "B": "The Azure resource ID of the private Windows VM",
+        "C": "The Windows administrator's password",
+        "D": "An RDP session recording file"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The host's public address is a different network resource value.",
+        "B": "az vm show --ids uses that identifier to inspect the intended workload.",
+        "C": "The credential is provided through a separate sensitive output.",
+        "D": "The output identifies the VM resource rather than saved session content."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q26",
+      "learningObjective": "Keep regional feasibility checks separate",
+      "stem": "A location value passes the lesson's string validation. What must still be checked before deploying Bastion and the Windows VM?",
+      "options": {
+        "A": "Service availability, permitted resources, and relevant VM quota in that region",
+        "B": "Only whether the region has a short name",
+        "C": "Nothing, because Terraform validation reserves Azure capacity",
+        "D": "Only whether the portal is using dark mode"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Valid-looking text does not guarantee subscription capacity or regional service support.",
+        "B": "Name length alone says nothing about deployment feasibility.",
+        "C": "Static validation does not reserve remote compute or service capacity.",
+        "D": "Portal appearance does not change Azure resource availability."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Check Azure VM quotas",
+          "url": "https://learn.microsoft.com/en-us/azure/quotas/view-quotas"
+        },
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q27",
+      "learningObjective": "Avoid adding capabilities not in the deployment",
+      "stem": "Which statement accurately describes the Windows workload in CLZ-210?",
+      "options": {
+        "A": "It is an Internet-facing IIS tier behind a Load Balancer",
+        "B": "It has a NAT Gateway because Bastion always deploys one",
+        "C": "It is a private management target without a claimed general Internet egress path",
+        "D": "It has per-instance public RDP NAT port 50001"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That architecture belongs to a subsequent load-balancing lesson.",
+        "B": "The Terraform does not create or associate a NAT Gateway.",
+        "C": "The lesson deliberately focuses on Bastion access and the private boundary.",
+        "D": "That management NAT pattern is introduced in CLZ-230."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q28",
+      "learningObjective": "Review safe production administration controls",
+      "stem": "Which addition strengthens the production administration approach described by the lesson?",
+      "options": {
+        "A": "A shared administrator password committed to the repository",
+        "B": "An NSG allow rule for all Internet RDP sources",
+        "C": "Disabling the guest RDP service but still marking access validated",
+        "D": "Least-privilege access, hardened images, and appropriate session monitoring"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Publishing a reusable credential defeats access-control improvements.",
+        "B": "The rule would reopen the direct exposure removed by this lesson.",
+        "C": "A broken management target cannot satisfy the lesson's access test.",
+        "D": "These controls complement the private access path."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        },
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q29",
+      "learningObjective": "Distinguish successful host creation from successful session testing",
+      "stem": "Bastion is Succeeded and the VM has no public IP. Which additional evidence validates usable administration?",
+      "options": {
+        "A": "A successful authenticated Bastion RDP session to the intended running VM",
+        "B": "A completed quiz with no Azure access",
+        "C": "A Terraform formatting check on bastion.tf",
+        "D": "An unrelated public website returning HTTP 200"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Resource configuration alone does not prove an end-to-end guest session.",
+        "B": "Knowledge assessment is separate from hands-on connection evidence.",
+        "C": "Formatting does not test the guest RDP path.",
+        "D": "An external web response says nothing about this private management target."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ210-Q30",
+      "learningObjective": "Recognize the browser-side transport",
+      "stem": "Which transport connects the browser-based Bastion client to the service?",
+      "options": {
+        "A": "Unencrypted RDP over public port 3389 to the VM",
+        "B": "TLS over port 443",
+        "C": "HTTP on port 80 to the VM's IIS site",
+        "D": "DNS queries over UDP 53 only"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The workload's direct public RDP endpoint is absent.",
+        "B": "Browser Bastion connections use a protected TLS transport to the service.",
+        "C": "This lesson's management connection does not use an IIS web page.",
+        "D": "DNS can assist name resolution but does not carry the interactive management session."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

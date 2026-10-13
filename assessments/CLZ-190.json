@@ -1,0 +1,829 @@
+{
+  "lessonId": "CLZ-190",
+  "questions": [
+    {
+      "id": "CLZ190-Q01",
+      "learningObjective": "Identify the introductory VM",
+      "stem": "Which OS image does the supplied CLZ-190 VM declaration use?",
+      "options": {
+        "A": "Ubuntu Server.",
+        "B": "Windows 11 Enterprise.",
+        "C": "A custom image from Key Vault.",
+        "D": "Windows Server 2022 Datacenter Azure Edition."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That is not the configured Windows image.",
+        "B": "The lesson uses a Windows Server image.",
+        "C": "Key Vault is not an image repository and is not used here.",
+        "D": "The sku is 2022-datacenter-azure-edition."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Create a Windows VM using Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-cli"
+        },
+        {
+          "title": "Find Windows VM images",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q02",
+      "learningObjective": "Understand NIC attachment",
+      "stem": "How does the Windows VM join the web subnet?",
+      "options": {
+        "A": "Through its network interface's IP configuration.",
+        "B": "Through the Environment tag.",
+        "C": "By naming its disk web-snet.",
+        "D": "Through the public IP resource alone."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The VM references the NIC, whose subnet_id points to web.",
+        "B": "Tags do not attach network interfaces.",
+        "C": "A disk name does not create network membership.",
+        "D": "The public IP provides an address; the NIC establishes subnet attachment."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network interfaces",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q03",
+      "learningObjective": "Recognize public access teaching exception",
+      "stem": "Why does the introductory VM have a Standard public IP?",
+      "options": {
+        "A": "Because every Azure VM requires one.",
+        "B": "To demonstrate intentional direct first access.",
+        "C": "Because Terraform cannot use private IPs.",
+        "D": "To automatically install IIS."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Private-only VMs are supported.",
+        "B": "Later production guidance replaces public administration.",
+        "C": "The NIC also has a private IP.",
+        "D": "A public IP does not install software."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure public IP addresses",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses"
+        },
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q04",
+      "learningObjective": "Identify generated credentials",
+      "stem": "Where does admin_password obtain its configured value?",
+      "options": {
+        "A": "The resource-group tag map.",
+        "B": "The Azure subscription GUID.",
+        "C": "random_password.windows_admin.result",
+        "D": "A fixed literal in terraform.tfvars.example."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "No password belongs in tags.",
+        "B": "Subscription identifiers are not passwords.",
+        "C": "Terraform generates the password rather than hardcoding it.",
+        "D": "The supplied compute resource references the random password result."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q05",
+      "learningObjective": "Understand credential storage",
+      "stem": "Why must the learner protect state for this VM even though its password output is sensitive?",
+      "options": {
+        "A": "The password is never persisted anywhere.",
+        "B": "State stores only public IPs.",
+        "C": "The public IP encrypts Terraform artifacts.",
+        "D": "The generated password can still reside in state."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The random result and VM configuration are tracked.",
+        "B": "It can include secret attributes too.",
+        "C": "Network addressing does not protect local files.",
+        "D": "Sensitive display redaction is not removal from stored state."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q06",
+      "learningObjective": "Read secrets deliberately",
+      "stem": "Which command explicitly reveals the sensitive Windows password and therefore belongs only in a private terminal?",
+      "options": {
+        "A": "terraform output -raw windows_admin_password",
+        "B": "terraform output",
+        "C": "terraform fmt -check",
+        "D": "az account show --query id"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The raw named output can expose a marked-sensitive value.",
+        "B": "Ordinary output redacts marked-sensitive values.",
+        "C": "Formatting does not retrieve the credential.",
+        "D": "That reads subscription context."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        },
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q07",
+      "learningObjective": "Distinguish port reachability and login",
+      "stem": "Test-NetConnection to TCP 3389 succeeds. What does that prove by itself?",
+      "options": {
+        "A": "The administrator password is correct.",
+        "B": "The tested TCP path is reachable from that source.",
+        "C": "IIS serves HTTP on port 80.",
+        "D": "The VM is backed up."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "No RDP credential login is tested.",
+        "B": "It does not prove successful Windows authentication.",
+        "C": "That is a different service and port.",
+        "D": "Connectivity does not verify backup."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Troubleshoot Windows VM RDP",
+          "url": "https://learn.microsoft.com/en-us/troubleshoot/azure/virtual-machines/windows/troubleshoot-rdp-connection"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q08",
+      "learningObjective": "Match allowed administrator sources",
+      "stem": "RDP worked yesterday but fails after the learner changes home networks. What should be checked first?",
+      "options": {
+        "A": "Whether the saved /32 still equals the current NIC private address.",
+        "B": "Whether the Lab tag is uppercase.",
+        "C": "Whether the current public IPv4 matches admin_cidr.",
+        "D": "Whether every inbound port is open."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The direct administration source is the learner's public IPv4, not the VM NIC address.",
+        "B": "That does not select the traffic source.",
+        "C": "The rule is restricted to that source.",
+        "D": "Broad exposure is not the intended fix."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Troubleshoot Windows VM RDP",
+          "url": "https://learn.microsoft.com/en-us/troubleshoot/azure/virtual-machines/windows/troubleshoot-rdp-connection"
+        },
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q09",
+      "learningObjective": "Handle compute quota failures",
+      "stem": "A VM create request fails with a regional family-quota error. Which response fits the lesson?",
+      "options": {
+        "A": "Change the NSG rule name.",
+        "B": "Delete the sensitive output flag.",
+        "C": "Use a broader RDP CIDR.",
+        "D": "Choose an approved suitable size/region or resolve the quota first."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That does not supply vCPU capacity.",
+        "B": "Credential display does not affect quota.",
+        "C": "Traffic exposure does not increase quota.",
+        "D": "Revisit the regional readiness checks."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure VM vCPU quotas",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/quotas"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q10",
+      "learningObjective": "Interpret latest image selection",
+      "stem": "The image version is latest. What production implication should be considered?",
+      "options": {
+        "A": "Future deployments may resolve to a newer image version.",
+        "B": "Existing VMs automatically rebuild at every release.",
+        "C": "latest means the VM has no OS.",
+        "D": "It disables all Windows patching permanently."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Production reproducibility may require a reviewed pinned image/version.",
+        "B": "Image selection does not imply that behavior.",
+        "C": "It selects an available image version.",
+        "D": "The reference does not establish a patch policy."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Find Windows VM images",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q11",
+      "learningObjective": "Know running VM cost drivers",
+      "stem": "Which factor dominates CLZ-190's compute charges?",
+      "options": {
+        "A": "The number of README headings.",
+        "B": "VM size and allocated running time.",
+        "C": "The length of the Lab tag.",
+        "D": "The number of VNet subnet labels."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Documentation does not allocate compute.",
+        "B": "The chosen SKU and hours drive compute cost.",
+        "C": "Tags are not the dominant compute driver.",
+        "D": "Subnet naming does not drive allocated VM compute hours."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure VM states and billing",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q12",
+      "learningObjective": "Recognize charges after deallocation",
+      "stem": "If the VM is deallocated but retained, which resource can still incur cost?",
+      "options": {
+        "A": "The README alone.",
+        "B": "Only the local output JSON.",
+        "C": "Its managed OS disk and retained public IP.",
+        "D": "No retained Azure resource can cost anything."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Markdown files do not allocate Azure disks.",
+        "B": "Local output files do not create Azure charges.",
+        "C": "Stopping compute does not delete those resources.",
+        "D": "Deallocation is not complete resource deletion."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure VM states and billing",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing"
+        },
+        {
+          "title": "Azure managed disk overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview"
+        },
+        {
+          "title": "Azure public IP addresses",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q13",
+      "learningObjective": "Read the real VM state",
+      "stem": "Which command supplies the documented Azure power-state evidence?",
+      "options": {
+        "A": "terraform validate",
+        "B": "terraform console local.tags",
+        "C": "terraform fmt",
+        "D": "az vm list --resource-group $resourceGroup --show-details"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That checks configuration consistency.",
+        "B": "That evaluates metadata expressions.",
+        "C": "That formats source.",
+        "D": "The query reads deployed VM details."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Create a Windows VM using Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q14",
+      "learningObjective": "Understand private addressing",
+      "stem": "What private IP allocation mode is configured on the VM NIC?",
+      "options": {
+        "A": "Dynamic.",
+        "B": "Static public only, with no private address.",
+        "C": "DHCP from the learner's home router.",
+        "D": "A private address selected manually in the VM block."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The NIC IP configuration declares Dynamic.",
+        "B": "The NIC also has a subnet private IP.",
+        "C": "The NIC is inside Azure's VNet.",
+        "D": "The NIC declaration requests dynamic private allocation."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network interfaces",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q15",
+      "learningObjective": "Know the public IP allocation",
+      "stem": "Which public IP settings are supplied in CLZ-190?",
+      "options": {
+        "A": "Basic SKU with Dynamic allocation.",
+        "B": "Standard SKU with Static allocation.",
+        "C": "Standard SKU with no address allocation.",
+        "D": "An NSG-generated floating address."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That is not the source declaration.",
+        "B": "Both are explicit in the public IP resource.",
+        "C": "Static allocation is declared.",
+        "D": "The address is a separate public IP resource."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure public IP addresses",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q16",
+      "learningObjective": "Recognize security association differences",
+      "stem": "Unlike CLZ-180's subnet association, where does CLZ-190 associate its web NSG?",
+      "options": {
+        "A": "Every disk.",
+        "B": "The Azure tenant.",
+        "C": "The web network interface.",
+        "D": "The generated password."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "NSGs do not attach to OS disks.",
+        "B": "The association is not tenant-wide.",
+        "C": "The source uses a NIC security-group association.",
+        "D": "A password is not a network association target."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group"
+        },
+        {
+          "title": "Azure network interfaces",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q17",
+      "learningObjective": "Reject broad administration inputs",
+      "stem": "Why should admin_cidr=198.51.100.0/24 fail this lesson's validator?",
+      "options": {
+        "A": "A /24 is not valid IPv4 CIDR syntax.",
+        "B": "The input accepts IPv6 only.",
+        "C": "Every CIDR must equal the default example.",
+        "D": "The prefix length must be 32."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "It is valid syntax but too broad here.",
+        "B": "It requires IPv4.",
+        "C": "The learner supplies their own matching /32.",
+        "D": "The source restricts the allowed shape to one IPv4 host."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q18",
+      "learningObjective": "Understand routability caveats",
+      "stem": "A supplied IPv4 /32 passes validation. Which additional claim is unsafe?",
+      "options": {
+        "A": "That it is guaranteed public and reachable.",
+        "B": "That it has a /32 length.",
+        "C": "That IPv6-style colon notation is excluded.",
+        "D": "That a supported input can be stored locally."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The code checks syntax/prefix length, not public classification or reachability.",
+        "B": "That is checked.",
+        "C": "The validation checks that.",
+        "D": "The lesson uses local inputs."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q19",
+      "learningObjective": "Use valid administrator naming",
+      "stem": "Why does admin_username=Administrator fail the configured input validation?",
+      "options": {
+        "A": "The name contains digits.",
+        "B": "The reserved-name check is case-insensitive.",
+        "C": "Every username must be a subscription GUID.",
+        "D": "The public IP must be Dynamic first."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "It contains no digits.",
+        "B": "lower() is checked against the disallowed list.",
+        "C": "Usernames and subscription IDs are distinct.",
+        "D": "Public IP allocation does not determine username validation."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q20",
+      "learningObjective": "Interpret VM size format checks",
+      "stem": "vm_size matches Standard_[A-Za-z0-9_]+. What remains to be verified?",
+      "options": {
+        "A": "Whether it starts with Standard_.",
+        "B": "Whether it contains an underscore after Standard.",
+        "C": "Actual regional availability and quota for that SKU.",
+        "D": "Whether uppercase letters are allowed."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The pattern checks that.",
+        "B": "The pattern checks that separator.",
+        "C": "The regex proves only a plausible string shape.",
+        "D": "The pattern explicitly permits letters of either case."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Azure VM vCPU quotas",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/quotas"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q21",
+      "learningObjective": "Understand managed OS disks",
+      "stem": "What is the purpose of the VM's declared OS disk?",
+      "options": {
+        "A": "Store the Azure CLI's local login cache.",
+        "B": "Provide subscription RBAC.",
+        "C": "Replace the network interface.",
+        "D": "Store the installed operating system on managed storage."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That cache is on the workstation.",
+        "B": "A disk does not grant roles.",
+        "C": "Storage and networking are separate dependencies.",
+        "D": "Its storage tier contributes separate cost."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure managed disk overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q22",
+      "learningObjective": "Keep credentials out of evidence",
+      "stem": "A learner collects screenshots for a public issue. Which content must be excluded?",
+      "options": {
+        "A": "The raw Windows administrator password.",
+        "B": "The nonsecret VM power-state label.",
+        "C": "The lesson identifier CLZ-190.",
+        "D": "The Terraform command names."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Troubleshooting evidence must not publish the credential.",
+        "B": "That can be useful diagnostic evidence.",
+        "C": "That is public curriculum metadata.",
+        "D": "Command names alone are not secrets."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q23",
+      "learningObjective": "Avoid service assumptions",
+      "stem": "Does the supplied CLZ-190 module install and validate IIS?",
+      "options": {
+        "A": "Yes; allowing port 80 installs IIS.",
+        "B": "No; the IIS bootstrap is a subsequent lesson.",
+        "C": "Yes; every Windows image serves HTTP by default.",
+        "D": "Only if the VM name contains web."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "An NSG rule does not install features.",
+        "B": "This lesson establishes the Windows VM and first access.",
+        "C": "Do not assume that application behavior.",
+        "D": "Names do not install software."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Create a Windows VM using Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q24",
+      "learningObjective": "Use real administrator ingress",
+      "stem": "The local network blocks outbound TCP 3389. What is a sensible troubleshooting step?",
+      "options": {
+        "A": "Open all VM inbound ports.",
+        "B": "Remove password sensitivity.",
+        "C": "Check local egress restrictions and use an approved access path.",
+        "D": "Change only the VM's Lab tag."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That cannot repair local outbound filtering.",
+        "B": "Output redaction does not affect TCP.",
+        "C": "The end-to-end path includes the learner's network.",
+        "D": "Tags do not control local egress."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Troubleshoot Windows VM RDP",
+          "url": "https://learn.microsoft.com/en-us/troubleshoot/azure/virtual-machines/windows/troubleshoot-rdp-connection"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q25",
+      "learningObjective": "Plan production private access",
+      "stem": "Which change directly addresses the lesson's intentional public administration exception?",
+      "options": {
+        "A": "Rename the public IP secure.",
+        "B": "Allow RDP from Internet.",
+        "C": "Store the password in a public tag.",
+        "D": "Remove the VM public IP and use Bastion/private connectivity."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Naming does not remove exposure.",
+        "B": "That broadens direct administration.",
+        "C": "That exposes a secret.",
+        "D": "It changes the management path deliberately."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q26",
+      "learningObjective": "Assess resize changes safely",
+      "stem": "The exercise changes vm_size. What should the learner inspect before applying?",
+      "options": {
+        "A": "Whether the plan proposes an in-place resize or replacement.",
+        "B": "Assume every resize is guaranteed nondisruptive.",
+        "C": "Delete the state file to avoid replacement.",
+        "D": "Check only the new name's spelling."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Review actual provider actions and constraints.",
+        "B": "Size changes can have consequences.",
+        "C": "That loses ownership bindings.",
+        "D": "Format alone is insufficient."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q27",
+      "learningObjective": "Identify VM dependencies",
+      "stem": "Which set describes resources this VM lesson adds beyond a bare resource group?",
+      "options": {
+        "A": "Only four standalone tag resources.",
+        "B": "NIC, public IP, disk, network, NSG, and generated credential.",
+        "C": "A Kubernetes cluster and SQL server.",
+        "D": "A mandatory remote-state backend."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tags are attributes.",
+        "B": "These support networking, storage, and authentication.",
+        "C": "Neither is declared.",
+        "D": "This lesson does not add that backend."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Create a Windows VM using Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-cli"
+        },
+        {
+          "title": "Azure network interfaces",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q28",
+      "learningObjective": "Validate cleanup boundaries",
+      "stem": "Why is deallocating the VM insufficient for the lesson's documented cleanup?",
+      "options": {
+        "A": "Deallocation changes the subscription GUID.",
+        "B": "Deallocation deletes the resource group automatically.",
+        "C": "It leaves retained resources and state instead of removing the lab.",
+        "D": "Terraform state always disappears when Windows stops."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "It does not.",
+        "B": "It does not remove the group.",
+        "C": "The lab calls for Terraform destroy and Azure readback.",
+        "D": "Guest/compute state does not erase Terraform state."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Azure VM states and billing",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/states-billing"
+        },
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q29",
+      "learningObjective": "Confirm secret-state cleanup limits",
+      "stem": "After destroy, can historical state backups or saved plans still contain prior credentials?",
+      "options": {
+        "A": "No; Azure remotely wipes every workstation file.",
+        "B": "Only if the password output was nonsensitive.",
+        "C": "The raw password becomes public-safe immediately.",
+        "D": "Yes; retained local artifacts need protection and appropriate cleanup."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Azure does not control all local artifacts.",
+        "B": "Sensitive values can also persist in artifacts.",
+        "C": "Old credentials should still not be published.",
+        "D": "Deleting managed Azure resources does not sanitize every copy."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ190-Q30",
+      "learningObjective": "Build a production operating model",
+      "stem": "Which combination matches the lesson's broader production guidance?",
+      "options": {
+        "A": "Hardened images, managed identities, patching, backup, endpoint protection, and secret rotation.",
+        "B": "Public RDP plus no backups or patching.",
+        "C": "Only a longer VM name.",
+        "D": "Disable monitoring to reduce every risk."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "First access is only one part of secure VM operations.",
+        "B": "That discards the stated operational controls.",
+        "C": "Naming does not provide operational protection.",
+        "D": "Visibility is part of responsible operations."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Create a Windows VM using Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-cli"
+        },
+        {
+          "title": "Azure managed disk overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/managed-disks-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

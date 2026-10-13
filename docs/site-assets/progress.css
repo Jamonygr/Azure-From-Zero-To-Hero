@@ -1,0 +1,105 @@
+.zth-progress-card {
+  border: 0.08rem solid var(--md-default-fg-color--lightest);
+  border-radius: 0.4rem;
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.zth-progress-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0.8rem 0;
+}
+
+.zth-progress-actions button,
+.zth-progress-actions .zth-file-button {
+  align-items: center;
+  background: var(--md-primary-fg-color);
+  border: 0;
+  border-radius: 0.2rem;
+  color: var(--md-primary-bg-color);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  min-height: 2.2rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.zth-progress-actions button:focus-visible,
+.zth-progress-actions .zth-file-button:focus-within {
+  outline: 0.15rem solid var(--md-accent-fg-color);
+  outline-offset: 0.15rem;
+}
+
+.zth-progress-actions input[type="file"] {
+  height: 0.05rem;
+  opacity: 0;
+  position: absolute;
+  width: 0.05rem;
+}
+
+.zth-progress-actions input[type="number"] {
+  background: var(--md-default-bg-color);
+  border: 0.05rem solid var(--md-default-fg-color--lighter);
+  color: var(--md-default-fg-color);
+  font: inherit;
+  margin-inline-start: 0.4rem;
+  max-width: 5rem;
+  padding: 0.2rem;
+}
+
+.zth-score-label {
+  align-items: center;
+  display: inline-flex;
+  min-height: 2.2rem;
+}
+
+.zth-progress-grid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  margin: 1rem 0;
+}
+
+.zth-progress-item {
+  border-inline-start: 0.25rem solid var(--md-default-fg-color--lighter);
+  padding: 0.5rem 0.7rem;
+}
+
+.zth-progress-item[data-status="complete"] {
+  border-inline-start-color: #16803a;
+}
+
+.zth-progress-item[data-status="in-progress"] {
+  border-inline-start-color: #b45f06;
+}
+
+.zth-progress-meter {
+  accent-color: var(--md-accent-fg-color);
+  max-width: 32rem;
+  width: 100%;
+}
+
+.zth-progress-message {
+  min-height: 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zth-progress-card * {
+    scroll-behavior: auto;
+    transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .zth-progress-card,
+  .zth-progress-item {
+    border-color: CanvasText;
+  }
+
+  .zth-progress-actions button,
+  .zth-progress-actions .zth-file-button {
+    border: 0.08rem solid ButtonText;
+  }
+}

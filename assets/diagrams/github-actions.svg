@@ -1,14 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="525" viewBox="0 0 1100 525" role="img" aria-labelledby="title desc">
   <title id="title">GitHub Actions validation</title>
   <desc id="desc">A GitHub Actions workflow checks Terraform formatting and validation on each change.</desc>
-  <style>.bg{fill:#f8fafc}.box{fill:#fff;stroke:#111827;stroke-width:3}.ci{fill:#e5e7eb}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#111827;stroke-width:4;marker-end:url(#arrow)}</style>
-  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#111827"/></marker></defs>
-  <rect class="bg" width="1100" height="430" rx="18"/>
+  <metadata>{"preserves": "labels, coordinates, resource shapes, and service connections", "sourceSha256": "5444cef4da74ebd1a1bc9226e6a6a67b2430b00433a8de469e33ecc0d079e24d"}</metadata><style>.bg{fill:#080e1b}.box{fill:#101d32;stroke:#eff5ff;stroke-width:3}.ci{fill:#1c2a3c}.text{font:700 24px "Segoe UI",Arial,sans-serif;fill:#eff5ff}.small{font:18px "Segoe UI",Arial,sans-serif;fill:#bcd0eb}.arrow{stroke:#eff5ff;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#eff5ff" /></marker></defs>
+  <rect class="bg" width="1100" height="430" rx="18" />
   <text class="text" x="40" y="55">Repository Validation Flow</text>
-  <rect class="box" x="95" y="155" width="190" height="120" rx="12"/><text class="text" x="138" y="205">Commit</text><text class="small" x="128" y="238">docs + HCL</text>
-  <line class="arrow" x1="305" y1="215" x2="430" y2="215"/>
-  <rect class="box ci" x="455" y="125" width="240" height="180" rx="12"/><text class="text" x="510" y="195">Actions</text><text class="small" x="505" y="230">fmt + validate</text>
-  <line class="arrow" x1="715" y1="215" x2="840" y2="215"/>
-  <rect class="box" x="865" y="155" width="170" height="120" rx="12"/><text class="text" x="913" y="205">Pass</text><text class="small" x="900" y="238">ready to run</text>
-</svg>
-
+  <rect class="box" x="95" y="155" width="190" height="120" rx="12" /><text class="text" x="138" y="205">Commit</text><text class="small" x="128" y="238">docs + HCL</text>
+  <line class="arrow" x1="305" y1="215" x2="430" y2="215" />
+  <rect class="box ci" x="455" y="125" width="240" height="180" rx="12" /><text class="text" x="510" y="195">Actions</text><text class="small" x="505" y="230">fmt + validate</text>
+  <line class="arrow" x1="715" y1="215" x2="840" y2="215" />
+  <rect class="box" x="865" y="155" width="170" height="120" rx="12" /><text class="text" x="913" y="205">Pass</text><text class="small" x="900" y="238">ready to run</text>
+<g><rect y="430.0" width="1100.0" height="95" fill="#080e1b" /><g transform="translate(25 443.0) scale(0.75)" fill="none" stroke="#60e0e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 60h39c25 0 25-34 2-37-8-24-40-22-46 1C-3 30 0 60 24 60Z" /><path d="m30 40 12 12 15-22" /></g><g transform="translate(112 443.0) scale(0.75)" fill="none" stroke="#b39bff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="29" y="29" width="26" height="26" rx="5" /><path d="M42 29V12m0 43v17M29 42H12m43 0h17" /><circle cx="42" cy="9" r="5" /><circle cx="42" cy="75" r="5" /><circle cx="9" cy="42" r="5" /><circle cx="75" cy="42" r="5" /></g><text x="210" y="472.0" fill="#eaf2ff" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="500">Azure + Terraform learning architecture</text><text x="210" y="500.0" fill="#bdd0ec" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Follow the lesson for exact resource settings and deployment mode.</text></g></svg>

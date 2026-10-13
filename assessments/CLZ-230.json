@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-230",
+  "questions": [
+    {
+      "id": "CLZ230-Q01",
+      "learningObjective": "Distinguish per-instance NAT from load balancing",
+      "stem": "An administrator connects to the CLZ-230 frontend on TCP 50001. How is the target selected?",
+      "options": {
+        "A": "The health probe alternates RDP sessions across both VMs",
+        "B": "The client selects a VM by putting its name in the password",
+        "C": "The NAT rule association directs that port to the first backend NIC",
+        "D": "The outbound rule chooses whichever VM has lower CPU"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A per-instance NAT mapping is not a load-balancing rule.",
+        "B": "The password authenticates the guest and does not select a NIC.",
+        "C": "This specific rule references web[0], so it targets one VM.",
+        "D": "Outbound SNAT does not distribute inbound RDP."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q02",
+      "learningObjective": "Read the port mapping",
+      "stem": "Which frontend-to-backend port mapping is declared by CLZ-230's rdp_first rule?",
+      "options": {
+        "A": "TCP 3389 to TCP 50001",
+        "B": "TCP 50001 to TCP 3389",
+        "C": "TCP 80 to UDP 3389",
+        "D": "UDP 50001 to TCP 443"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "This reverses the declared direction.",
+        "B": "The public administration port is forwarded to the guest RDP port.",
+        "C": "HTTP distribution and the TCP RDP NAT mapping are different rules.",
+        "D": "The rule uses TCP and targets RDP, not browser HTTPS."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q03",
+      "learningObjective": "Choose the RDP client endpoint",
+      "stem": "Which address should a learner enter for the lesson's external RDP NAT test?",
+      "options": {
+        "A": "The web subnet address followed by port 80",
+        "B": "The second VM's private IP from an ordinary Internet laptop",
+        "C": "The resource-group name followed by port 443",
+        "D": "The load balancer public IP with frontend port 50001"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A subnet prefix is not a remote host endpoint.",
+        "B": "That private address is not directly Internet-routable.",
+        "C": "A resource-group name is not the load balancer endpoint.",
+        "D": "The NAT frontend is the externally reachable entry point."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q04",
+      "learningObjective": "Match NSG rules to translated traffic",
+      "stem": "Why does CLZ-230's workload NSG permit destination port 3389 rather than 50001 for the RDP path?",
+      "options": {
+        "A": "NSGs can filter only Windows default ports",
+        "B": "The backend sees the translated guest RDP destination port",
+        "C": "The public frontend listens on 3389 in this implementation",
+        "D": "The health probe rewrites all destination ports"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "NSGs can filter custom TCP or UDP ports.",
+        "B": "Frontend port forwarding maps 50001 to 3389 before delivery to the VM.",
+        "C": "The declared frontend port is 50001.",
+        "D": "Health probes do not perform NAT for client sessions."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q05",
+      "learningObjective": "Interpret the administrator CIDR",
+      "stem": "The learner's current public IPv4 is 198.51.100.25 in an illustrative scenario. What prefix length should scope that one address in admin_cidr?",
+      "options": {
+        "A": "/24",
+        "B": "/16",
+        "C": "/0",
+        "D": "/32"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A /24 permits a range of addresses, not only one.",
+        "B": "A /16 greatly broadens the permitted source range.",
+        "C": "A /0 covers the whole IPv4 address space.",
+        "D": "A /32 selects a single IPv4 address; use the learner's actual address in a real lab."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q06",
+      "learningObjective": "Match the protocol throughout the RDP forwarding path",
+      "stem": "A learner adds an NSG allow for UDP 3389, but the CLZ-230 TCP NAT connection still fails. Why is that rule insufficient?",
+      "options": {
+        "A": "UDP permission automatically opens every TCP port",
+        "B": "The public frontend uses an HTTP proxy for RDP",
+        "C": "The declared NAT mapping and RDP test use TCP, so their TCP path needs permission",
+        "D": "The frontend port must always equal the guest port"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "TCP and UDP are separate protocols in NSG matching.",
+        "B": "This Layer 4 mapping does not provide an HTTP proxy.",
+        "C": "Allow the configured TCP destination path while retaining the narrow administrator source.",
+        "D": "Port forwarding deliberately maps frontend 50001 to backend 3389; equality is unnecessary."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q07",
+      "learningObjective": "Read explicit NIC association",
+      "stem": "Which object does azurerm_network_interface_nat_rule_association.rdp_first reference in CLZ-230?",
+      "options": {
+        "A": "azurerm_network_interface.web[0]",
+        "B": "Every NIC in the Azure subscription",
+        "C": "Only the AzureBastionSubnet resource",
+        "D": "The public IP's DNS label"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The declared association targets the first counted backend NIC.",
+        "B": "The relationship specifies a single NIC.",
+        "C": "No Bastion subnet is part of this NAT association.",
+        "D": "The association uses the private NIC's internal IP configuration."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q08",
+      "learningObjective": "Avoid assuming all backends have RDP NAT",
+      "stem": "The implementation creates two Windows VMs but only one inbound NAT association. What can port 50001 reach?",
+      "options": {
+        "A": "Both backends in round-robin order",
+        "B": "Only whichever backend currently serves HTTP",
+        "C": "Both backends simultaneously in one RDP session",
+        "D": "Only the first backend, subject to NSG and guest readiness"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The rule is not an RDP load-balancing rule.",
+        "B": "HTTP flow selection is independent of the NAT mapping.",
+        "C": "A client session targets a single mapped VM.",
+        "D": "The second VM has no association with this NAT rule."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q09",
+      "learningObjective": "Differentiate health probe requirements",
+      "stem": "Does the lesson's per-instance inbound NAT rule need the HTTP health probe to choose its RDP target?",
+      "options": {
+        "A": "Yes; the HTTP probe reads the administrator password",
+        "B": "Yes; the probe changes 80 into 3389",
+        "C": "No; the explicit NAT association selects the target without a health probe",
+        "D": "No; because every Windows VM automatically gets a public IP"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Probes do not authenticate Windows users.",
+        "B": "Probe configuration does not transform service ports.",
+        "C": "Inbound NAT mapping does not use a probe to select the designated VM.",
+        "D": "These backend NICs are private; explicit NAT supplies access."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q10",
+      "learningObjective": "Interpret a successful TCP test",
+      "stem": "Test-NetConnection succeeds against the public IP on 50001. What remains unproven?",
+      "options": {
+        "A": "Successful authenticated RDP access to the intended Windows guest",
+        "B": "The existence of any network path to that port",
+        "C": "Whether the local workstation can open any TCP socket",
+        "D": "Whether the frontend port number is present in the command"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "TCP reachability is narrower than a working authenticated session.",
+        "B": "A successful test demonstrates that path at the time of testing.",
+        "C": "The test already opened a socket to the target.",
+        "D": "The command used that specified port."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q11",
+      "learningObjective": "Explain the broad deny rule",
+      "stem": "CLZ-230 permits admin_cidr at priority 110 and denies other RDP at priority 120. Why does the chosen source remain permitted?",
+      "options": {
+        "A": "The highest numerical priority always wins",
+        "B": "The lower-numbered matching allow rule is evaluated first",
+        "C": "A Deny rule is ignored whenever a load balancer exists",
+        "D": "RDP passwords bypass every network rule"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Lower priority numbers are evaluated first.",
+        "B": "The broad later deny restricts sources that do not match the allow.",
+        "C": "NSG policy still applies to backend traffic.",
+        "D": "Credentials cannot bypass a blocked network path."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q12",
+      "learningObjective": "Keep HTTP and RDP roles separate",
+      "stem": "Which declared rule continues distributing ordinary HTTP traffic while RDP uses its single target?",
+      "options": {
+        "A": "The RDP rule's frontend port 50001",
+        "B": "The administrator /32 validation expression",
+        "C": "The load-balancing rule for TCP frontend 80 and backend 80",
+        "D": "The Terraform sensitive password output"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That port maps to the Windows RDP service.",
+        "B": "Input validation does not distribute traffic.",
+        "C": "HTTP uses the backend pool and probe separately from RDP NAT.",
+        "D": "An output is not a forwarding rule."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q13",
+      "learningObjective": "Keep outbound and inbound roles separate",
+      "stem": "Which CLZ-230 rule supplies backend-initiated Internet egress?",
+      "options": {
+        "A": "The per-instance inbound RDP NAT rule",
+        "B": "The explicit load balancer outbound rule",
+        "C": "The deny-other-rdp NSG rule",
+        "D": "The resource group's Project tag"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Inbound port forwarding does not supply a general egress design.",
+        "B": "The rule declares SNAT for outbound flows from the backend pool.",
+        "C": "An inbound deny rule cannot provide egress translation.",
+        "D": "Metadata does not implement packet forwarding."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q14",
+      "learningObjective": "Diagnose a wrong RDP destination",
+      "stem": "The session opens on the wrong VM after a configuration edit. Which relationship should be inspected?",
+      "options": {
+        "A": "The health probe's HTTP page title",
+        "B": "The Terraform binary filename",
+        "C": "The outbound rule's protocol alone",
+        "D": "The NIC-to-inbound-NAT-rule association"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The NAT target is not selected by page content.",
+        "B": "The filename does not choose the mapped NIC.",
+        "C": "Outbound translation is separate from the inbound target.",
+        "D": "That relationship identifies the target private IP configuration."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q15",
+      "learningObjective": "Review a frontend port change completely",
+      "stem": "A learner changes the NAT frontend port from 50001 to 50002. Which follow-up is needed?",
+      "options": {
+        "A": "Update any hard-coded port output and client validation commands to match",
+        "B": "Change the guest RDP service to port 50002 automatically",
+        "C": "Replace the HTTP probe with an RDP username",
+        "D": "Add a public IP to both private NICs"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The declared mapping, reported port, and client endpoint must agree.",
+        "B": "The backend port can remain 3389; a frontend change does not reconfigure Windows.",
+        "C": "Probes do not accept usernames as target ports.",
+        "D": "The NAT frontend already provides the intended path."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q16",
+      "learningObjective": "Recognize a documentation placeholder",
+      "stem": "admin_cidr remains 203.0.113.10/32 while the learner uses a different real public IP. What is the expected risk?",
+      "options": {
+        "A": "The source restriction will not permit the learner's actual RDP traffic",
+        "B": "Azure converts that prefix into the current client's address",
+        "C": "The value opens RDP to everyone because /32 is broad",
+        "D": "The value changes the backend RDP port to 2030"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Documentation example addresses must be replaced before a real connectivity test.",
+        "B": "Azure does not infer the caller's address from an example value.",
+        "C": "A /32 is narrow, although this address is only an example.",
+        "D": "A source CIDR does not change the destination port."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q17",
+      "learningObjective": "Plan private management in production",
+      "stem": "Which production alternative best removes this lesson's Internet-facing RDP NAT pattern?",
+      "options": {
+        "A": "An unscoped Internet allow rule on port 3389",
+        "B": "Publishing the Windows password on the IIS page",
+        "C": "Changing 50001 to another high port without source restrictions",
+        "D": "Bastion or an approved VPN/ExpressRoute-based private management path"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That broadens exposure rather than removing it.",
+        "B": "A secret on a public page is not a private management path.",
+        "C": "A different port is not an access boundary.",
+        "D": "These approaches support private administration without the public per-VM NAT exposure."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q18",
+      "learningObjective": "Validate control-plane port mapping",
+      "stem": "Which Azure CLI result most directly confirms the intended NAT rule configuration?",
+      "options": {
+        "A": "An IIS page containing the resource-group name",
+        "B": "An inbound-nat-rule entry with frontendPort 50001 and backendPort 3389",
+        "C": "An outbound rule with protocol All only",
+        "D": "A VM list that shows two administrator usernames"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Page content does not list the NAT rule's configured ports.",
+        "B": "Those fields describe the declared mapping.",
+        "C": "That confirms egress configuration, not the inbound mapping.",
+        "D": "Usernames do not describe load balancer NAT ports."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q19",
+      "learningObjective": "Consider guest service readiness",
+      "stem": "The NSG source and NAT association are correct, but the guest RDP service is unavailable. What should the learner expect?",
+      "options": {
+        "A": "The load balancer automatically installs an RDP service",
+        "B": "HTTP probe health guarantees authenticated RDP works",
+        "C": "Network forwarding alone will not create a usable RDP session",
+        "D": "Changing the Terraform tag removes the need for a listener"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The network service does not configure guest services.",
+        "B": "HTTP port health does not prove RDP readiness.",
+        "C": "The guest must listen and permit the session as well.",
+        "D": "Tags do not start the service."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q20",
+      "learningObjective": "Explain public-IP ownership",
+      "stem": "Why do the backend Windows NICs not need their own public IPs for this demonstration?",
+      "options": {
+        "A": "The guest password includes an embedded public route",
+        "B": "The load balancer frontend forwards the mapped port to a private backend",
+        "C": "Azure makes every private IP Internet-routable",
+        "D": "An A record automatically creates public NIC addresses"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Passwords do not establish routes.",
+        "B": "The public endpoint is supplied by the shared frontend.",
+        "C": "Private IPs remain private.",
+        "D": "DNS records do not allocate public IP resources."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q21",
+      "learningObjective": "Understand Standard security requirements",
+      "stem": "If all inbound NSG allows are removed from the private backends, what happens to the NAT path?",
+      "options": {
+        "A": "The NAT declaration alone does not grant permitted backend traffic",
+        "B": "Every frontend port becomes permitted by default",
+        "C": "The service switches automatically to Bastion",
+        "D": "Only the Terraform plan becomes encrypted"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Standard forwarding still requires an allowed network path.",
+        "B": "The NAT rule is not a blanket access grant.",
+        "C": "Bastion is a separate deployed service.",
+        "D": "Network policy changes do not alter plan encryption."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q22",
+      "learningObjective": "Compare NAT and application proxying",
+      "stem": "Which claim about CLZ-230's RDP NAT rule is accurate?",
+      "options": {
+        "A": "It validates every Windows password before forwarding TCP",
+        "B": "It reads the RDP desktop pixels to select a backend",
+        "C": "It forwards a selected transport port rather than authenticating the Windows user",
+        "D": "It encrypts Terraform state while the session is active"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The Layer 4 service does not perform Windows guest authentication.",
+        "B": "Backend association is explicit, not content based.",
+        "C": "Guest credentials and access remain Windows responsibilities.",
+        "D": "Traffic forwarding does not encrypt local state."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q23",
+      "learningObjective": "Account for actual compute footprint",
+      "stem": "Why should a learner budget for two Windows instances when inspecting CLZ-230's current Terraform?",
+      "options": {
+        "A": "Every inbound NAT rule automatically creates two extra VMs",
+        "B": "Port 50001 represents a count of 50,001 servers",
+        "C": "The HTTP probe multiplies the VM count by two",
+        "D": "Both NIC and VM resources have count = 2 despite a single RDP NAT target"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Rules do not independently create Windows instances.",
+        "B": "A port is not resource cardinality.",
+        "C": "Probes do not create backend VMs.",
+        "D": "One NAT association does not reduce the number of declared VMs."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q24",
+      "learningObjective": "Respond to a rejected broad RDP input",
+      "stem": "Terraform rejects admin_cidr = 0.0.0.0/0. Which correction follows the lesson?",
+      "options": {
+        "A": "Supply one real current public IPv4 /32 for the administrator",
+        "B": "Disable validation and keep the universal source range",
+        "C": "Change the same broad range to a Role tag",
+        "D": "Use an administrator password as the CIDR string"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The lesson explicitly limits direct RDP to one source.",
+        "B": "That removes the intended safety constraint.",
+        "C": "Tags do not define the permitted source rule.",
+        "D": "A password is not a network prefix."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q25",
+      "learningObjective": "Protect state and plan artifacts",
+      "stem": "The NAT lab generates a Windows administrator password. How should its state and saved plan be handled?",
+      "options": {
+        "A": "As harmless public files because the output has sensitive = true",
+        "B": "As potentially sensitive artifacts kept out of public Git history",
+        "C": "As safe attachments whenever the NAT port is nonstandard",
+        "D": "As files that must be copied into the IIS web root"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Sensitive output redaction does not sanitize state.",
+        "B": "Terraform artifacts can retain values associated with guest credentials.",
+        "C": "Port selection does not protect stored secrets.",
+        "D": "Publishing state can expose credentials and resource details."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform sensitive state",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q26",
+      "learningObjective": "Do not mistake port obscurity for authorization",
+      "stem": "Why is frontend port 50001 alone insufficient security for this lesson's RDP exposure?",
+      "options": {
+        "A": "Ports above 49152 automatically enforce Microsoft Entra MFA",
+        "B": "Only the creator can connect to high-numbered Azure ports",
+        "C": "A discoverable port still needs source restrictions and strong authenticated access",
+        "D": "A high port encrypts the Terraform configuration"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Port numbers do not enable MFA.",
+        "B": "There is no creator-only port authorization.",
+        "C": "Changing the port does not establish identity or trust.",
+        "D": "Port choice does not encrypt configuration files."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q27",
+      "learningObjective": "Review changes before deploying NAT exposure",
+      "stem": "Which step lets the learner inspect a proposed change to the NAT rule before applying it?",
+      "options": {
+        "A": "Run terraform plan with the intended inputs and review the saved plan",
+        "B": "Delete the local state file and rely on the frontend",
+        "C": "Run Test-NetConnection against a port not yet deployed",
+        "D": "Change the browser theme to dark"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A plan displays the forwarding and policy changes without executing them.",
+        "B": "Removing state breaks tracking instead of reviewing changes.",
+        "C": "A live probe cannot describe an unapplied Terraform change.",
+        "D": "The theme does not inspect infrastructure actions."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q28",
+      "learningObjective": "Verify full cleanup",
+      "stem": "Which result completes the lesson's cleanup evidence after the documented destroy?",
+      "options": {
+        "A": "The RDP window closes but the VMs remain running",
+        "B": "Port 50001 times out while the public IP is still allocated",
+        "C": "terraform fmt succeeds without changes",
+        "D": "The captured lesson resource-group name returns false from az group exists"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Closing a client does not delete resources.",
+        "B": "A failed connection does not prove resource removal.",
+        "C": "Formatting is unrelated to deletion.",
+        "D": "The verification confirms the managed group is absent."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q29",
+      "learningObjective": "Avoid treating a NAT mapping as high availability",
+      "stem": "Why is the first backend's RDP mapping not a highly available pooled administration endpoint?",
+      "options": {
+        "A": "The outbound rule only supports DNS",
+        "B": "It stays associated with one designated backend and can fail when that VM is unavailable",
+        "C": "The HTTP frontend lacks a public IP",
+        "D": "RDP maps each request through an HTTP URL path"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The rule's protocol is All, and it is unrelated to RDP failover.",
+        "B": "Per-instance forwarding does not fail over administration to a different guest.",
+        "C": "The frontend has a Standard public IP.",
+        "D": "RDP is not HTTP path routing."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ230-Q30",
+      "learningObjective": "Keep limited exposure temporary",
+      "stem": "Which operational addition fits a temporary production NAT exception?",
+      "options": {
+        "A": "Time-bounded source access, monitoring, and an assigned owner",
+        "B": "A permanent universal RDP source to avoid IP changes",
+        "C": "A shared password committed with the Terraform plan",
+        "D": "Removing logs so administrators cannot be traced"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Temporary exceptions still require accountable access and review.",
+        "B": "That expands risk and contradicts source scoping.",
+        "C": "Credentials should not be published.",
+        "D": "Auditable operations require appropriate records."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Load Balancer inbound NAT rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

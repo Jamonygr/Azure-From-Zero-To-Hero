@@ -14,16 +14,16 @@ Understand per-instance inbound NAT by mapping one scoped public frontend port t
 
 ## Architecture
 
-A Standard Load Balancer serves HTTP on port 80 and maps frontend TCP 50001 to backend RDP 3389. The web NSG limits that admin flow to `admin_cidr`. An explicit outbound rule supplies backend egress without relying on inbound SNAT.
+A Standard Load Balancer serves HTTP on port 80 across two Windows backends and maps frontend TCP 50001 to RDP 3389 on the first backend, `web[0]`. The web NSG limits that admin flow to `admin_cidr`. An explicit outbound rule supplies backend egress without relying on inbound SNAT.
 
 ## Resources And Cost
 
-**Relative cost: Moderate.** The Windows VM and disk dominate; Standard public IP and outbound traffic add cost.
+**Relative cost: Moderate.** Two Windows VMs and their disks dominate; Standard public IP and outbound traffic add cost.
 
 | Component | Purpose and principal cost driver |
 |---|---|
 | Standard Load Balancer and public IP | HTTP, health probe, explicit outbound, and one inbound NAT rule. |
-| Windows IIS VM | Private backend NIC associated with the pool and NAT rule. |
+| Two Windows IIS VMs | Both private NICs join the HTTP pool; only `web[0]` is associated with the RDP NAT rule. |
 | Web NSG | Allows HTTP and one `/32` administrator source for RDP. |
 
 ## Inputs
@@ -92,7 +92,7 @@ terraform destroy -var "subscription_id=$subscriptionId"
 az group exists --name $resourceGroup
 ```
 
-The NAT exposure, backend VM, load balancer, and public IP are deleted.
+The NAT exposure, both backend VMs, load balancer, and public IP are deleted.
 
 ## Production Delta
 

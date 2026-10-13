@@ -8,6 +8,15 @@ crash.log
 crash.*.log
 artifacts/
 
+# Generated documentation and Python development files
+.site-docs/
+.site-docs.tmp/
+/site/
+.venv/
+venv/
+**/__pycache__/
+*.pyc
+
 # Local values and overrides
 terraform.tfvars
 *.auto.tfvars
@@ -29,3 +38,4 @@ override.tf.json
 Thumbs.db
 .DS_Store
 
+.check-tools/
