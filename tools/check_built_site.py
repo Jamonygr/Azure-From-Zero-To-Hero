@@ -4,7 +4,7 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
-from site_common import ROOT, catalog, lesson_path
+from site_common import ROOT, PHASES, catalog, lesson_path
 
 
 class Page(HTMLParser):
@@ -52,6 +52,8 @@ def check():
         content = path.read_text(encoding='utf-8')
         assert f'data-zth-lesson="{lesson["Id"]}"' in content
         assert f'{lesson["Id"]}-learning.svg' in content
+        assert f'{lesson["Id"]}-concept.svg' in content
+        assert content.index(f'{lesson["Id"]}-concept.svg') > content.index('id="architecture"'), f'Teaching diagram must be in Architecture: {lesson["Id"]}'
         if lesson['Id'] == 'CLZ-090': continue
         bank = json.loads((site/'assets/quiz'/f'{lesson["Id"]}.json').read_text(encoding='utf-8'))
         assert len(bank['questions']) == 30
@@ -64,13 +66,30 @@ def check():
     assert count == 900
     assert hashlib.sha256((site/'ClickopzBook.pdf').read_bytes()).digest() == hashlib.sha256((ROOT/'ClickopzBook.pdf').read_bytes()).digest()
     assert len(list((site/'assets/diagrams').glob('*.svg'))) == 15
-    assert len(list((site/'assets/illustrations').glob('*.svg'))) == 40
+    assert len(list((site/'assets/illustrations').glob('*.svg'))) == 72
+    assert len(list((site/'assets/illustrations').glob('CLZ-*-concept.svg'))) == 31
+    assert (site/'assets/markers.css').is_file()
+    for phase, slug in PHASES.items():
+        asset = site/'assets/illustrations'/f'{slug}-scene.png'
+        assert asset.is_file() and asset.stat().st_size > 1000, f'Missing original artwork: {phase}'
+        for route in ['index.html', f'phases/{slug}/index.html']:
+            assert f'{slug}-scene.png' in (site/route).read_text(encoding='utf-8')
+    for route in ['index.html', 'learning-pathways/index.html', 'visual-guides/index.html']:
+        assert 'curriculum-journey.svg' in (site/route).read_text(encoding='utf-8')
+    gallery = (site/'visual-guides/index.html').read_text(encoding='utf-8')
+    for visual in list((site/'assets/illustrations').glob('*.svg')) + list((site/'assets/diagrams').glob('*.svg')):
+        assert visual.name in gallery, f'Missing gallery visual: {visual.name}'
+        original = ROOT/'assets'/visual.parent.name/visual.name
+        assert hashlib.sha256(visual.read_bytes()).digest() == hashlib.sha256(original.read_bytes()).digest(), f'Rebuild after visual edits: {visual.name}'
+    for raster in list((site/'assets/illustrations').glob('*-scene.png')) + [site/'assets/illustrations/zero-to-hero-cover.png']:
+        original = ROOT/'assets/illustrations'/raster.name
+        assert hashlib.sha256(raster.read_bytes()).digest() == hashlib.sha256(original.read_bytes()).digest(), f'Staged artwork differs from original: {raster.name}'
     assert not list(site.rglob('terraform.tfvars')) and not list(site.rglob('*.tfstate*'))
     assert not list(site.rglob('tfplan'))
     assert len(list((site/'wiki').glob('*/index.html'))) == 14
     examples = list((site/'downloads/CLZ-370').glob('*.yml.example'))
     assert examples and all(path.suffix == '.example' for path in examples)
-    print(f'PASS: {len(pages)} pages, all local links and anchors, 31 lessons, 900 unchanged compiled questions, 55 SVGs, 14 guides and identical book')
+    print(f'PASS: {len(pages)} pages, all local links and anchors, 31 lessons, 900 unchanged compiled questions, 87 SVGs, 6 new phase scenes, 14 guides and identical book')
 
 
 if __name__ == '__main__':

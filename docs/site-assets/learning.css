@@ -158,6 +158,44 @@ body { font-family: var(--md-text-font); }
   .zth-domain-card, .zth-lab-card, .zth-path-card, .zth-hero, .zth-button, .zth-stats div, .zth-quiz-option { border-color: CanvasText; }
 }
 /* Course homepage overrides: readable cover and four curriculum statistics. */
+.zth-marker { flex: 0 0 1.05rem; height: 1.05rem; margin-inline-end: 0.4rem; vertical-align: middle; width: 1.05rem; color: var(--md-typeset-a-color); }
+.zth-card-body p.zth-card-meta { align-items: start; display: flex; gap: 0.15rem; line-height: 1.55; }
+.zth-card-body p.zth-card-meta .zth-marker { margin-top: 0.04rem; }
+.zth-phase-scene { margin: 1.4rem auto; max-width: 46rem; }
+.zth-phase-scene img { width: 100%; height: auto; }
+.zth-phase-symbol { margin: 1rem auto; max-width: 25rem; }
+.zth-concept-visual { margin: 1.5rem auto; max-width: 58rem; }
+.zth-concept-visual img { width: 100%; height: auto; }
+.zth-diagram-viewport { overflow-x: auto; }
+.zth-diagram-viewport:focus-visible { outline: 0.15rem solid var(--md-accent-fg-color); outline-offset: -0.15rem; }
+@media (max-width: 760px) {
+  .zth-concept-visual img { max-width: none; min-width: 48rem; }
+}
+.md-typeset h2#prerequisites::before,
+.md-typeset h2#resources-and-cost::before,
+.md-typeset h2#deploy::before,
+.md-typeset h2#validate::before,
+.md-typeset h2#cleanup::before,
+.zth-quiz-controls::before,
+.zth-progress-card > h2::before {
+  background: var(--md-typeset-a-color);
+  content: "";
+  display: inline-block;
+  height: 1.15em;
+  margin-inline-end: 0.45em;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  vertical-align: -0.15em;
+  width: 1.15em;
+}
+.md-typeset h2#prerequisites::before { mask-image: var(--zth-icon-prerequisites); }
+.md-typeset h2#resources-and-cost::before { mask-image: var(--zth-icon-cost); }
+.md-typeset h2#deploy::before { mask-image: var(--zth-icon-deploy); }
+.md-typeset h2#validate::before { mask-image: var(--zth-icon-verify); }
+.md-typeset h2#cleanup::before { mask-image: var(--zth-icon-cleanup); }
+.zth-quiz-controls::before { flex-shrink: 0; mask-image: var(--zth-icon-quiz); }
+.zth-progress-card > h2::before { mask-image: var(--zth-icon-progress); }
 .md-typeset .zth-home .zth-hero { display: block; padding: 2rem; }
 .md-typeset .zth-cover { display: block; width: 100%; max-width: none; margin: 0 0 1.2rem; }
 .md-typeset .zth-cover img { width: 100%; height: auto; border-radius: 1.1rem; }

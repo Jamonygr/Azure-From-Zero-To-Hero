@@ -14,10 +14,18 @@ Windows Server, IIS, networking, state, security, operations, and CI.
 [Practice 900 original questions](https://jamonygr.github.io/Azure-From-Zero-To-Hero/practice/) ·
 [Download Beyond Clickopz](ClickopzBook.pdf)
 
-The website brings together all 31 lessons, six learning phases, 55 SVG teaching
-visuals, search, quizzes with explanations, and browser-local progress. Black/navy
+The website brings together all 31 lessons, six illustrated learning phases,
+87 SVG visuals, search, quizzes with explanations, and browser-local progress. Black/navy
 is the default theme, with a remembered light-mode option. Exercise and cleanup
 completion are self-reported; the website does not run Terraform or create Azure resources.
+
+Six original phase scenes and 31 lesson-specific teaching diagrams illustrate
+subnets, packet paths, Windows infrastructure, state migration, secrets, private
+access, and the capstone. [Explore the visual gallery](https://jamonygr.github.io/Azure-From-Zero-To-Hero/visual-guides/).
+
+![Six-phase Azure and Terraform learning journey, including optional setup and public DNS](assets/illustrations/curriculum-journey.svg)
+
+Suggested learning order, not an Azure topology. [Open the journey at full size](assets/illustrations/curriculum-journey.svg).
 
 > [!CAUTION]
 > Many lessons create billable Azure resources. Nothing in this repository runs

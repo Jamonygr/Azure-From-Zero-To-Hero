@@ -13,6 +13,7 @@ from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
 from site_common import ROOT, PHASES, catalog, lesson_path
 from validate_assessments import validate
+from site_markers import marker, styles as marker_styles
 
 OUTPUT = ROOT/'.site-docs'
 STATIC = ['terraform-safe-workflow','troubleshooting','state-aware-cleanup']
@@ -32,15 +33,34 @@ def figure(path, alt, caption, css='zth-teaching-visual'):
         width, height = ET.parse(original).getroot().attrib['viewBox'].split()[2:]
     elif original and original.suffix == '.png':
         width,height = struct.unpack('>II', original.read_bytes()[16:24])
-    return f'<figure class="{css}"><a href="{path}" aria-label="Open {escape(alt,quote=True)} at full size"><img src="{path}" alt="{escape(alt,quote=True)}" width="{width}" height="{height}" loading="lazy"></a><figcaption>{escape(caption)} <a href="{path}">Open at full size</a>.</figcaption></figure>'
+    visual = f'<a href="{path}" aria-label="Open {escape(alt,quote=True)} at full size"><img src="{path}" alt="{escape(alt,quote=True)}" width="{width}" height="{height}" loading="lazy"></a>'
+    if 'zth-concept-visual' in css.split():
+        visual = f'<div class="zth-diagram-viewport" role="region" aria-label="Scrollable teaching diagram" tabindex="0">{visual}</div>'
+        caption += ' On narrow screens, scroll the diagram horizontally.'
+    return f'<figure class="{css}">{visual}<figcaption>{escape(caption)} <a href="{path}">Open at full size</a>.</figcaption></figure>'
 
 
 def card(lesson, prefix=''):
     url = prefix+lesson_path(lesson)
-    image = prefix+f'assets/illustrations/{lesson["Id"]}-learning.svg'
+    image = prefix+f'assets/illustrations/{lesson["Id"]}-concept.svg'
     optional = ' · Optional' if lesson['Id'] in {'CLZ-090','CLZ-300'} else ''
     quiz = 0 if lesson['Id']=='CLZ-090' else 30
-    return f'<article class="zth-lab-card zth-visual-card">{figure(image,lesson["Id"]+" lesson learning sequence","Learning sequence; follow the lesson for commands.","")}<div class="zth-card-body"><span class="zth-eyebrow">{lesson["Id"]}{optional}</span><h3><a href="{url}">{escape(lesson["Title"])}</a></h3><p>{escape(lesson["Phase"])} · {escape(lesson["CostTier"])} relative cost</p><p>{escape(lesson["DeploymentMode"])} · {quiz} questions</p><p>Prerequisites: {escape(', '.join(lesson['Prerequisites']) or 'None')}</p><a class="zth-card-link" href="{url}">Open lesson →</a></div></article>'
+    return f'<article class="zth-lab-card zth-visual-card">{figure(image,concept_alt(lesson),"Lesson teaching diagram; read the arrow legend.","")}<div class="zth-card-body"><span class="zth-eyebrow">{lesson["Id"]}{optional}</span><h3><a href="{url}">{escape(lesson["Title"])}</a></h3><p>{escape(lesson["Phase"])}</p><p class="zth-card-meta">{marker("cost")}{escape(lesson["CostTier"])} relative cost</p><p class="zth-card-meta">{marker("deploy")}{escape(lesson["DeploymentMode"])}</p><p class="zth-card-meta">{marker("quiz")}{quiz} questions</p><p class="zth-card-meta">{marker("prerequisites")}Prerequisites: {escape(', '.join(lesson['Prerequisites']) or 'None')}</p><a class="zth-card-link" href="{url}">Open lesson →</a></div></article>'
+
+
+def concept_alt(lesson):
+    path = ROOT/'assets/illustrations'/f'{lesson["Id"]}-concept.svg'
+    root = ET.parse(path).getroot()
+    description = root.find('{http://www.w3.org/2000/svg}desc')
+    assert description is not None and description.text, f'Missing teaching description: {path}'
+    return lesson['Id']+' — '+description.text
+
+
+def journey(prefix=''):
+    return figure(prefix+'assets/illustrations/curriculum-journey.svg',
+                  'Six learning phases from the optional workstation setup through Terraform foundations, networking, Windows compute, platform services, and operations. Public DNS in CLZ-300 is optional.',
+                  'Suggested learning journey, not a network topology. Follow lesson prerequisites; CLZ-090 and CLZ-300 are optional.',
+                  'zth-teaching-visual zth-concept-visual')
 
 
 def cards(lessons,prefix=''):
@@ -94,6 +114,7 @@ def rewrite(content, original, target, mapping):
 
 def stage(allow_partial=False):
     lessons = catalog(); banks = validate(allow_partial)
+    placed_concepts = set()
     temp = ROOT/'.site-docs.tmp'
     assert temp.resolve().parent == ROOT.resolve() and OUTPUT.resolve().parent == ROOT.resolve()
     if temp.exists(): shutil.rmtree(temp)
@@ -111,6 +132,12 @@ def stage(allow_partial=False):
                 content = re.sub(r'!\[([^\]]+)\]\(([^)]+\.svg)\)',lambda m:figure(m[2],m[1],'Service or workflow illustration. The lesson defines the exact resource settings.'),content,count=1)
                 visual = figure(f'../../assets/illustrations/{lesson["Id"]}-learning.svg',lesson['Id']+' learning sequence','Arrows show the learning sequence, not service traffic. '+lesson['DeploymentMode']+'.','zth-teaching-visual zth-learning-visual')
                 content = content.replace('\n## Prerequisites\n','\n'+visual+'\n\n## Prerequisites\n',1)
+                assert content.count('\n## Architecture\n') == 1, f'Expected one Architecture section: {lesson["Id"]}'
+                concept = figure(f'../../assets/illustrations/{lesson["Id"]}-concept.svg', concept_alt(lesson),
+                                 'Lesson-specific teaching diagram. Read the arrow legend and the accompanying architecture explanation. '+lesson['DeploymentMode']+'.',
+                                 'zth-teaching-visual zth-concept-visual')
+                content = content.replace('\n## Architecture\n','\n## Architecture\n\n'+concept+'\n',1)
+                placed_concepts.add(lesson['Id'])
                 for heading,name,caption in [('Deploy','terraform-safe-workflow','Review the plan and lesson-specific gates before deliberate execution. Local-only and read-only lessons create no Azure resources.'),('Troubleshooting','troubleshooting','Gather evidence, repair the cause, and rerun verification.'),('Cleanup','state-aware-cleanup','Use the lesson state and cleanup instructions. Preserve remote-state dependencies until consumers are removed.')]:
                     content = content.replace('\n## '+heading+'\n','\n## '+heading+'\n\n'+figure('../../assets/illustrations/'+name+'.svg',caption,caption,'zth-teaching-visual zth-learning-visual')+'\n',1)
                 content += f'\n<div data-zth-lesson="{lesson["Id"]}"></div>\n'
@@ -127,6 +154,8 @@ def stage(allow_partial=False):
     for source in (ROOT/'docs/site-assets').iterdir():
         if source.is_file():
             (temp/'assets').mkdir(exist_ok=True); shutil.copy2(source,temp/'assets'/source.name)
+    assert placed_concepts == {lesson['Id'] for lesson in lessons}, 'Every lesson must receive its own teaching diagram'
+    write(temp/'assets/markers.css', marker_styles())
     infos = [{'labId':item['Id'],'title':item['Title'],'pathUrl':lesson_path(item),'questionCount':0 if item['Id']=='CLZ-090' else 30,'bankUrl':item['Id']+'.json'} for item in lessons]
     write(temp/'assets/catalog.json',json.dumps({'schemaVersion':'1.0.0','labs':infos},indent=2))
     quiz_infos = [item for item in infos if item['questionCount']]
@@ -136,17 +165,26 @@ def stage(allow_partial=False):
         write(temp/'assets/quiz'/f'{lesson["Id"]}.json',json.dumps({'schemaVersion':'1.0.0','labId':lesson['Id'],'pathUrl':lesson_path(lesson),'questions':questions},ensure_ascii=False,indent=2))
     write(temp/'index.md',homepage(lessons))
     write(temp/'labs/index.md','# Lesson catalog\n\n30 main lessons and an optional contributor setup. CLZ-300 public DNS is optional. Costs and deployment modes come directly from the curriculum.\n\n'+cards(lessons,'../'))
-    pathway = '# Learning pathways\n\nBegin with CLZ-100. Use CLZ-090 when your local toolchain needs setup. Read-only readiness in CLZ-110 precedes the first deployment in CLZ-120.\n\n'
+    pathway = '# Learning pathways\n\nBegin with CLZ-100. Use CLZ-090 when your local toolchain needs setup. Read-only readiness in CLZ-110 precedes the first deployment in CLZ-120.\n\n'+journey('../')+'\n\n'
     for phase,slug in PHASES.items():
         items = [item for item in lessons if item['Phase']==phase]
         pathway += f'## {phase}\n\n[Explore this phase](phases/{slug}.md) · '+', '.join(item['Id'] for item in items)+'\n\n'
-        write(temp/f'phases/{slug}.md',f'# {phase}\n\n'+figure(f'../../assets/illustrations/{slug}.svg',phase+' learning phase','Conceptual phase illustration.')+'\n\n'+cards(items,'../../'))
+        write(temp/f'phases/{slug}.md',f'# {phase}\n\n'+figure(f'../../assets/illustrations/{slug}-scene.png',phase+' illustrated Azure and Terraform learning scene','Original conceptual phase artwork; individual lessons define the actual deployed services.','zth-teaching-visual zth-phase-scene')+'\n\n'+cards(items,'../../'))
     pathway += '## Keep the state dependency safe\n\nCLZ-320 consumes state hosted by CLZ-310. Destroy CLZ-320 first, migrate CLZ-310 back to local state as documented, then remove the backend. [Read the state exercise](labs/CLZ-310-remote-state-storage/index.md).\n'
     write(temp/'learning-pathways.md',pathway)
-    gallery = '# Visual guides\n\nExplore the original illustrated guides. Learning arrows show exercise order; service diagrams show conceptual connections. Open each illustration for readable full-size labels.\n\n## Terraform habits\n\n'
+    gallery = '# Visual guides\n\nExplore the original illustrated guides. Learning arrows show exercise order; each technical figure has its own legend. Open an illustration for readable full-size labels.\n\n## Your learning journey\n\n'+journey('../')+'\n\n## Illustrated phases\n\n'
+    for phase,slug in PHASES.items():
+        gallery += f'### {phase}\n\n'+figure(f'../assets/illustrations/{slug}-scene.png',phase+' illustrated learning scene','Original conceptual artwork, not a deployment topology.','zth-teaching-visual zth-phase-scene')+'\n\n'
+    gallery += '## Terraform habits\n\n'
     for name in STATIC:
         gallery += figure(f'../assets/illustrations/{name}.svg',name.replace('-',' '),'Follow the exact lesson instructions.','zth-teaching-visual zth-learning-visual')+'\n\n'
     gallery += '## Every lesson\n\n'+cards(lessons,'../')
+    gallery += '\n## Learning sequences\n\n'
+    for item in lessons:
+        gallery += f'### {item["Id"]} — {item["Title"]}\n\n'+figure(f'../assets/illustrations/{item["Id"]}-learning.svg',item['Id']+' learning sequence','Arrows show learning order, not network traffic.','zth-teaching-visual zth-learning-visual')+'\n\n'
+    gallery += '\n## Original phase symbols\n\n'
+    for phase,slug in PHASES.items():
+        gallery += figure(f'../assets/illustrations/{slug}.svg',phase+' phase symbol','Original symbolic phase illustration.','zth-teaching-visual zth-phase-symbol')+'\n\n'
     gallery += '\n## Architecture library\n\n'
     for source in sorted((ROOT/'assets/diagrams').glob('*.svg')):
         title = ET.parse(source).getroot().find('{http://www.w3.org/2000/svg}title').text
@@ -164,9 +202,9 @@ def homepage(lessons):
     phases = '<div class="zth-domain-grid">'
     for phase,slug in PHASES.items():
         items = [item for item in lessons if item['Phase']==phase]
-        phases += f'<article class="zth-domain-card">{figure("assets/illustrations/"+slug+".svg",phase+" learning phase","Conceptual phase illustration.","")}<div class="zth-card-body"><h3><a href="phases/{slug}/">{phase}</a></h3><p>{len(items)} {"lesson" if len(items)==1 else "lessons"} · {items[0]["Id"]}–{items[-1]["Id"]}</p><a class="zth-card-link" href="phases/{slug}/">Explore the phase →</a></div></article>'
+        phases += f'<article class="zth-domain-card">{figure("assets/illustrations/"+slug+"-scene.png",phase+" illustrated Azure and Terraform learning scene","Original conceptual phase artwork.","")}<div class="zth-card-body"><h3><a href="phases/{slug}/">{phase}</a></h3><p>{len(items)} {"lesson" if len(items)==1 else "lessons"} · {items[0]["Id"]}–{items[-1]["Id"]}</p><a class="zth-card-link" href="phases/{slug}/">Explore the phase →</a></div></article>'
     phases += '</div>'
-    return '# Azure From Zero To Hero\n\n<div class="zth-home">'+cover+hero+stats+'</div>\n\n## Choose your learning phase\n\n<div class="zth-home">'+phases+'</div>\n\n## Run safely\n\nAzure resources can be billable. The website never runs Terraform or creates resources. Review your exact subscription, inputs, costs, and saved plan. [Read cost and cleanup guidance](wiki/cost-governance-and-lab-safety.md). Exercise completion in the progress tools is self-reported.\n\n## Curriculum\n\n'+cards(lessons)+'\n## Beyond Clickopz\n\n[Download the free companion book](ClickopzBook.pdf) · [Book rights and errata](companion-book.md) · [Download lab sources (GitHub ZIP)](https://github.com/Jamonygr/Azure-From-Zero-To-Hero/archive/refs/heads/main.zip)\n\nThe book retains its existing all rights reserved notice. No book or repository license is changed.\n\n[Explore visual guides](visual-guides.md) · [Choose a learning pathway](learning-pathways.md) · [View your progress](learner-progress.md)\n'
+    return '# Azure From Zero To Hero\n\n<div class="zth-home">'+cover+hero+stats+'</div>\n\n## Choose your learning phase\n\n<div class="zth-home">'+phases+'</div>\n\n## Your learning journey\n\n'+journey()+'\n\n## Run safely\n\nAzure resources can be billable. The website never runs Terraform or creates resources. Review your exact subscription, inputs, costs, and saved plan. [Read cost and cleanup guidance](wiki/cost-governance-and-lab-safety.md). Exercise completion in the progress tools is self-reported.\n\n## Curriculum\n\n'+cards(lessons)+'\n## Beyond Clickopz\n\n[Download the free companion book](ClickopzBook.pdf) · [Book rights and errata](companion-book.md) · [Download lab sources (GitHub ZIP)](https://github.com/Jamonygr/Azure-From-Zero-To-Hero/archive/refs/heads/main.zip)\n\nThe book retains its existing all rights reserved notice. No book or repository license is changed.\n\n[Explore visual guides](visual-guides.md) · [Choose a learning pathway](learning-pathways.md) · [View your progress](learner-progress.md)\n'
 
 
 if __name__ == '__main__':

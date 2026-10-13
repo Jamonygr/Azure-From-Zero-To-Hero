@@ -8,6 +8,7 @@ import textwrap
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from site_common import ROOT, PHASES, catalog
+from teaching_visuals import teaching_outputs
 
 BLUE, CYAN, PURPLE = "#61caff", "#60e0e5", "#b39bff"
 NS = "{http://www.w3.org/2000/svg}"
@@ -95,7 +96,7 @@ def lesson_steps(item):
         330: ('network','Traffic Manager returns DNS','Priority routing does not terminate TLS'),
         340: ('shield','Key Vault protects a secret','Review RBAC, network access, and state'),
         350: ('storage','Blob access uses private IPs','Link private DNS; disable public access'),
-        360: ('monitor','Observe the resource group','Inspect workspace and activity-log routes'),
+        360: ('monitor','Provision monitoring foundations','Inspect workspace and empty action group'),
         380: ('storage','SQL through a private endpoint','Verify private DNS and network reachability'),
         390: ('cloud','Combine the reference modules','VMSS, Bastion, vault, and workspace'),
     }
@@ -160,6 +161,7 @@ def outputs():
     }
     for name, args in shared.items():
         result[ROOT/'assets/illustrations'/f'{name}.svg'] = steps_figure(*args)
+    result.update(teaching_outputs())
     return result
 
 
@@ -168,7 +170,7 @@ def main():
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     rendered = outputs()
-    assert len(rendered) == 55
+    assert len(rendered) == 87
     for path, value in rendered.items():
         ET.fromstring(value)
         if args.check:
