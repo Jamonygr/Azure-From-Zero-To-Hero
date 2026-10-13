@@ -402,4 +402,3 @@ EXPECTED_CONNECTIONS = {
                 'destination_port_range = "3389"', "disable_outbound_snat = true",
                 'resource "azurerm_lb_outbound_rule" "web"', 'protocol = "Tcp"'),
 }
-
