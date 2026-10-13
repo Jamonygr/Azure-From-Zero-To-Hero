@@ -2,56 +2,102 @@
 
 ![Provider Authentication architecture](../assets/diagrams/terraform-workflow.svg)
 
-## Overview
-A provider configuration that can target one explicit subscription.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Understand how the AzureRM provider uses Azure CLI identity while an explicit subscription ID prevents accidental cross-subscription deployment.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-120 and destroy its resource group.
+- An active Azure CLI session with access to the intended learning subscription.
+
+## Architecture
+
+Terraform Core loads the pinned AzureRM provider, Azure CLI supplies the user token, and the provider targets only `var.subscription_id`. A resource group gives the authentication path a harmless managed object to validate.
+
+## Resources And Cost
+
+**Relative cost: Low.** The empty resource group has no direct charge.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | Azure provider and CLI authentication |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz130-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| AzureRM provider session | Authenticates and sends control-plane requests to one subscription. |
+| Tagged resource group | Proves create/read/delete permissions in the selected scope. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Understand AzureRM provider setup; use subscription_id when needed; avoid accidental deployments.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `lab.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for Azure plan, apply, and destroy; copy the exact ID returned by Azure CLI. |
+| `environment` | Keep `dev` for the lab or choose `test`/`prod` only to study the naming boundary. |
+| `location` | Use a region where your subscription has access and sufficient quota. |
+| `name_prefix` | Use a short lowercase prefix; resource names derive from it. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz130`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-130-provider-authentication
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+terraform providers
+$terraformSubscription = terraform providers schema -json | Out-Null; $subscriptionId
+az account show --query '{subscription:id,tenant:tenantId,user:user.name}' --output table
+az group show --name (terraform output -raw resource_group_name) --query id --output tsv
+```
+
+Expected result:
+
+- The dependency tree contains the HashiCorp AzureRM provider.
+- Azure CLI shows the same subscription ID passed to Terraform.
+- The resource-group ID begins with `/subscriptions/$subscriptionId/`.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| Azure CLI is logged in but Terraform gets 401/403 | Run `az account get-access-token`, confirm the tenant, and check role scope. |
+| Multiple subscriptions have the same display name | Select and pass the immutable GUID. |
+| CI cannot use the interactive login | Use OIDC as demonstrated in CLZ-370; never store a client secret in the repository. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Standardize names and tags.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+az group exists --name $resourceGroup
+```
+
+The command returns `false`; no authentication credential is stored in Terraform code.
+
+## Production Delta
+
+- Prefer managed identity or OIDC workload federation for automation.
+- Separate plan and apply identities, minimize role scope, and log privileged operations.
+
+## Exercises
+
+1. Use `terraform providers` to map each configuration to its provider source.
+2. Explain why setting an active Azure CLI subscription and passing `subscription_id` are complementary controls.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-120 - First Azure Deployment and Terraform Workflow](../CLZ-120-terraform-core-workflow/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-140 - Resource Groups and Tags &rarr;](../CLZ-140-resource-groups-tags/README.md)
+<!-- lesson-navigation:end -->

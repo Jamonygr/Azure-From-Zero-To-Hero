@@ -1,0 +1,49 @@
+name: Lesson feedback
+description: Share feedback about lesson clarity, order, diagrams, validation, cost, or cleanup.
+title: "[Lesson]: "
+labels:
+  - documentation
+  - lesson
+body:
+  - type: input
+    id: lesson
+    attributes:
+      label: Lesson
+      description: Which lesson or phase does this feedback apply to?
+      placeholder: CLZ-170-virtual-network-foundation
+    validations:
+      required: true
+  - type: dropdown
+    id: feedback-type
+    attributes:
+      label: Feedback type
+      options:
+        - Clarity
+        - Missing step
+        - Diagram mismatch
+        - Validation
+        - Cleanup
+        - Cost guidance
+        - Troubleshooting
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Feedback
+      description: What should be clearer, corrected, or added?
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-change
+    attributes:
+      label: Suggested change
+      description: Optional wording, command, diagram note, or validation step.
+  - type: checkboxes
+    id: review
+    attributes:
+      label: Review
+      options:
+        - label: I checked the current README and related wiki page before filing this.
+          required: true

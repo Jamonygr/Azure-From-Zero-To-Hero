@@ -1,0 +1,833 @@
+{
+  "lessonId": "CLZ-120",
+  "questions": [
+    {
+      "id": "CLZ120-Q01",
+      "learningObjective": "Follow a reviewable lifecycle",
+      "stem": "Which sequence matches CLZ-120's first Azure deployment workflow?",
+      "options": {
+        "A": "Initialize, format-check, validate, plan, inspect, apply, verify.",
+        "B": "Apply, initialize, inspect, validate.",
+        "C": "Destroy, apply, then choose a subscription.",
+        "D": "Format, verify Azure, then skip planning."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Inspection precedes execution and validation follows deployment.",
+        "B": "Initialization and review should happen before apply.",
+        "C": "Target context must be established first.",
+        "D": "The lab explicitly requires reviewing the proposed changes."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform initialization",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        },
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q02",
+      "learningObjective": "Identify the first managed object",
+      "stem": "What Azure object does the supplied CLZ-120 module deploy?",
+      "options": {
+        "A": "A Windows VM and disk.",
+        "B": "One tagged resource group.",
+        "C": "An Azure Storage remote backend.",
+        "D": "A full four-subnet VNet."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Compute starts in a later lesson.",
+        "B": "This is the smallest managed boundary used for the lifecycle exercise.",
+        "C": "This lesson uses local state.",
+        "D": "Networking starts later."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q03",
+      "learningObjective": "Inspect saved deployment plans",
+      "stem": "Which command reviews the exact tfplan file before execution?",
+      "options": {
+        "A": "terraform fmt tfplan",
+        "B": "az group show tfplan",
+        "C": "terraform show tfplan",
+        "D": "terraform state rm tfplan"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Fmt handles configuration, not binary plans.",
+        "B": "Azure CLI does not read plan files.",
+        "C": "Show displays the saved plan.",
+        "D": "A plan file is not a managed address."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform show command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/show"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q04",
+      "learningObjective": "Execute a reviewed plan",
+      "stem": "How does the lesson apply the saved changes already inspected by the learner?",
+      "options": {
+        "A": "terraform apply -out tfplan",
+        "B": "terraform output tfplan",
+        "C": "terraform validate tfplan",
+        "D": "terraform apply tfplan"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "-out is a plan-saving option, not this apply syntax.",
+        "B": "Output reads stored results.",
+        "C": "Validate is not plan execution.",
+        "D": "Providing the file executes that saved plan."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform apply command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/apply"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q05",
+      "learningObjective": "Recognize subscription pinning",
+      "stem": "Why pass subscription_id explicitly while Azure CLI supplies authentication?",
+      "options": {
+        "A": "To pin the deployment target to the intended subscription.",
+        "B": "To create a new Azure subscription.",
+        "C": "To increase regional quota.",
+        "D": "To disable all state handling."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Identity and target selection are complementary controls.",
+        "B": "This module creates a resource group only.",
+        "C": "A subscription input does not change quota.",
+        "D": "State remains part of Terraform's lifecycle."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        },
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q06",
+      "learningObjective": "Interpret empty resource-group cost",
+      "stem": "Which cost statement fits CLZ-120?",
+      "options": {
+        "A": "Tags remove the cost of any future VM.",
+        "B": "The empty group has no direct charge; contained services may be billable.",
+        "C": "The group costs the same as a running VM.",
+        "D": "Local state prevents Azure billing."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tags do not waive service charges.",
+        "B": "Resource groups are management containers.",
+        "C": "A group is not compute.",
+        "D": "State location does not cancel resource charges."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q07",
+      "learningObjective": "Validate Azure independently",
+      "stem": "After apply, which evidence confirms the resource group's actual Azure properties?",
+      "options": {
+        "A": "The success of terraform fmt alone.",
+        "B": "The filename resource-group.tf.",
+        "C": "az group show using the Terraform output name.",
+        "D": "A saved plan from before apply."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Formatting does not query deployment state.",
+        "B": "A source filename is not deployment evidence.",
+        "C": "It reads the deployed object from Azure.",
+        "D": "A proposal is not actual Azure readback."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q08",
+      "learningObjective": "Use resource addresses correctly",
+      "stem": "Which address should terraform state list contain for this lesson?",
+      "options": {
+        "A": "resource_group_name",
+        "B": "local.tags",
+        "C": "subscription_id",
+        "D": "azurerm_resource_group.lab"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That is an output, not the resource address.",
+        "B": "A local expression is not managed state inventory.",
+        "C": "An input is not a managed Azure resource.",
+        "D": "The resource type and local name form its address."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform state list",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/list"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q09",
+      "learningObjective": "Check convergence",
+      "stem": "A second plan after successful CLZ-120 apply reports no changes. What does that support?",
+      "options": {
+        "A": "The managed object matches the evaluated configuration.",
+        "B": "All resources in the subscription are managed.",
+        "C": "Future drift is impossible.",
+        "D": "Cleanup has already run."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It is a useful convergence check at that time.",
+        "B": "This module tracks only its declared object.",
+        "C": "Later out-of-band changes can still occur.",
+        "D": "An empty normal plan is not a destroy."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q10",
+      "learningObjective": "Interpret naming replacement",
+      "stem": "A learner changes environment so the derived resource-group name changes. What must be reviewed?",
+      "options": {
+        "A": "Only the console's text color.",
+        "B": "Any destroy/create replacement shown by the plan.",
+        "C": "An automatic subscription move.",
+        "D": "A guaranteed tag-only update."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Appearance is unrelated to resource replacement.",
+        "B": "A name change can alter the managed object's identity.",
+        "C": "The environment input does not select another subscription.",
+        "D": "The derived name changes too."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q11",
+      "learningObjective": "Keep local inputs private",
+      "stem": "Where should the learner place actual local values copied from terraform.tfvars.example?",
+      "options": {
+        "A": "In a public GitHub comment.",
+        "B": "Inside every resource block.",
+        "C": "In the untracked terraform.tfvars file.",
+        "D": "In the README's shared deployment example."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That unnecessarily publishes deployment context.",
+        "B": "Duplicating inputs makes configuration harder to maintain.",
+        "C": "The example is a template; personal values stay out of source control.",
+        "D": "Shared examples should preserve placeholders."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q12",
+      "learningObjective": "Understand lock-file use",
+      "stem": "Why initialize with -lockfile=readonly during the lesson?",
+      "options": {
+        "A": "To forbid future Azure writes.",
+        "B": "To remove the backend state lock.",
+        "C": "To skip provider installation entirely.",
+        "D": "To use the committed provider dependency choices without rewriting them."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The flag controls dependency-file changes only.",
+        "B": "Dependency locking and state locking differ.",
+        "C": "Initialization may still install the selected provider.",
+        "D": "This helps keep the reviewed dependency selection stable."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform dependency lock file",
+          "url": "https://developer.hashicorp.com/terraform/language/files/dependency-lock"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q13",
+      "learningObjective": "Handle authorization errors",
+      "stem": "The first Azure plan returns an authorization error. Which action fits CLZ-120 troubleshooting?",
+      "options": {
+        "A": "Verify the role at the intended scope and allow new grants to propagate.",
+        "B": "Change the environment tag to prod.",
+        "C": "Run apply repeatedly without reading the failure.",
+        "D": "Remove the subscription input."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The provider needs authorized access, not just valid syntax.",
+        "B": "Labels do not grant permissions.",
+        "C": "Repeated execution does not establish authorization.",
+        "D": "That weakens the target boundary."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q14",
+      "learningObjective": "React to an unexpected target",
+      "stem": "The plan's subscription is not the intended learning subscription. What should the learner do?",
+      "options": {
+        "A": "Apply because a resource group is inexpensive.",
+        "B": "Stop and reconcile input, CLI context, and provider target.",
+        "C": "Rename the plan file to safe.tfplan.",
+        "D": "Hide the subscription line from review."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Low cost does not authorize another subscription.",
+        "B": "Target mismatch must be resolved before apply.",
+        "C": "A filename does not alter its target.",
+        "D": "That removes important evidence."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        },
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q15",
+      "learningObjective": "Protect plans and state",
+      "stem": "Why does this simple resource-group lesson still recommend protecting local Terraform artifacts?",
+      "options": {
+        "A": "Every plan is automatically encrypted by Terraform.",
+        "B": "State contains only formatting preferences.",
+        "C": "Later plans and state can hold sensitive deployment data.",
+        "D": "Only source files matter for security."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Local artifacts are not inherently encrypted.",
+        "B": "It records object bindings and attributes.",
+        "C": "Safe artifact habits should start before secrets are introduced.",
+        "D": "Generated artifacts can also expose data."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        },
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q16",
+      "learningObjective": "Read scalar outputs",
+      "stem": "The cleanup script needs the resource-group name without surrounding quotation marks. Which command is appropriate?",
+      "options": {
+        "A": "terraform output -json resource_group_name",
+        "B": "terraform fmt resource_group_name",
+        "C": "az account show --query name",
+        "D": "terraform output -raw resource_group_name"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "JSON output retains JSON encoding.",
+        "B": "Formatting does not fetch values.",
+        "C": "That returns a subscription/account field, not this group output.",
+        "D": "-raw prints a scalar value for shell use."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q17",
+      "learningObjective": "Preserve cleanup context",
+      "stem": "Why capture the resource-group name before terraform destroy?",
+      "options": {
+        "A": "The output may disappear after its resource is removed.",
+        "B": "Destroy needs an output to rename the subscription.",
+        "C": "The name stops Azure billing without deletion.",
+        "D": "State outputs survive every destroy unchanged."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The saved name enables the independent existence check.",
+        "B": "It does not rename subscriptions.",
+        "C": "A local variable is not a billing control.",
+        "D": "Outputs depending on removed resources need not remain."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        },
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q18",
+      "learningObjective": "Verify cleanup in two places",
+      "stem": "Which pair of results matches the documented successful cleanup?",
+      "options": {
+        "A": "Empty state alone while Azure says true.",
+        "B": "Empty managed state and az group exists returning false.",
+        "C": "A false tag query with the group still present.",
+        "D": "A successful formatting check and unchanged Azure group."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "An orphaned group may remain.",
+        "B": "It combines Terraform inventory with Azure readback.",
+        "C": "Missing tags do not prove deletion.",
+        "D": "Formatting is not cleanup verification."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform state list",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/list"
+        },
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q19",
+      "learningObjective": "Distinguish destroy from deleting files",
+      "stem": "A learner deletes tfplan and assumes the group is gone. What is correct?",
+      "options": {
+        "A": "The group disappears when its plan is removed.",
+        "B": "Terraform automatically purges Azure at terminal exit.",
+        "C": "Deleting the plan file does not delete the Azure resource.",
+        "D": "Removing .terraform is equivalent to destroy."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Plan files do not control object lifetime after apply.",
+        "B": "Managed resources persist beyond the shell.",
+        "C": "A reviewed destroy operation is still required.",
+        "D": "That removes local runtime data, not Azure objects."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q20",
+      "learningObjective": "Interpret required configuration",
+      "stem": "What is the purpose of features {} in the supplied AzureRM provider block?",
+      "options": {
+        "A": "It declares an Azure resource group.",
+        "B": "It chooses a VM image.",
+        "C": "It stores the administrator password.",
+        "D": "It is provider configuration required by this provider's setup."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The group has a separate resource block.",
+        "B": "There is no VM in this lesson.",
+        "C": "No password is generated here.",
+        "D": "It is not an Azure resource declaration."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q21",
+      "learningObjective": "Choose the correct lesson directory",
+      "stem": "Why run the commands from CLZ-120-terraform-core-workflow?",
+      "options": {
+        "A": "Terraform evaluates that root module and its state context.",
+        "B": "The folder title grants Contributor.",
+        "C": "Every folder shares one mandatory state file.",
+        "D": "Azure accepts only commands from that path."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Working in another folder may target different resources.",
+        "B": "Folder names do not grant RBAC.",
+        "C": "These standalone lessons have their own context.",
+        "D": "Azure does not enforce local repository paths."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q22",
+      "learningObjective": "Compare validation and planning",
+      "stem": "terraform validate succeeds but plan fails to authenticate. Why is that possible?",
+      "options": {
+        "A": "Validate always checks active Azure login.",
+        "B": "Validation checks configuration consistency; planning may contact Azure.",
+        "C": "A successful validate guarantees Azure availability.",
+        "D": "Plan never uses provider credentials."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "It does not validate live authorization.",
+        "B": "These commands test different boundaries.",
+        "C": "It is not a service availability test.",
+        "D": "The Azure provider needs credentials for remote reads/actions."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform configuration validation",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+        },
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q23",
+      "learningObjective": "Track declared tags",
+      "stem": "Which four metadata keys are applied by the supplied local.tags map?",
+      "options": {
+        "A": "Owner, Password, Token, and Secret.",
+        "B": "CPU, RAM, Disk, and NIC.",
+        "C": "Project, Environment, ManagedBy, and Lab.",
+        "D": "Tenant, BillingKey, RootPassword, and VMSize."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Those are not the supplied keys and secrets do not belong in tags.",
+        "B": "Those are not this metadata map.",
+        "C": "They are the standard ownership/context tags.",
+        "D": "No such tag map is declared."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        },
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q24",
+      "learningObjective": "Understand tag-only changes",
+      "stem": "Only an added Owner tag changes while the group's name and location remain fixed. What should the learner inspect?",
+      "options": {
+        "A": "A mandatory redeployment of every Azure service.",
+        "B": "A new CLI login for each tag key.",
+        "C": "An automatic state migration.",
+        "D": "The plan for the intended metadata update."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The module manages just one group.",
+        "B": "Tags do not define authentication.",
+        "C": "No backend change follows from a tag addition.",
+        "D": "Review confirms the scope and any unexpected actions."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        },
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q25",
+      "learningObjective": "Avoid blind automatic approval",
+      "stem": "Why is terraform show tfplan part of the workflow before apply?",
+      "options": {
+        "A": "To review intended actions and target context.",
+        "B": "To make all destructive actions safe automatically.",
+        "C": "To change provider credentials stored in the file.",
+        "D": "To create the group without apply."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A saved plan is still a proposal requiring inspection.",
+        "B": "Displaying a plan does not remove risk.",
+        "C": "Show is inspection, not credential editing.",
+        "D": "Show does not execute changes."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform show command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/show"
+        },
+        {
+          "title": "Terraform apply command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/apply"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q26",
+      "learningObjective": "Recognize explicit resource dependencies",
+      "stem": "The resource group's name references local.prefix. Where is that value computed?",
+      "options": {
+        "A": "By Azure billing.",
+        "B": "In the module's local expressions.",
+        "C": "From the resource_group_name output.",
+        "D": "From the VM's host name."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Billing does not generate this prefix.",
+        "B": "The resource consumes a derived naming expression.",
+        "C": "The output exposes the resource result; it does not define local.prefix.",
+        "D": "No VM is declared."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q27",
+      "learningObjective": "Plan a production backend",
+      "stem": "Which change fits CLZ-120's Production Delta for team use?",
+      "options": {
+        "A": "Commit terraform.tfstate to public GitHub.",
+        "B": "Let each teammate edit the same state JSON by hand.",
+        "C": "A reviewed remote backend with locking and recovery controls.",
+        "D": "Disable all backend locking."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That publishes operational data.",
+        "B": "Manual concurrent edits risk corruption.",
+        "C": "Local teaching state is not the final shared-state design.",
+        "D": "That removes protection against concurrent writes."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform Azure backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        },
+        {
+          "title": "Terraform state locking",
+          "url": "https://developer.hashicorp.com/terraform/language/state/locking"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q28",
+      "learningObjective": "Use appropriate automation identity",
+      "stem": "For production CI, which authentication approach does this lesson recommend?",
+      "options": {
+        "A": "A personal access token pasted into Terraform locals.",
+        "B": "An anonymous Azure deployment.",
+        "C": "The website progress key as a credential.",
+        "D": "Workload identity federation with reviewed plan/apply control."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That is not an Azure workload identity design.",
+        "B": "Azure requires an authorized identity.",
+        "C": "Browser progress is not authentication.",
+        "D": "It avoids long-lived embedded secrets."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Authenticate Terraform to Azure",
+          "url": "https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate/authenticate-to-azure"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q29",
+      "learningObjective": "Understand plan artifact changes",
+      "stem": "After editing inputs, should the learner apply a tfplan made before those edits as if it reflects them?",
+      "options": {
+        "A": "No; produce and inspect a new plan for the new intent.",
+        "B": "Yes, saved plans always reread every changed input.",
+        "C": "Only changing its filename is necessary.",
+        "D": "The old plan automatically includes portal edits."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A saved plan records the inputs/actions from its generation.",
+        "B": "Applying a saved plan uses its recorded proposal.",
+        "C": "Renaming does not update the plan.",
+        "D": "Changes require fresh review and may invalidate assumptions."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ120-Q30",
+      "learningObjective": "Respect ownership during cleanup",
+      "stem": "Someone placed an unrelated resource in the lab group. What should happen before approving destruction?",
+      "options": {
+        "A": "Delete it because the group has a Lab tag.",
+        "B": "Stop and resolve the unrelated resource's ownership.",
+        "C": "Remove state so nothing can be deleted.",
+        "D": "Ignore the destroy plan."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A tag does not prove ownership of every contained object.",
+        "B": "Group deletion can affect everything inside the boundary.",
+        "C": "That can orphan managed infrastructure.",
+        "D": "Review is essential when the boundary changed."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        },
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

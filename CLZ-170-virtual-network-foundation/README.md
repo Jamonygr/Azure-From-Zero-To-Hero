@@ -2,56 +2,104 @@
 
 ![Virtual Network Foundation architecture](../assets/diagrams/network-foundation.svg)
 
-## Overview
-A four-subnet Azure network for web, app, data, and management workloads.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Build an address plan that separates web, application, data, and management workloads and exposes stable subnet IDs for later patterns.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-160 and destroy its lab.
+- Know which subscription and Azure region will host the network.
+
+## Architecture
+
+One `10.40.0.0/16` virtual network contains four nonoverlapping `/24` subnets: web, app, data, and management. This lesson intentionally has no NSG, route table, VM, or public IP so the address model is easy to inspect before policy is layered on.
+
+## Resources And Cost
+
+**Relative cost: Low.** Virtual networks and subnets have no direct hourly charge; later gateways, peerings, and traffic can be billable.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | VNet, subnets, and address plan |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz170-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Resource group | Lifecycle boundary for the lesson. |
+| Virtual network | `10.40.0.0/16` address space. |
+| Four subnets | Web, app, data, and management segmentation; no workload is deployed. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Design address ranges; create subnets; prepare repeatable network outputs.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `network.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for plan, apply, and destroy; use the exact subscription GUID. |
+| `environment` | Keep `dev` for an ephemeral lab unless testing an environment boundary. |
+| `location` | Select a supported region with adequate quota. |
+| `name_prefix` | Use a short lowercase prefix for derived names. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz170`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-170-virtual-network-foundation
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+$vnet = terraform output -raw vnet_name
+az network vnet show --resource-group $resourceGroup --name $vnet --query addressSpace.addressPrefixes --output tsv
+az network vnet subnet list --resource-group $resourceGroup --vnet-name $vnet --query '[].{name:name,prefix:addressPrefix}' --output table
+```
+
+Expected result:
+
+- The VNet contains `10.40.0.0/16`.
+- Exactly four subnets appear with distinct `10.40.x.0/24` prefixes.
+- A second Terraform plan reports no changes.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| A subnet prefix overlaps | Correct the address plan before apply; Azure will reject overlapping ranges. |
+| A preferred region is unavailable | Change `location`; VNet CIDRs are independent of region. |
+| Later peering would overlap | Choose a new nonoverlapping private range before workloads depend on this network. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Attach security rules to the network.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+terraform state list
+az group exists --name $resourceGroup
+```
+
+The state is empty and Azure CLI returns `false`.
+
+## Production Delta
+
+- Allocate CIDRs from an organization-wide IP address management plan.
+- Add DNS, DDoS decisions, route tables, NSGs, flow logs, and hub connectivity according to the platform design.
+
+## Exercises
+
+1. Add a fifth temporary subnet without overlapping existing ranges and review the plan.
+2. Draw a peering candidate and prove its address space does not overlap `10.40.0.0/16`.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-160 - State and Locking Basics](../CLZ-160-state-and-locking-basics/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-180 - Network Security Groups &rarr;](../CLZ-180-network-security-groups/README.md)
+<!-- lesson-navigation:end -->

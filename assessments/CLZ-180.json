@@ -1,0 +1,801 @@
+{
+  "lessonId": "CLZ-180",
+  "questions": [
+    {
+      "id": "CLZ180-Q01",
+      "learningObjective": "Identify the security association",
+      "stem": "Where is the supplied CLZ-180 web NSG associated?",
+      "options": {
+        "A": "Every subnet automatically.",
+        "B": "A Windows VM's OS disk.",
+        "C": "The web subnet.",
+        "D": "The Azure subscription itself."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Only web has the declared association.",
+        "B": "No VM or disk is declared.",
+        "C": "The association resource targets azurerm_subnet.web.",
+        "D": "NSGs attach to network boundaries, not this subscription scope."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q02",
+      "learningObjective": "Evaluate rule priorities",
+      "stem": "Which custom NSG rule is evaluated first when several rules could match?",
+      "options": {
+        "A": "The rule with the longest name.",
+        "B": "The matching rule with the highest number.",
+        "C": "The newest rule regardless of priority.",
+        "D": "The matching rule with the lowest priority number."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Names do not determine evaluation order.",
+        "B": "That reverses the evaluation order.",
+        "C": "Creation time is not precedence.",
+        "D": "Azure evaluates increasing priority numbers."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q03",
+      "learningObjective": "Understand scoped RDP permission",
+      "stem": "What source does allow_admin_rdp use in this lesson?",
+      "options": {
+        "A": "var.admin_cidr",
+        "B": "Internet unconditionally.",
+        "C": "VirtualNetwork only.",
+        "D": "Every source through 0.0.0.0/0."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The input supplies one administrator IPv4 /32.",
+        "B": "Internet is used for the HTTP teaching rule.",
+        "C": "That is not the supplied RDP source.",
+        "D": "The input rejects broad prefix lengths."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q04",
+      "learningObjective": "Know the negative validation case",
+      "stem": "What should the documented plan using admin_cidr=0.0.0.0/0 demonstrate?",
+      "options": {
+        "A": "Automatic public RDP deployment.",
+        "B": "Input rejection before Azure is changed.",
+        "C": "Removal of the VNet.",
+        "D": "A quota increase."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A failed plan does not apply changes.",
+        "B": "The validation requires a /32.",
+        "C": "Planning does not destroy this module merely from invalid input.",
+        "D": "CIDR validation is not quota management."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q05",
+      "learningObjective": "Interpret validator limits",
+      "stem": "A private IPv4 /32 passes this source's admin_cidr validation. What does passing actually prove?",
+      "options": {
+        "A": "The address is guaranteed publicly routable.",
+        "B": "The address belongs to the current learner.",
+        "C": "IPv4 CIDR shape and /32 prefix length, not public routability.",
+        "D": "A Windows VM is reachable from it."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The syntax checks cannot prove that.",
+        "B": "No ownership query is implemented.",
+        "C": "The code does not classify public versus private ranges.",
+        "D": "This lesson has no VM and the validator does not test connectivity."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q06",
+      "learningObjective": "Recognize the HTTP teaching rule",
+      "stem": "Which destination port does allow_http admit from Internet?",
+      "options": {
+        "A": "TCP 3389",
+        "B": "UDP 53",
+        "C": "TCP 1433",
+        "D": "TCP 80"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That is the scoped administration port.",
+        "B": "No DNS allow rule is declared.",
+        "C": "No SQL allow rule is declared.",
+        "D": "This is the deliberately public HTTP teaching rule."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q07",
+      "learningObjective": "Use valid custom priorities",
+      "stem": "A learner adds a rule at priority 90. Why is it unsuitable as a normal custom NSG rule?",
+      "options": {
+        "A": "Custom priority values start at 100.",
+        "B": "Every priority must be a multiple of 100.",
+        "C": "Priority is a free-form string.",
+        "D": "Only three rules are permitted."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Custom priorities range from 100 through 4096.",
+        "B": "That is not required.",
+        "C": "It is a numeric value.",
+        "D": "The lesson has three, but that is not the NSG limit."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Manage network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q08",
+      "learningObjective": "Resolve conflicting priorities",
+      "stem": "Two inbound rules are assigned priority 110. What should be corrected?",
+      "options": {
+        "A": "Rename both rules to the same name.",
+        "B": "Give each inbound rule a unique priority.",
+        "C": "Change only the Project tag.",
+        "D": "Add a Windows VM first."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That creates another conflict.",
+        "B": "Priorities must be unique for rules in the same direction.",
+        "C": "Tags do not control rule priority.",
+        "D": "Compute does not resolve rule conflicts."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Manage network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q09",
+      "learningObjective": "Understand explicit RDP denial",
+      "stem": "Why does the lesson include deny_other_rdp at priority 120 after the administrator allow at 110?",
+      "options": {
+        "A": "To block the allowed administrator before 110.",
+        "B": "To enable SQL access.",
+        "C": "To deny other matching RDP sources after the allowed /32 is considered.",
+        "D": "To create a new public IP."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "120 is evaluated later.",
+        "B": "The rule targets RDP, not SQL.",
+        "C": "Lower-numbered allow is considered first.",
+        "D": "NSG rules do not provision public addresses."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q10",
+      "learningObjective": "Distinguish filtering and listeners",
+      "stem": "Does allowing TCP 80 in CLZ-180 prove an HTTP service is running?",
+      "options": {
+        "A": "Yes; NSGs install IIS automatically.",
+        "B": "Only if the rule name says http.",
+        "C": "Yes; every subnet hosts a web listener.",
+        "D": "No; a rule permits traffic but does not deploy a server."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "They do not install application services.",
+        "B": "Names do not install software.",
+        "C": "Subnets do not imply application processes.",
+        "D": "There is no VM or IIS resource in this lesson."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q11",
+      "learningObjective": "Understand stateful traffic filtering",
+      "stem": "An inbound connection is allowed by an NSG. How is its response traffic normally treated?",
+      "options": {
+        "A": "The NSG tracks the flow and permits its response.",
+        "B": "A mirrored response rule is always mandatory.",
+        "C": "All outbound traffic becomes permanently allowed.",
+        "D": "The NSG forwards traffic without any flow checks."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "NSG rules are stateful.",
+        "B": "Stateful tracking normally handles return traffic.",
+        "C": "Only the tracked flow gains response handling.",
+        "D": "Stateful filtering still applies."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q12",
+      "learningObjective": "Check real rule properties",
+      "stem": "Which validation output matters for CLZ-180's administrator access?",
+      "options": {
+        "A": "Only the NSG resource's provisioning state.",
+        "B": "The actual rule's source, destination port, priority, and access.",
+        "C": "Only the Terraform binary size.",
+        "D": "Only the number of subnets."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Succeeded does not by itself prove every intended rule value.",
+        "B": "These establish the intended scoped filter.",
+        "C": "Binary size does not show Azure policy.",
+        "D": "Subnet count does not verify source, port, action, and priority."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Manage network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q13",
+      "learningObjective": "Handle documentation addresses",
+      "stem": "Why replace the default 203.0.113.10/32 before a real direct-access lesson?",
+      "options": {
+        "A": "It is always the learner's Azure gateway.",
+        "B": "The prefix length is invalid.",
+        "C": "It is an example address, not evidence of the learner's public source.",
+        "D": "Terraform automatically discovers the browser IP."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "No such assignment is guaranteed.",
+        "B": "/32 is the required length.",
+        "C": "Use the current actual public IPv4.",
+        "D": "No discovery is implemented in this input."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q14",
+      "learningObjective": "Choose production administration",
+      "stem": "Which production pattern reduces direct Internet RDP exposure?",
+      "options": {
+        "A": "Use source=* on port 3389.",
+        "B": "Rename the RDP rule secure.",
+        "C": "Rely on the Environment tag.",
+        "D": "Bastion, VPN, or another approved private management path."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That broadens exposure.",
+        "B": "Names do not restrict traffic.",
+        "C": "Tags are not packet filters.",
+        "D": "The production delta replaces direct public administration."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q15",
+      "learningObjective": "Read rule evaluation correctly",
+      "stem": "An administrator source matches allow_admin_rdp at 110 and deny_other_rdp at 120. What is the result?",
+      "options": {
+        "A": "The allow at 110 is matched first.",
+        "B": "Both rules are merged into a random outcome.",
+        "C": "The later deny always overrides every allow.",
+        "D": "The connection is allowed only on port 80."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Processing stops at the first matching rule.",
+        "B": "Evaluation is deterministic.",
+        "C": "Order is by priority, not universal deny preference.",
+        "D": "This question concerns the TCP 3389 rules."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q16",
+      "learningObjective": "Evaluate a stronger deny proposal",
+      "stem": "A new matching RDP deny is added at priority 105. What happens to the allow at 110 for that traffic?",
+      "options": {
+        "A": "The 110 allow always overrides.",
+        "B": "The 105 deny wins first.",
+        "C": "Both cancel and create a public IP.",
+        "D": "Azure sorts by rule names instead."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The lower-numbered match wins.",
+        "B": "Its lower priority number gives precedence.",
+        "C": "Rules do not create addresses.",
+        "D": "Priorities determine order."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q17",
+      "learningObjective": "Reject IPv6 in the scoped input",
+      "stem": "Why would admin_cidr=2001:db8::1/128 fail this lesson's validator?",
+      "options": {
+        "A": "Azure never supports IPv6 anywhere.",
+        "B": "IPv6 can be used only as a tag.",
+        "C": "It requires an IPv4 address and /32 length.",
+        "D": "The default VM size disallows all IPs."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That broader claim is false.",
+        "B": "IPv6 is a network protocol, not merely metadata.",
+        "C": "The colon and prefix checks exclude this IPv6 input.",
+        "D": "No VM size is part of this lesson."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q18",
+      "learningObjective": "Separate NSGs and connectivity paths",
+      "stem": "Later RDP remains unreachable despite a correct NSG rule. What else must be checked?",
+      "options": {
+        "A": "Only the lesson title.",
+        "B": "Whether local.tags contains a password.",
+        "C": "Whether the NSG has the longest name.",
+        "D": "A real public, NAT, or Bastion ingress path and running workload."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Titles do not provide a network path.",
+        "B": "Secrets do not belong in tags.",
+        "C": "Name length is not connectivity.",
+        "D": "Filtering permission alone does not create reachability."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Troubleshoot Windows VM RDP",
+          "url": "https://learn.microsoft.com/en-us/troubleshoot/azure/virtual-machines/windows/troubleshoot-rdp-connection"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q19",
+      "learningObjective": "Know default inbound behavior",
+      "stem": "After custom rules, which Azure default commonly denies other unsolicited inbound traffic?",
+      "options": {
+        "A": "DenyAllInBound at priority 65500.",
+        "B": "A hidden allow for every public source.",
+        "C": "ManagedBy=Terraform at priority 1.",
+        "D": "A README Cleanup heading."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Default rules include a low-precedence final deny.",
+        "B": "There is no universal public inbound allow.",
+        "C": "Tags are not NSG rules.",
+        "D": "Markdown does not filter packets."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q20",
+      "learningObjective": "Understand service-tag sources",
+      "stem": "The allow_http rule uses Internet as its source. What is Internet here?",
+      "options": {
+        "A": "The name of this lesson's subnet.",
+        "B": "An Azure service tag representing that source category.",
+        "C": "A VM's local administrator account.",
+        "D": "A Terraform provider alias."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The subnet is web-snet.",
+        "B": "It is not a generated password or resource.",
+        "C": "No such account is declared here.",
+        "D": "It is a network rule source value."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q21",
+      "learningObjective": "Distinguish port directions",
+      "stem": "In allow_http, source_port_range is * and destination_port_range is 80. Why?",
+      "options": {
+        "A": "The server must listen on every port.",
+        "B": "Both fields always mean the VM's port.",
+        "C": "Clients may use different source ports to reach HTTP port 80.",
+        "D": "It permits only outbound DNS."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Wildcard source ports do not open every destination.",
+        "B": "Source and destination have distinct roles.",
+        "C": "Destination is the service port.",
+        "D": "The rule is inbound TCP HTTP."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q22",
+      "learningObjective": "Choose appropriate security verification",
+      "stem": "Why read Azure NSG rules after apply instead of relying only on terraform validate?",
+      "options": {
+        "A": "Validate deploys all NSGs automatically.",
+        "B": "Azure tags replace rule readback.",
+        "C": "A saved pre-apply plan is always proof of the live rule set.",
+        "D": "Readback checks the deployed rule values."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "It does not apply changes.",
+        "B": "Tags are different metadata.",
+        "C": "The actual Azure configuration can differ until apply and readback.",
+        "D": "Static validity is not proof of actual applied policy."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Manage network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q23",
+      "learningObjective": "Avoid resource inheritance assumptions",
+      "stem": "CLZ-180 follows CLZ-170. Does it attach rules to CLZ-170's live VNet by navigation alone?",
+      "options": {
+        "A": "No; it recreates its own independent network.",
+        "B": "Yes; the next lesson imports automatically.",
+        "C": "Only if names look similar.",
+        "D": "Yes; prerequisites share one global state."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The source declares the VNet and subnets again.",
+        "B": "Navigation does not invoke import.",
+        "C": "Similar names do not link state ownership.",
+        "D": "Standalone lesson folders keep separate contexts."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q24",
+      "learningObjective": "Recognize subnet-level coverage",
+      "stem": "The NSG is associated with web-snet. Which future workload NICs are affected by that subnet filter?",
+      "options": {
+        "A": "All NICs in every subscription.",
+        "B": "NICs placed in that subnet.",
+        "C": "Only NICs whose names contain web.",
+        "D": "Only NICs with an HTTP tag."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The association is not global.",
+        "B": "Subnet-associated rules apply to traffic of its attached workloads.",
+        "C": "Attachment, not name substring, determines coverage.",
+        "D": "Tags do not define the association."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/manage-network-security-group"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q25",
+      "learningObjective": "Use application security groups conceptually",
+      "stem": "Why might production use Application Security Groups in NSG rules?",
+      "options": {
+        "A": "To encrypt Terraform state.",
+        "B": "To create subscription RBAC assignments.",
+        "C": "To group workload interfaces by application intent.",
+        "D": "To remove all route tables automatically."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "ASGs are network policy grouping constructs.",
+        "B": "RBAC is separate.",
+        "C": "This can simplify rules based on roles.",
+        "D": "They do not delete routing infrastructure."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q26",
+      "learningObjective": "Preserve exposure boundaries",
+      "stem": "Which change would weaken CLZ-180's administrator rule?",
+      "options": {
+        "A": "Changing a safe /32 to another verified safe /32.",
+        "B": "Reading rule properties with Azure CLI.",
+        "C": "Adding a nonsecret Owner tag.",
+        "D": "Changing the RDP source to a broad network."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That updates the intended administrator source.",
+        "B": "Inspection does not widen access.",
+        "C": "Metadata does not broaden the rule.",
+        "D": "It grants access to more source addresses."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q27",
+      "learningObjective": "Interpret NSG cost",
+      "stem": "What is directly billed for the NSG and its rules in this lesson?",
+      "options": {
+        "A": "No direct NSG/rule resource charge.",
+        "B": "One Windows license per rule.",
+        "C": "One VM hour per priority number.",
+        "D": "A mandatory Bastion instance."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Traffic and later workloads may introduce costs.",
+        "B": "Rules are not operating systems.",
+        "C": "Priorities are not compute capacity.",
+        "D": "Bastion is not deployed here."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q28",
+      "learningObjective": "Use effective rules when layers exist",
+      "stem": "If a later VM has both subnet and NIC NSGs, how should connectivity be diagnosed?",
+      "options": {
+        "A": "Only the rule with the shortest name matters.",
+        "B": "Evaluate the effective rules across both associations.",
+        "C": "Only the NIC NSG applies; subnet rules vanish.",
+        "D": "The Project tag bypasses both NSGs."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Names do not choose the effective filter.",
+        "B": "Traffic must be permitted through the relevant layers.",
+        "C": "Both can affect the traffic.",
+        "D": "Tags do not bypass rules."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Diagnose VM traffic filtering",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/diagnose-network-traffic-filter-problem"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q29",
+      "learningObjective": "Verify owned network cleanup",
+      "stem": "What confirms successful CLZ-180 cleanup at the group boundary?",
+      "options": {
+        "A": "The rule query alone returns no results.",
+        "B": "The plan file is renamed.",
+        "C": "Destroy finishes and Azure reports the named group absent.",
+        "D": "RDP stops responding from one source."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Wrong context or filtering can also hide results.",
+        "B": "That does not delete Azure resources.",
+        "C": "Its independently declared network/NSG belong to that disposable boundary.",
+        "D": "Connectivity failure is not deletion proof."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        },
+        {
+          "title": "Terraform destroy command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ180-Q30",
+      "learningObjective": "Review updated administrator sources",
+      "stem": "The learner's public IP changes after moving networks. What is the intended remediation?",
+      "options": {
+        "A": "Use 0.0.0.0/0 to avoid future edits.",
+        "B": "Disable all NSGs permanently.",
+        "C": "Put the new IP in ManagedBy only.",
+        "D": "Update admin_cidr to the current public IPv4 /32 and review the plan."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The safety validation rejects that broad range.",
+        "B": "That removes the teaching protection.",
+        "C": "A tag does not update source_address_prefix.",
+        "D": "Keep administration narrowly scoped."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        },
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

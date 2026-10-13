@@ -1,0 +1,19 @@
+* text=auto eol=lf
+
+*.ps1 text eol=lf
+*.psd1 text eol=lf
+*.psm1 text eol=lf
+*.tf text eol=lf
+*.tfvars text eol=lf
+*.hcl text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.jsonc text eol=lf
+*.svg text eol=lf
+
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary

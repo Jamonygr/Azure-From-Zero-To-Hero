@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-360",
+  "questions": [
+    {
+      "id": "CLZ360-Q01",
+      "learningObjective": "Telemetry versus provisioning",
+      "stem": "CLZ-360 apply succeeds, but Heartbeat has no rows. What is the expected explanation?",
+      "options": {
+        "A": "No data source or collection rule is attached by this lesson",
+        "B": "Succeeded guarantees a VM heartbeat every minute",
+        "C": "The action group writes heartbeat rows",
+        "D": "Terraform must be rerun until rows appear"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The lesson provisions a foundation without a telemetry source.",
+        "B": "Resource provisioning is not agent data ingestion.",
+        "C": "Action groups deliver actions, not VM heartbeat records.",
+        "D": "Repeating apply does not add an absent source."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q02",
+      "learningObjective": "Workspace purpose",
+      "stem": "Which boundary does the deployed Log Analytics workspace provide?",
+      "options": {
+        "A": "An HTTP load-balancer frontend",
+        "B": "A DNS failover profile",
+        "C": "A store and query scope for collected log data",
+        "D": "A Windows VM image"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Load balancing is a different service.",
+        "B": "Traffic Manager handles DNS routing.",
+        "C": "The workspace defines where logs are stored and queried.",
+        "D": "A workspace is not a VM image."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q03",
+      "learningObjective": "Action group purpose",
+      "stem": "What is the role of the operations action group in CLZ-360?",
+      "options": {
+        "A": "A rule deciding whether CPU is too high",
+        "B": "A VM telemetry agent",
+        "C": "An autoscale rule",
+        "D": "A reusable target for configured alert actions and notifications"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "An alert rule evaluates the condition.",
+        "B": "An agent sends telemetry.",
+        "C": "Autoscaling is not created here.",
+        "D": "It provides action configuration for alerts."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor action groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q04",
+      "learningObjective": "Alert connection requirement",
+      "stem": "The action group exists, but nobody receives an alert. What capability is missing from this lesson as written?",
+      "options": {
+        "A": "A new random VM suffix",
+        "B": "An alert rule connected to appropriate receivers",
+        "C": "A larger resource-group tag",
+        "D": "A shorter workspace name"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Naming does not create an alert.",
+        "B": "No rule or receiver is configured to send a meaningful alert.",
+        "C": "Tags do not supply notification routing.",
+        "D": "Name length is not a delivery rule."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Monitor alerts overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q05",
+      "learningObjective": "Retention setting",
+      "stem": "Which log retention value is configured in the Terraform workspace resource?",
+      "options": {
+        "A": "7 hours",
+        "B": "30 days",
+        "C": "Unlimited lifetime",
+        "D": "One Terraform plan"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The unit is days and the configured value is 30.",
+        "B": "retention_in_days is explicitly 30.",
+        "C": "No indefinite retention is configured.",
+        "D": "Plan lifetime is not log retention."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q06",
+      "learningObjective": "Ingestion cost",
+      "stem": "A production workload begins sending large volumes to the workspace. What cost driver needs reassessment?",
+      "options": {
+        "A": "The number of PowerShell comments",
+        "B": "The SVG dimensions",
+        "C": "The lesson navigation order",
+        "D": "Data ingestion and retention"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Comments do not ingest Azure data.",
+        "B": "Illustrations do not change workspace ingestion.",
+        "C": "Page ordering is unrelated to billing.",
+        "D": "Collected data volume and retention influence Monitor cost."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Monitor cost and usage",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/cost-usage"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q07",
+      "learningObjective": "Log query authorization",
+      "stem": "A query returns an authorization error rather than no rows. What should be verified?",
+      "options": {
+        "A": "Only whether the table would be empty",
+        "B": "Only the quiz score",
+        "C": "Workspace query permissions and selected tenant",
+        "D": "Only the retention period"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "No-data expectations do not explain denied authorization.",
+        "B": "Quiz results cannot grant Azure permissions.",
+        "C": "Access failures require identity and scope diagnosis.",
+        "D": "Retention does not grant query rights."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Manage Log Analytics access",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/manage-access"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q08",
+      "learningObjective": "Heartbeat query meaning",
+      "stem": "What does Heartbeat | take 5 request?",
+      "options": {
+        "A": "Up to five records from the Heartbeat table",
+        "B": "Create five VM agents",
+        "C": "Keep all logs for five days",
+        "D": "Send five emails through the action group"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It queries existing rows and limits the returned set.",
+        "B": "KQL does not deploy agents.",
+        "C": "take is not retention configuration.",
+        "D": "It is not an alert-delivery command."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q09",
+      "learningObjective": "Per-computer summary",
+      "stem": "Which KQL expression counts existing Heartbeat records by computer?",
+      "options": {
+        "A": "Heartbeat | take Computer",
+        "B": "Heartbeat | create VM",
+        "C": "Heartbeat | retention 30",
+        "D": "Heartbeat | summarize count() by Computer"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "take expects a row limit, not this grouping operation.",
+        "B": "KQL queries do not create VMs.",
+        "C": "That is not a retention-setting statement.",
+        "D": "summarize groups and aggregates rows by Computer."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Kusto summarize operator",
+          "url": "https://learn.microsoft.com/en-us/kusto/query/summarize-operator"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q10",
+      "learningObjective": "Collection rule purpose",
+      "stem": "What production addition describes which guest data an agent collects and where it sends it?",
+      "options": {
+        "A": "A Traffic Manager endpoint priority",
+        "B": "A data collection rule",
+        "C": "A Key Vault purge permission",
+        "D": "A public registrar delegation"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Routing priorities do not select guest logs.",
+        "B": "A DCR defines a collection and destination configuration.",
+        "C": "Purge permissions do not collect telemetry.",
+        "D": "Public DNS delegation does not configure monitoring."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor data collection rules",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-rule-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q11",
+      "learningObjective": "Diagnostic setting role",
+      "stem": "A service's platform logs are not reaching the workspace. What should a production design review?",
+      "options": {
+        "A": "The service's diagnostic settings and supported destinations",
+        "B": "The desktop color theme",
+        "C": "The Terraform filename casing alone",
+        "D": "The companion book cover"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Platform log routing needs appropriate diagnostic configuration.",
+        "B": "Theme does not route telemetry.",
+        "C": "Filename case alone does not attach a source.",
+        "D": "Artwork is unrelated to ingestion."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor data collection rules",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-rule-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q12",
+      "learningObjective": "Actionable alert design",
+      "stem": "Which proposal best fits the alert design exercise?",
+      "options": {
+        "A": "A notification with no signal or owner",
+        "B": "A workspace created without a data source",
+        "C": "A defined signal, threshold, evaluation window, owner, and runbook",
+        "D": "A screenshot showing only resource tags"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Unowned undiagnosable notifications are ineffective.",
+        "B": "Provisioning alone is not alert logic.",
+        "C": "The exercise calls for an actionable condition and response.",
+        "D": "Tags are not the required alert definition."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure Monitor alerts overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q13",
+      "learningObjective": "Receiver verification",
+      "stem": "Before production notification testing, what should be confirmed?",
+      "options": {
+        "A": "That every tenant user is subscribed automatically",
+        "B": "That Terraform init sends a test email",
+        "C": "Receiver configuration and the intended nonproduction recipients",
+        "D": "That a workspace name equals an email address"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "There is no tenant-wide default recipient.",
+        "B": "Initialization is not a notification test.",
+        "C": "Receivers require explicit configuration and intentional testing.",
+        "D": "Names do not create email receivers."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Azure Monitor action groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q14",
+      "learningObjective": "Read-only workspace evidence",
+      "stem": "Which lesson query reports workspace provisioning and retention?",
+      "options": {
+        "A": "az monitor log-analytics workspace show",
+        "B": "az monitor action-group create",
+        "C": "terraform apply tfplan",
+        "D": "terraform destroy"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The show query reads workspace metadata.",
+        "B": "Create mutates an action group.",
+        "C": "Apply changes resources.",
+        "D": "Destroy removes resources."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q15",
+      "learningObjective": "Workspace versus rule",
+      "stem": "Which component should evaluate an alert's condition on a signal?",
+      "options": {
+        "A": "The action group's short_name",
+        "B": "An alert rule",
+        "C": "A resource-group tag",
+        "D": "The browser progress store"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The short name is notification metadata.",
+        "B": "Rules evaluate conditions and trigger configured actions.",
+        "C": "Tags do not evaluate signals.",
+        "D": "Local progress has no Azure alert role."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor alerts overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q16",
+      "learningObjective": "Cost-control tradeoff",
+      "stem": "A daily ingestion cap is proposed for production. What implication must be understood?",
+      "options": {
+        "A": "It guarantees every event is collected indefinitely",
+        "B": "It disables all authorization checks",
+        "C": "It makes all alert actions free",
+        "D": "It can control volume while leaving a telemetry gap after the cap is reached"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A cap cannot promise unlimited collection.",
+        "B": "Identity permissions remain enforced.",
+        "C": "Receiver services can have their own costs.",
+        "D": "A cost limit has an observability tradeoff."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor cost and usage",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/cost-usage"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q17",
+      "learningObjective": "No implicit workload agent",
+      "stem": "Which claim about CLZ-360 is inaccurate?",
+      "options": {
+        "A": "It installs Azure Monitor Agent on an IIS VM",
+        "B": "It creates a workspace",
+        "C": "It creates an action group",
+        "D": "It provides an operations resource group"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "No VM or guest agent is configured by this lesson.",
+        "B": "The workspace resource is present.",
+        "C": "The action-group resource is present.",
+        "D": "The resource group is part of the configuration."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Monitor data collection rules",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-rule-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q18",
+      "learningObjective": "Query scope diagnosis",
+      "stem": "Heartbeat exists in another workspace but not in the selected one. What should be checked?",
+      "options": {
+        "A": "Whether every action group has the same name",
+        "B": "Whether the log file is a GitHub image",
+        "C": "Whether DNS TTL is 60",
+        "D": "The queried workspace and the data collection destination"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Action-group names do not move records.",
+        "B": "GitHub artwork is unrelated.",
+        "C": "DNS TTL does not route log ingestion.",
+        "D": "Logs are stored in their configured destination workspace."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q19",
+      "learningObjective": "Low-cost does not mean free",
+      "stem": "Why should this lesson's Low classification still include budget review?",
+      "options": {
+        "A": "The class guarantees an exact zero invoice",
+        "B": "Every action group requires a Bastion VM",
+        "C": "Future ingestion, retention, and receiver usage can add costs",
+        "D": "Terraform charges by code line"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The class is not a billing guarantee.",
+        "B": "No Bastion dependency is configured.",
+        "C": "Classification is relative, not a fixed price promise.",
+        "D": "Code line counts are not service meters."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Monitor cost and usage",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/cost-usage"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q20",
+      "learningObjective": "Log-access boundary",
+      "stem": "Which production practice restricts who can query operational logs?",
+      "options": {
+        "A": "Publish the workspace's full credentials in README",
+        "B": "Assign appropriate workspace or resource-context access permissions",
+        "C": "Assume its region makes it private to one user",
+        "D": "Remove all alert rules"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Publication leaks sensitive access material.",
+        "B": "Access control should match readers and operational scopes.",
+        "C": "Region is not user authorization.",
+        "D": "Removing alerts does not scope query rights."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Manage Log Analytics access",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/manage-access"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q21",
+      "learningObjective": "Signal relevance",
+      "stem": "A team wants an IIS outage alert. Which design is more meaningful than workspace existence?",
+      "options": {
+        "A": "Alert every time Terraform files are listed",
+        "B": "Treat workspace Succeeded as eternal IIS health",
+        "C": "Use only the action group name as the signal",
+        "D": "A representative service signal with a failure threshold and response"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "File listing does not test IIS availability.",
+        "B": "Provisioning does not prove workload health.",
+        "C": "Names are not telemetry conditions.",
+        "D": "Availability monitoring must observe the application path."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure Monitor alerts overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q22",
+      "learningObjective": "Deduplication rationale",
+      "stem": "Why include deduplication and maintenance controls in an alert delivery design?",
+      "options": {
+        "A": "Guarantee incidents cannot occur",
+        "B": "Erase all historical logs",
+        "C": "Reduce repeated noise and handle planned work without losing incident ownership",
+        "D": "Remove every receiver"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "They cannot prevent all failures.",
+        "B": "Delivery controls are not log erasure.",
+        "C": "Operational controls improve signal handling.",
+        "D": "Removing all receivers defeats notification."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor alerts overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q23",
+      "learningObjective": "Cleanup resource scope",
+      "stem": "What active resources does CLZ-360 cleanup remove?",
+      "options": {
+        "A": "All workspaces in the tenant",
+        "B": "Its workspace, action group, and resource group",
+        "C": "Any external VM that sent a heartbeat",
+        "D": "Every production alert rule regardless of ownership"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tenant-wide removal is outside scope.",
+        "B": "Destroy acts on resources owned by this lesson.",
+        "C": "Telemetry sources are not implicitly owned.",
+        "D": "Unrelated rules are outside this state."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Recover a Log Analytics workspace",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/delete-workspace"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q24",
+      "learningObjective": "Workspace deletion caveat",
+      "stem": "A learner wants to immediately reuse a deleted workspace name. What should be considered?",
+      "options": {
+        "A": "Workspace soft-delete and recovery behavior",
+        "B": "The number of Terraform variables",
+        "C": "Whether its action group is purple",
+        "D": "The PDF's license text"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Service recovery behavior can affect deletion and reuse.",
+        "B": "Variable count does not determine recovery.",
+        "C": "Artwork has no deletion semantics.",
+        "D": "Book licensing is unrelated."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Recover a Log Analytics workspace",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/delete-workspace"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q25",
+      "learningObjective": "Testing without deployment",
+      "stem": "Which exercise can be completed by writing a query before any source is attached?",
+      "options": {
+        "A": "Prove a real VM sent a heartbeat without deploying or using one",
+        "B": "Draft a Heartbeat summary grouped by Computer",
+        "C": "Claim live ingestion solely from an SVG",
+        "D": "Send production alerts to arbitrary recipients"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Evidence requires an actual configured source.",
+        "B": "The lesson permits query design before data exists.",
+        "C": "A diagram is not telemetry evidence.",
+        "D": "Recipients require intentional configuration."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Kusto summarize operator",
+          "url": "https://learn.microsoft.com/en-us/kusto/query/summarize-operator"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q26",
+      "learningObjective": "Sanitized evidence",
+      "stem": "Which evidence supports an empty-foundation outcome without inventing data?",
+      "options": {
+        "A": "Workspace metadata, the actual query outcome, and an explicit no-source explanation",
+        "B": "A fabricated heartbeat row marked live",
+        "C": "An unrelated VM screenshot presented as this lesson",
+        "D": "Only a success claim with no query context"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Record the real result, including an empty or unavailable table when no source has created telemetry.",
+        "B": "Fabrication is not validation.",
+        "C": "Unrelated evidence does not establish this configuration's data.",
+        "D": "Context is needed to interpret empty results."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q27",
+      "learningObjective": "Action group reuse",
+      "stem": "Two alert rules should notify the same operations destination. What pattern fits?",
+      "options": {
+        "A": "Duplicate the Log Analytics workspace for every email",
+        "B": "Rename every VM to the email address",
+        "C": "Give the action group a SQL password",
+        "D": "Associate both with the same appropriately configured action group"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Workspace duplication is not required for shared actions.",
+        "B": "VM names do not configure notifications.",
+        "C": "SQL credentials are unrelated.",
+        "D": "Action groups can serve multiple alert rules."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor action groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q28",
+      "learningObjective": "Empty query troubleshooting",
+      "stem": "A colleague suggests recreating the empty workspace to get Heartbeat rows. What should be checked instead?",
+      "options": {
+        "A": "Whether the workspace name is shorter than five characters",
+        "B": "Whether the dark theme is selected",
+        "C": "Whether a real source, agent, and collection configuration exist",
+        "D": "Whether source files use CRLF"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Name length does not create a heartbeat source.",
+        "B": "Theme is unrelated to Azure ingestion.",
+        "C": "Recreation does not add absent telemetry collection.",
+        "D": "Line endings do not create data sources."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Monitor data collection rules",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/data-collection/data-collection-rule-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q29",
+      "learningObjective": "Operational ownership",
+      "stem": "Which production addition connects an alert to a responsible response?",
+      "options": {
+        "A": "A new illustrated card alone",
+        "B": "An arbitrary suffix change",
+        "C": "A larger README title",
+        "D": "Defined severity, incident owner, and runbook"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Artwork does not assign operational responsibility.",
+        "B": "Names do not resolve incident ownership.",
+        "C": "Heading size does not define response.",
+        "D": "Alerts need a response process, not just a resource."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor alerts overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ360-Q30",
+      "learningObjective": "Persistence distinction",
+      "stem": "Browser-local lesson progress says Complete. What does it prove about CLZ-360 telemetry?",
+      "options": {
+        "A": "Only the learner-reported progress, not live Azure ingestion",
+        "B": "That every VM is reporting",
+        "C": "That notification delivery was tested",
+        "D": "That all workspace logs were preserved"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Local progress is not live Azure evidence.",
+        "B": "No browser field proves agent reporting.",
+        "C": "Delivery needs independent testing.",
+        "D": "Retention requires Azure data and configuration evidence."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

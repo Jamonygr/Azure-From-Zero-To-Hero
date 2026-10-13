@@ -1,0 +1,81 @@
+site_name: Azure From Zero To Hero
+site_description: Illustrated Windows-first Terraform and PowerShell labs for building, securing, and operating Azure.
+site_url: https://jamonygr.github.io/Azure-From-Zero-To-Hero/
+repo_url: https://github.com/Jamonygr/Azure-From-Zero-To-Hero
+repo_name: Jamonygr/Azure-From-Zero-To-Hero
+docs_dir: .site-docs
+site_dir: site
+copyright: For personal learning. Azure deployment and cleanup remain deliberate learner actions.
+hooks:
+  - tools/site_hooks.py
+theme:
+  name: material
+  font: false
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.follow
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.code.copy
+  palette:
+    - scheme: slate
+      primary: blue
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Use light mode
+    - scheme: default
+      primary: blue
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Use dark mode
+nav:
+  - Home: index.md
+  - Learning paths: learning-pathways.md
+  - Labs:
+      - Catalog: labs/index.md
+  - Study resources:
+      - Visual guides: visual-guides.md
+      - Companion book: companion-book.md
+      - Book errata: wiki/companion-book-errata.md
+      - Terraform concepts: wiki/terraform-core-concepts.md
+      - Networking glossary: wiki/azure-networking-glossary.md
+      - Windows tooling: wiki/windows-workstation-tooling.md
+      - Windows compute notes: wiki/windows-vm-and-vmss-notes.md
+      - Remote state: wiki/state-backend-and-locking.md
+      - Security and secrets: wiki/security-and-secrets.md
+      - Learning outcomes: wiki/learning-outcomes-and-review-rubric.md
+      - Architecture plan: wiki/architecture-plan.md
+      - Final architecture: wiki/final-reference-architecture-plan.md
+      - Maintenance playbook: wiki/release-and-maintenance-playbook.md
+  - Run safely:
+      - Cost and cleanup: wiki/cost-governance-and-lab-safety.md
+      - Troubleshooting: wiki/troubleshooting.md
+      - Live testing matrix: wiki/manual-azure-smoke-matrix.md
+  - Your progress: learner-progress.md
+  - Practice questions: practice.md
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-\.]+'
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+extra_css:
+  - assets/progress.css
+  - assets/learning.css
+extra_javascript:
+  - assets/progress.js
+  - assets/quiz.js

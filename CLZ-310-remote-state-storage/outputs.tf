@@ -17,3 +17,13 @@ output "state_container_name" {
   value       = azurerm_storage_container.state.name
 }
 
+output "backend_configuration" {
+  description = "Values to copy into backend.hcl and the CLZ-320 remote_state input."
+  value = {
+    resource_group_name  = azurerm_resource_group.lab.name
+    storage_account_name = azurerm_storage_account.state.name
+    container_name       = azurerm_storage_container.state.name
+    key                  = "clz310.tfstate"
+  }
+}
+

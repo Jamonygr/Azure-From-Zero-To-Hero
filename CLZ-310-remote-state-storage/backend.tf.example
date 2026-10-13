@@ -1,0 +1,4 @@
+# Copy this file to backend.tf only after the storage account and container exist.
+terraform {
+  backend "azurerm" {}
+}

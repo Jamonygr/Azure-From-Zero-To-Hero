@@ -1,0 +1,813 @@
+{
+  "lessonId": "CLZ-140",
+  "questions": [
+    {
+      "id": "CLZ140-Q01",
+      "learningObjective": "Recognize resource-group boundaries",
+      "stem": "What is the main purpose of CLZ-140's resource group?",
+      "options": {
+        "A": "A replacement for an Azure tenant.",
+        "B": "A running Windows compute instance.",
+        "C": "An understandable lifecycle boundary for the lesson.",
+        "D": "A Terraform provider installer."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Identity directories are separate.",
+        "B": "A group does not provide compute.",
+        "C": "Related managed objects can share ownership and cleanup context.",
+        "D": "Initialization installs providers locally."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q02",
+      "learningObjective": "Predict standard naming",
+      "stem": "With name_prefix=campus and environment=dev, which group name follows CLZ-140's expression?",
+      "options": {
+        "A": "campus-clz140-prod-rg",
+        "B": "campus-dev-clz150-rg",
+        "C": "campus-rg",
+        "D": "campus-dev-clz140-rg"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That changes the input and ordering.",
+        "B": "That uses the wrong lesson code.",
+        "C": "That omits environment and lesson identity.",
+        "D": "The fixed lesson code is normalized to clz140."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q03",
+      "learningObjective": "Choose tag purpose",
+      "stem": "Which supplied tag identifies this particular exercise's ownership context?",
+      "options": {
+        "A": "Lab = CLZ-140",
+        "B": "Environment = CLZ-140",
+        "C": "ManagedBy = CLZ-140",
+        "D": "Project = CLZ-140"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It separates this lesson from others.",
+        "B": "Environment contains dev, test, or prod.",
+        "C": "ManagedBy contains Terraform.",
+        "D": "Project contains the curriculum name."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q04",
+      "learningObjective": "Separate tag key and value",
+      "stem": "The tag map has Environment = var.environment. What is Environment in that expression?",
+      "options": {
+        "A": "The subscription GUID.",
+        "B": "The tag key.",
+        "C": "The resource-group location.",
+        "D": "The Terraform local resource address."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The key does not select a subscription.",
+        "B": "The input supplies its value.",
+        "C": "Location is a separate property.",
+        "D": "A tag key is not an address."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q05",
+      "learningObjective": "Avoid assumed tag inheritance",
+      "stem": "A VM is added to a tagged group but has no tags in its own resource definition. What should the author know?",
+      "options": {
+        "A": "Every group tag is inherited automatically.",
+        "B": "Terraform always copies parent tags implicitly.",
+        "C": "Resource-group tags do not automatically flow to contained resources.",
+        "D": "The VM inherits only the Lab tag."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Azure does not provide automatic tag inheritance.",
+        "B": "Resource arguments must express that behavior.",
+        "C": "Apply tags explicitly or use an approved policy.",
+        "D": "No built-in selective inheritance occurs."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q06",
+      "learningObjective": "Understand location metadata",
+      "stem": "Can one resource group contain resources deployed in different Azure regions?",
+      "options": {
+        "A": "No; every object must use the group's region.",
+        "B": "Only if the group has no tags.",
+        "C": "Only if all resources are Windows.",
+        "D": "Yes; group location stores group metadata."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A group is not a single-region placement requirement.",
+        "B": "Tags do not govern this capability.",
+        "C": "Operating system is unrelated.",
+        "D": "Contained resources have their own location choices."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q07",
+      "learningObjective": "Review metadata updates",
+      "stem": "The learner adds an Owner entry to local.tags. What should the next plan be inspected for?",
+      "options": {
+        "A": "The intended tag update and any unexpected changes.",
+        "B": "Automatic migration to another tenant.",
+        "C": "Removal of all Terraform state.",
+        "D": "An automatic VM deployment."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The exercise asks for a reviewed metadata change.",
+        "B": "Adding a tag does not change tenant.",
+        "C": "A tag expression does not erase state.",
+        "D": "No VM resource is declared."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        },
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q08",
+      "learningObjective": "Understand fixed lesson identity",
+      "stem": "Why cannot the learner select lab_id through the documented inputs?",
+      "options": {
+        "A": "Azure forbids all custom tag values.",
+        "B": "The lesson fixes lab_id in locals.",
+        "C": "The site hides a fifth required input.",
+        "D": "The identity is generated from current time."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Azure supports custom values.",
+        "B": "It is not part of the variable interface.",
+        "C": "The source declares four public inputs.",
+        "D": "The provided local uses a fixed literal."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q09",
+      "learningObjective": "Read actual metadata",
+      "stem": "Which command reads CLZ-140's group name and tags from Azure?",
+      "options": {
+        "A": "terraform fmt -check",
+        "B": "terraform providers",
+        "C": "az group show --name $resourceGroup --query '{name:name,tags:tags}'",
+        "D": "az account get-access-token"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Formatting does not query Azure.",
+        "B": "Provider listing does not show actual group tags.",
+        "C": "The query returns the deployed group's properties.",
+        "D": "Token acquisition is not metadata readback."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q10",
+      "learningObjective": "Treat tags as classification",
+      "stem": "What does a CostCenter tag added in a production version do by itself?",
+      "options": {
+        "A": "Automatically pay the Azure bill.",
+        "B": "Grant access to financial data.",
+        "C": "Cap all Azure charges at zero.",
+        "D": "Classify resources for governance and reporting."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A tag is not a payment action.",
+        "B": "RBAC controls access.",
+        "C": "Budgets and cost controls are separate.",
+        "D": "It supplies metadata; separate processes use it."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q11",
+      "learningObjective": "Avoid secrets in tags",
+      "stem": "Which proposed tag value is unsuitable for resource metadata?",
+      "options": {
+        "A": "A live administrator password.",
+        "B": "An approved cost-center code.",
+        "C": "A nonsecret expiration date.",
+        "D": "The environment label dev."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Tags are not a secret store.",
+        "B": "That is ordinary classification metadata.",
+        "C": "That supports lifecycle tracking.",
+        "D": "That is already part of the standard map."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        },
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q12",
+      "learningObjective": "Troubleshoot missing tags",
+      "stem": "After apply, the group lacks an expected tag. What should be investigated?",
+      "options": {
+        "A": "Only Windows VM patch status.",
+        "B": "The local map and applicable Azure Policy behavior.",
+        "C": "Whether the inspected object is the intended group.",
+        "D": "Only the local dependency lock-file timestamp."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "No VM is deployed.",
+        "B": "Configuration or policy can affect metadata.",
+        "C": "Wrong object or context can produce misleading tag readback.",
+        "D": "Dependency timestamps do not establish the applied tag map or policy effects."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q13",
+      "learningObjective": "Protect unrelated group contents",
+      "stem": "A manually created unrelated disk appears in the lab group. Why review ownership before destroy?",
+      "options": {
+        "A": "Group deletion only removes tags.",
+        "B": "Untracked disks are automatically protected.",
+        "C": "Deleting the group can remove contained resources.",
+        "D": "A Lab tag guarantees the disk's ownership."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "It can delete contained objects.",
+        "B": "Being outside Terraform state is not protection from group deletion.",
+        "C": "The lifecycle boundary must remain disposable and owned.",
+        "D": "Group metadata cannot prove every object's ownership."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q14",
+      "learningObjective": "Recognize standard management metadata",
+      "stem": "Which value marks the intended management tooling in CLZ-140?",
+      "options": {
+        "A": "ManagedBy = Windows",
+        "B": "Environment = Terraform",
+        "C": "Lab = ManagedBy",
+        "D": "ManagedBy = Terraform"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Windows is not the supplied tooling value.",
+        "B": "That is the wrong key purpose.",
+        "C": "That swaps identities rather than identifies tooling.",
+        "D": "It records the management source."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q15",
+      "learningObjective": "Scope metadata queries",
+      "stem": "A tag query unexpectedly finds nothing. Which basic context check is appropriate?",
+      "options": {
+        "A": "Confirm subscription selection and exact tag values.",
+        "B": "Assume every resource was deleted.",
+        "C": "Increase VM size.",
+        "D": "Replace all tag keys with wildcard credentials."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Queries run against the selected Azure scope.",
+        "B": "An empty filter result is not deletion proof.",
+        "C": "There is no compute resource here.",
+        "D": "Credentials do not belong in tags."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        },
+        {
+          "title": "Azure CLI subscription management",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q16",
+      "learningObjective": "Interpret grouped lifecycle",
+      "stem": "Why should disposable lab infrastructure avoid sharing its resource group with long-lived production resources?",
+      "options": {
+        "A": "Resource groups cannot hold both kinds.",
+        "B": "Their cleanup lifecycles differ.",
+        "C": "Production tags are too expensive.",
+        "D": "Terraform cannot read production resources."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Azure permits it, but it is a poor lifecycle boundary.",
+        "B": "A group-level deletion should not affect unrelated production objects.",
+        "C": "Tags have no direct charge.",
+        "D": "The issue is ownership and blast radius, not that blanket limit."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q17",
+      "learningObjective": "Distinguish resource names and tags",
+      "stem": "A learner changes Environment from dev to test in this source. Why might the plan do more than update a tag?",
+      "options": {
+        "A": "Tags always require VM deletion.",
+        "B": "The input changes subscription_id automatically.",
+        "C": "The same input also changes the derived name.",
+        "D": "Azure tags rename every regional service."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "There is no VM in this module.",
+        "B": "They are separate variables.",
+        "C": "Both naming and tags consume environment.",
+        "D": "The naming expression, not tag semantics, changes the name."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        },
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q18",
+      "learningObjective": "Understand project classification",
+      "stem": "What does Project = Azure From Zero To Hero help group across lessons?",
+      "options": {
+        "A": "All resources in all Azure tenants.",
+        "B": "Only the Windows computer name.",
+        "C": "The provider checksum list.",
+        "D": "Resources belonging to this learning project."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags do not search inaccessible scopes.",
+        "B": "It is a project label, not hostname.",
+        "C": "Dependency checksums live in the lock file.",
+        "D": "The common value supports cross-lesson classification."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q19",
+      "learningObjective": "Use local maps consistently",
+      "stem": "Why derive standard tags once in local.tags instead of repeating their text?",
+      "options": {
+        "A": "To keep a single consistent expression for consumers.",
+        "B": "To avoid all state storage.",
+        "C": "To bypass Azure Policy.",
+        "D": "To create inheritance automatically."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Centralization reduces accidental divergence.",
+        "B": "Resource attributes still enter state.",
+        "C": "Policies still apply.",
+        "D": "Explicit consumer arguments remain necessary."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q20",
+      "learningObjective": "Know tags' cost boundary",
+      "stem": "What direct resource charge does adding the standard four tags introduce?",
+      "options": {
+        "A": "One VM-hour per tag.",
+        "B": "None for the tags themselves.",
+        "C": "One public IP charge per key.",
+        "D": "A mandatory Azure Storage account."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tag count is not compute billing.",
+        "B": "The lab's group and metadata have no direct charge.",
+        "C": "Tags do not provision IPs.",
+        "D": "No storage resource is created for tags."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q21",
+      "learningObjective": "Choose production governance",
+      "stem": "Which mechanism can enforce required tags across approved Azure scopes?",
+      "options": {
+        "A": "A naming convention with no policy evaluation.",
+        "B": "A renamed Terraform plan file.",
+        "C": "Azure Policy.",
+        "D": "A resource-group display name alone."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A naming rule alone does not enforce required metadata keys.",
+        "B": "Filename changes do not enforce standards.",
+        "C": "Policy can require or modify governance metadata.",
+        "D": "Naming is not tag enforcement."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q22",
+      "learningObjective": "Preserve readable naming inputs",
+      "stem": "What should the learner change if the derived group name is unexpected?",
+      "options": {
+        "A": "Edit Terraform state JSON directly.",
+        "B": "Change the subscription's tenant.",
+        "C": "Delete every file under assets.",
+        "D": "Review the prefix and environment inputs plus fixed local expressions."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "State is not the naming source interface.",
+        "B": "That does not fix the local expression.",
+        "C": "Artwork is not naming logic.",
+        "D": "These values construct the name."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        },
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q23",
+      "learningObjective": "Use separate classification keys",
+      "stem": "Which extra production tag most directly records when a disposable resource should be reviewed for removal?",
+      "options": {
+        "A": "An agreed expiration tag.",
+        "B": "A password tag.",
+        "C": "A CPU architecture tag only.",
+        "D": "A subscription token tag."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A documented date supports lifecycle automation/review.",
+        "B": "Passwords must not be metadata.",
+        "C": "Architecture does not express expiration.",
+        "D": "Tokens should not be stored in tags."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q24",
+      "learningObjective": "Understand resource-group membership",
+      "stem": "Can one Azure resource belong to two resource groups simultaneously?",
+      "options": {
+        "A": "Yes, one for each tag.",
+        "B": "No; it belongs to one resource group.",
+        "C": "Yes, if environment=prod.",
+        "D": "Only Windows VMs can do so."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tags are not membership.",
+        "B": "A resource's ARM ID includes a single group boundary.",
+        "C": "Environment values do not alter membership semantics.",
+        "D": "OS type does not create multiple group membership."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage resource groups",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q25",
+      "learningObjective": "Validate deletion independently",
+      "stem": "Why run az group exists after Terraform destruction?",
+      "options": {
+        "A": "To recreate all its tags.",
+        "B": "To export the resource-group password.",
+        "C": "To verify the named group is absent in Azure.",
+        "D": "To initialize the provider plugin."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Exists is a read, not recreation.",
+        "B": "Groups do not have such a password.",
+        "C": "Independent readback complements tool completion.",
+        "D": "That is a local init concern."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Manage resource groups with Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-cli"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q26",
+      "learningObjective": "Distinguish tags from access control",
+      "stem": "Does Lab=CLZ-140 stop another authorized administrator from modifying the group?",
+      "options": {
+        "A": "Yes; Lab tags are locks.",
+        "B": "Only when ManagedBy=Terraform.",
+        "C": "Yes; every tag encrypts the group.",
+        "D": "No; tags do not replace RBAC."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A tag is not a resource lock.",
+        "B": "That value is descriptive.",
+        "C": "Tags do not encrypt resources.",
+        "D": "Authorization remains separate."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        },
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q27",
+      "learningObjective": "Use stable tag values",
+      "stem": "Why should an organization document its owner and cost-center tag conventions?",
+      "options": {
+        "A": "Different teams need consistent interpretation and reporting.",
+        "B": "Azure requires every tag value to be identical.",
+        "C": "The convention automatically creates remote state.",
+        "D": "Terraform supports only the four lab keys."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A convention makes the metadata useful.",
+        "B": "Organizations choose meaningful values.",
+        "C": "It does not configure a backend.",
+        "D": "Other nonsecret keys can be used."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q28",
+      "learningObjective": "Interpret tag filtering limits",
+      "stem": "A query filtered by Lab=CLZ-140 returns one result. Does that alone prove no other lab-owned resources exist?",
+      "options": {
+        "A": "Yes, tag filters cannot miss resources.",
+        "B": "No; omitted or inconsistent tags can hide resources from that filter.",
+        "C": "Yes, because tags are immutable.",
+        "D": "Only if Terraform has one output."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Filters match metadata, not intent.",
+        "B": "Inventory and state review provide complementary evidence.",
+        "C": "Tags can be changed.",
+        "D": "Output count does not establish inventory or tagging completeness."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        },
+        {
+          "title": "Terraform state",
+          "url": "https://developer.hashicorp.com/terraform/language/state"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q29",
+      "learningObjective": "Separate location from name prefix",
+      "stem": "Why is changing name_prefix not the correct way to relocate the group?",
+      "options": {
+        "A": "Prefixes always contain encrypted region data.",
+        "B": "Azure uses the first three name letters as region.",
+        "C": "Location has its own input/property.",
+        "D": "Location is controlled by the ManagedBy tag."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The source has no such encoding.",
+        "B": "Placement is not determined that way.",
+        "C": "Prefix influences naming, not region selection.",
+        "D": "That tag identifies tooling."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ140-Q30",
+      "learningObjective": "Plan lifecycle metadata responsibly",
+      "stem": "Which production extension best preserves the lab's original tagging intent?",
+      "options": {
+        "A": "Replace all tags with administrator secrets.",
+        "B": "Remove Environment to mix workloads indiscriminately.",
+        "C": "Use random undocumented keys in each team.",
+        "D": "Add owner, cost-center, classification, and expiration conventions."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That turns metadata into a security problem.",
+        "B": "It loses useful classification.",
+        "C": "That makes reporting inconsistent.",
+        "D": "These extend ownership, reporting, and lifecycle context."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-270",
+  "questions": [
+    {
+      "id": "CLZ270-Q01",
+      "learningObjective": "Identify the autoscale target",
+      "stem": "Which resource does CLZ-270's Azure Monitor autoscale setting target?",
+      "options": {
+        "A": "The load balancer's public IP only",
+        "B": "The local terraform.tfvars file",
+        "C": "The administrator's workstation CPU",
+        "D": "The VMSS ID exposed by the shared windows-iis-vmss module"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The public IP does not provide the scalable VM instance capacity.",
+        "B": "Azure Monitor does not scale a local file.",
+        "C": "The metric target is the deployed Azure VMSS.",
+        "D": "The policy references module.windows_iis_vmss.vmss_id."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q02",
+      "learningObjective": "Read capacity as one contract",
+      "stem": "Which capacity relationship does the lesson validate?",
+      "options": {
+        "A": "maximum <= default <= minimum",
+        "B": "minimum <= default <= maximum",
+        "C": "minimum must always equal maximum",
+        "D": "default must be zero in every autoscale profile"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That reverses the intended lower and upper bounds.",
+        "B": "The object must have ordered whole-number bounds.",
+        "C": "The lesson permits a range for scaling.",
+        "D": "The lesson validates capacities from one through five."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q03",
+      "learningObjective": "Reject inconsistent bounds",
+      "stem": "A learner supplies { minimum = 3, default = 2, maximum = 4 }. Why does validation fail?",
+      "options": {
+        "A": "The maximum must be below two",
+        "B": "All capacities must be different",
+        "C": "Azure requires capacity values to be private IP addresses",
+        "D": "The default capacity is below the requested minimum"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Four is within the lesson's allowed range.",
+        "B": "Equal or distinct values can both satisfy the ordering.",
+        "C": "Capacity values represent instance counts.",
+        "D": "The ordered object contract prevents inconsistent desired capacity."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q04",
+      "learningObjective": "Reject fractional capacity",
+      "stem": "Which capacity object is valid under CLZ-270's lesson constraints?",
+      "options": {
+        "A": "{ minimum = 1, default = 2.5, maximum = 4 }",
+        "B": "{ minimum = 3, default = 2, maximum = 4 }",
+        "C": "{ minimum = 1, default = 2, maximum = 4 }",
+        "D": "{ minimum = 1, default = 2, maximum = 6 }"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The default is fractional.",
+        "B": "The default is below the minimum.",
+        "C": "These are bounded whole numbers with the required ordering.",
+        "D": "The maximum exceeds the lesson's limit of five."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q05",
+      "learningObjective": "Interpret the scale-out operator",
+      "stem": "The observed aggregated CPU is exactly 70 percent. Does the declared GreaterThan 70 rule alone match?",
+      "options": {
+        "A": "No; its comparison requires CPU above 70",
+        "B": "Yes; GreaterThan means greater than or equal",
+        "C": "Yes; the frontend port 80 makes every CPU threshold inclusive",
+        "D": "No; because Azure Monitor cannot read CPU metrics"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The configured operator is strict GreaterThan.",
+        "B": "The comparison does not include equality.",
+        "C": "Network ports do not redefine operators.",
+        "D": "CPU is the declared metric."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q06",
+      "learningObjective": "Interpret the scale-in threshold",
+      "stem": "Which aggregated CPU condition can satisfy the lesson's scale-in metric rule?",
+      "options": {
+        "A": "CPU above 70 percent",
+        "B": "CPU exactly 25 percent under the strict LessThan operator",
+        "C": "Any CPU value whenever HTTP succeeds",
+        "D": "CPU below 25 percent"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That is the scale-out condition.",
+        "B": "Equality does not satisfy a strict comparison.",
+        "C": "HTTP success is not this CPU trigger.",
+        "D": "The rule uses LessThan with threshold 25."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q07",
+      "learningObjective": "Read the aggregation window",
+      "stem": "How much metric history does each CLZ-270 rule evaluate for its CPU threshold?",
+      "options": {
+        "A": "Only the last browser request",
+        "B": "A one-month invoice average",
+        "C": "A five-minute window with Average aggregation",
+        "D": "Exactly one second of peak CPU"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Browser traffic is not the direct metric sample.",
+        "B": "The rule evaluates CPU history, not billing.",
+        "C": "The configuration declares time_window PT5M and time_aggregation Average.",
+        "D": "The declared window and aggregation do not match that."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q08",
+      "learningObjective": "Distinguish grain from window",
+      "stem": "The metric trigger has time_grain = PT1M and time_window = PT5M. What does that mean?",
+      "options": {
+        "A": "One-minute metric granularity is considered over the five-minute evaluation window",
+        "B": "The rule adds five instances every minute",
+        "C": "The scale set is destroyed after five minutes",
+        "D": "Every IIS request must last one minute"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The fields represent sample granularity and evaluation duration.",
+        "B": "Capacity actions and metric time fields are separate.",
+        "C": "No timed destroy action is declared.",
+        "D": "Metric grain does not impose request duration."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q09",
+      "learningObjective": "Explain cooldown",
+      "stem": "Why do CLZ-270's actions have a five-minute cooldown?",
+      "options": {
+        "A": "To stop all HTTP delivery for five minutes",
+        "B": "To let a scaling action take effect before additional scaling decisions",
+        "C": "To guarantee every VM has finished Windows updates",
+        "D": "To delay Terraform state deletion"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Cooldown is not an outage instruction.",
+        "B": "Cooldown limits reactions while capacity and load redistribute.",
+        "C": "It does not prove guest patch completion.",
+        "D": "Autoscale cooldown is unrelated to local state cleanup."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q10",
+      "learningObjective": "Read action magnitude",
+      "stem": "When an eligible scale-out action executes within the bounds, what does ChangeCount value 1 request?",
+      "options": {
+        "A": "Double the current fleet",
+        "B": "Set capacity permanently to one",
+        "C": "Add one instance",
+        "D": "Increase every VM's CPU count by one"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Doubling would not be ChangeCount 1.",
+        "B": "The action changes by one rather than setting capacity to one.",
+        "C": "The action is Increase by an absolute count of one.",
+        "D": "It scales instance count, not VM SKU."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q11",
+      "learningObjective": "Respect the maximum",
+      "stem": "CPU remains high while the scale set already has its configured maximum capacity. What should the learner expect from this policy?",
+      "options": {
+        "A": "The policy ignores the maximum under load",
+        "B": "No scale-out beyond the maximum solely because CPU stays high",
+        "C": "The load balancer automatically creates another subscription",
+        "D": "Terraform removes the maximum from the input file"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "High load does not nullify the upper bound.",
+        "B": "The capacity profile limits automatic instance growth.",
+        "C": "There is no such capacity mechanism.",
+        "D": "Azure Monitor does not edit local Terraform inputs."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q12",
+      "learningObjective": "Respect the minimum",
+      "stem": "The fleet has reached its configured minimum and CPU remains low. What limit applies?",
+      "options": {
+        "A": "The policy deletes all instances because CPU is low",
+        "B": "The public IP enforces a minimum of zero",
+        "C": "The Windows username determines the next instance count",
+        "D": "The policy should not reduce instance count below the minimum"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The minimum remains an active bound.",
+        "B": "The public IP does not define autoscale capacity.",
+        "C": "Guest identity is unrelated to the scaling bound.",
+        "D": "The lower bound protects the chosen baseline capacity."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q13",
+      "learningObjective": "Understand default capacity input",
+      "stem": "Which autoscale object value does CLZ-270 initially pass to the shared VMSS module as instance_count?",
+      "options": {
+        "A": "default",
+        "B": "maximum unconditionally",
+        "C": "minimum minus one",
+        "D": "The average of the two CPU thresholds"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The root module uses autoscale_capacity.default for its desired initial capacity.",
+        "B": "The module input is not always the upper bound.",
+        "C": "The code does not subtract from the minimum.",
+        "D": "CPU threshold arithmetic is not the capacity input."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q14",
+      "learningObjective": "Distinguish capacity bounds from monetary limits",
+      "stem": "Does maximum = 4 guarantee that the Azure bill cannot exceed a fixed currency amount?",
+      "options": {
+        "A": "No; it caps this policy's instance count, while other charges and usage still vary",
+        "B": "Yes; it guarantees the monthly bill is four dollars",
+        "C": "Yes; the autoscale setting cancels all storage charges",
+        "D": "No; because the maximum is ignored in every deployment"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A capacity limit is not a spending-limit enforcement service.",
+        "B": "Instance count is not a currency value.",
+        "C": "It does not remove managed disks or other service costs.",
+        "D": "The bound is meaningful for capacity, just not a monetary guarantee."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q15",
+      "learningObjective": "Plan quota for automatic scale-out",
+      "stem": "Which capacity should the learner consider when checking regional quota before deploying CLZ-270?",
+      "options": {
+        "A": "Only minimum because extra instances are free",
+        "B": "Only the number of public IPs",
+        "C": "The count of local Markdown files",
+        "D": "The configured maximum, not only the initial default"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Additional instances consume compute quota and cost.",
+        "B": "The frontend IP count does not measure VM quota.",
+        "C": "Documentation files are not Azure VM capacity.",
+        "D": "Automatic growth must fit available quota and budget headroom."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q16",
+      "learningObjective": "Diagnose delayed response",
+      "stem": "A short CPU spike does not immediately add an instance. What should be examined first?",
+      "options": {
+        "A": "Whether the Role tag is uppercase",
+        "B": "The metric window, aggregation, cooldown, and autoscale history",
+        "C": "Whether the public IP hostname contains the word autoscale",
+        "D": "Whether the learner clicked the site theme toggle"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The rule does not use Role casing.",
+        "B": "These mechanisms intentionally avoid reacting to every transient sample.",
+        "C": "Naming does not activate the metric trigger.",
+        "D": "Browser styling does not affect Azure scaling."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q17",
+      "learningObjective": "Interpret absent metric evidence",
+      "stem": "Autoscale is enabled, but the relevant CPU metric stream has no usable data. What conclusion is appropriate?",
+      "options": {
+        "A": "The system treats missing data as 100-percent CPU automatically",
+        "B": "The setting automatically loads CPU data from the Terraform state file",
+        "C": "The configured threshold alone does not prove that scaling should already occur",
+        "D": "Missing metrics disable all NSG rules"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That is not the lesson's assumed behavior.",
+        "B": "Terraform state is not the live metric stream.",
+        "C": "Diagnose metric availability and the rule's target before judging capacity behavior.",
+        "D": "Metric absence does not change network policy."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q18",
+      "learningObjective": "Validate policy and delivery separately",
+      "stem": "To demonstrate both bounded CPU autoscaling configuration and usable web delivery, which evidence should the learner collect?",
+      "options": {
+        "A": "Only VMSS capacity at one instant, without reviewing the policy",
+        "B": "The policy shows the intended bounds and two rules, and the frontend returns the expected HTTP response",
+        "C": "Only one successful CPU sample with no policy inspection",
+        "D": "Only an enabled action group, without a policy or endpoint check"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A capacity snapshot does not confirm the bounds, rule definitions, or application readiness.",
+        "B": "Both control-plane policy and data-plane delivery need verification.",
+        "C": "That cannot confirm configured bounds and rule definitions.",
+        "D": "An action group does not prove the autoscale policy or web delivery path."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q19",
+      "learningObjective": "Keep negative tests nonmutating",
+      "stem": "The lesson deliberately plans an invalid ordering { minimum = 3, default = 2, maximum = 1 }. What should happen?",
+      "options": {
+        "A": "Input validation rejects the plan without applying Azure changes",
+        "B": "Azure deletes every running instance immediately",
+        "C": "Terraform silently swaps minimum and maximum",
+        "D": "The policy accepts the object because all values are integers"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The exercise proves the guardrail through a nonapplying command.",
+        "B": "The plan does not execute resource changes.",
+        "C": "The validator rejects instead of repairing the user's values.",
+        "D": "Both whole-number and ordering constraints must hold."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q20",
+      "learningObjective": "Avoid assuming new capacity is instantly useful",
+      "stem": "Autoscale adds an instance, but HTTP delivery capacity has not increased immediately. What is a likely factor?",
+      "options": {
+        "A": "The frontend must receive a new public IP for every instance",
+        "B": "The local quiz must be graded before Azure sends traffic",
+        "C": "The new instance needs provisioning, guest bootstrap, and healthy probe status",
+        "D": "Scale-out can only add private DNS zones"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A stable frontend can serve a growing backend pool.",
+        "B": "Browser assessments do not gate Azure networking.",
+        "C": "Added compute must become application-ready before receiving useful traffic.",
+        "D": "It adds VMSS instances in this lesson."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q21",
+      "learningObjective": "Explain separated thresholds",
+      "stem": "Why use scale-out above 70 percent and scale-in below 25 percent instead of identical CPU thresholds?",
+      "options": {
+        "A": "The gap encrypts metric samples",
+        "B": "Azure requires exactly those two percentages for all workloads",
+        "C": "The gap reserves 45 new public IPs",
+        "D": "The gap helps reduce repeated opposing reactions near one boundary"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Threshold selection does not encrypt metrics.",
+        "B": "They are this lesson's choices, not universal required values.",
+        "C": "It has no public-IP allocation meaning.",
+        "D": "Distinct thresholds and cooldown support steadier capacity behavior."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q22",
+      "learningObjective": "Choose a workload-appropriate metric",
+      "stem": "A production queue worker has growing queue depth while CPU remains low. What change should be considered?",
+      "options": {
+        "A": "Use a demand metric such as queue depth if it better represents required capacity",
+        "B": "Assume low CPU proves no queued work exists",
+        "C": "Increase the page-message length to simulate CPU demand",
+        "D": "Remove the maximum so all quota is consumed automatically"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "CPU is not always the best signal for application demand.",
+        "B": "A backlog can exist with low CPU for other reasons.",
+        "C": "Page text is not a reliable queue metric.",
+        "D": "Unbounded growth does not fix metric selection."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q23",
+      "learningObjective": "Identify horizontal scaling",
+      "stem": "Which action describes CLZ-270's autoscaling?",
+      "options": {
+        "A": "Replacing Standard_B2s with a larger SKU whenever CPU rises",
+        "B": "Changing the number of VMSS instances",
+        "C": "Adding one CPU core inside the same VM after each request",
+        "D": "Moving the workload to a new region automatically"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That is vertical scaling and is not this rule action.",
+        "B": "The rules adjust capacity using ChangeCount.",
+        "C": "The action does not alter guest cores directly.",
+        "D": "This policy targets one existing scale set."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q24",
+      "learningObjective": "Observe realistic behavior safely",
+      "stem": "Which evidence best connects a load test to a scaling decision?",
+      "options": {
+        "A": "Only the number of browser refreshes",
+        "B": "Only the color of the VMSS icon",
+        "C": "Time-aligned demand, CPU metrics, autoscale history, and instance readiness",
+        "D": "Only an unchanged Terraform lockfile"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Refresh count alone does not describe aggregated CPU or actions.",
+        "B": "An icon is not operational evidence.",
+        "C": "These signals explain trigger conditions and useful capacity.",
+        "D": "Provider locking does not show runtime scale decisions."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q25",
+      "learningObjective": "Manage Terraform and runtime capacity together",
+      "stem": "Azure autoscale raises capacity above the module's desired default. What should be reviewed before a later Terraform apply?",
+      "options": {
+        "A": "Whether the plan proposes reconciling instances back to the configured value",
+        "B": "Assume Terraform automatically ignores every capacity difference",
+        "C": "Delete state to hide the autoscale decision",
+        "D": "Remove all bounds so Terraform cannot see the scale set"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "This module sets instances directly, so runtime capacity drift can appear in a plan.",
+        "B": "The module has no declared ignore_changes for instances.",
+        "C": "That loses tracking and can orphan resources.",
+        "D": "Bounds do not control Terraform's ability to read resources."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q26",
+      "learningObjective": "Understand default versus permanent capacity",
+      "stem": "Should autoscale_capacity.default be interpreted as a guarantee that runtime capacity always equals that value?",
+      "options": {
+        "A": "Yes; autoscale settings never change capacity",
+        "B": "Yes; only manual scaling can affect Windows VMSS",
+        "C": "No; because the value is a password placeholder",
+        "D": "No; active rules can move capacity within the minimum and maximum"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Changing capacity is the policy's purpose.",
+        "B": "Windows scale sets support configured autoscaling.",
+        "C": "It is a capacity count.",
+        "D": "Default is not a permanent fixed fleet size under autoscaling."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q27",
+      "learningObjective": "Preserve the manual model-update distinction",
+      "stem": "Autoscale is enabled while the shared VMSS upgrade policy remains Manual. What does autoscaling not guarantee?",
+      "options": {
+        "A": "That eligible new capacity changes can occur",
+        "B": "That every existing instance has automatically received each later model or extension change",
+        "C": "That the VMSS remains a valid Azure compute resource",
+        "D": "That CPU can be measured"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That is the configured autoscale function.",
+        "B": "Capacity automation is distinct from model upgrade propagation.",
+        "C": "The setting does not invalidate the VMSS.",
+        "D": "CPU metrics are the rule's intended input."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "VMSS upgrade policy modes",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-upgrade-policy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q28",
+      "learningObjective": "Improve operations for the bounded fleet",
+      "stem": "Which monitoring additions fit the lesson's production guidance?",
+      "options": {
+        "A": "Cost alerts, quota headroom, warm-up awareness, and operational dashboards",
+        "B": "Only a permanent RDP source of 0.0.0.0/0",
+        "C": "Only an administrator password displayed publicly",
+        "D": "Only a weekly rename of every VMSS instance"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Bounds need supporting operations and evidence under changing demand.",
+        "B": "Broad management exposure does not monitor scaling.",
+        "C": "Secrets should not be used as dashboards.",
+        "D": "Naming churn does not improve capacity operations."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Monitor autoscale settings",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q29",
+      "learningObjective": "Explain dependency-aware destroy",
+      "stem": "Why should the autoscale setting be removed before its target VMSS during cleanup?",
+      "options": {
+        "A": "The setting stores all Windows OS disks inside itself",
+        "B": "The load balancer cannot be deleted while a browser quiz is open",
+        "C": "The setting depends on the scale-set target resource ID",
+        "D": "The minimum capacity prevents any resource from ever being destroyed"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "OS disks are not stored in the autoscale setting.",
+        "B": "Browser state does not control Azure dependency deletion.",
+        "C": "Terraform's dependency graph supports removing dependent resources first.",
+        "D": "Destroy removes the policy and target rather than performing scale-in."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ270-Q30",
+      "learningObjective": "Verify final absence rather than low demand",
+      "stem": "CPU falls to zero after testing. What is still needed for final CLZ-270 cleanup?",
+      "options": {
+        "A": "Only wait for autoscale to remove every billable resource",
+        "B": "Destroy the managed resources and verify the captured group no longer exists",
+        "C": "Only delete the saved quiz score",
+        "D": "Only close the load-generating terminal"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The policy respects a minimum and does not clean up all services.",
+        "B": "Low demand does not delete the autoscale setting, minimum fleet, disks, or frontend.",
+        "C": "Learning progress does not remove Azure resources.",
+        "D": "Closing the client leaves the Azure footprint provisioned."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

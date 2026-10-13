@@ -21,7 +21,7 @@ rule "terraform_empty_list_equality" {
 }
 
 rule "terraform_unused_declarations" {
-  enabled = false
+  enabled = true
 }
 
 rule "terraform_typed_variables" {

@@ -7,10 +7,11 @@ resource "azurerm_virtual_network" "main" {
 }
 
 resource "azurerm_subnet" "web" {
-  name                 = "web-snet"
-  resource_group_name  = azurerm_resource_group.lab.name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.40.1.0/24"]
+  name                            = "web-snet"
+  resource_group_name             = azurerm_resource_group.lab.name
+  virtual_network_name            = azurerm_virtual_network.main.name
+  address_prefixes                = ["10.40.1.0/24"]
+  default_outbound_access_enabled = false
 }
 
 resource "azurerm_subnet" "app" {
@@ -55,20 +56,6 @@ resource "azurerm_network_security_rule" "allow_http" {
   network_security_group_name = azurerm_network_security_group.web.name
 }
 
-resource "azurerm_network_security_rule" "allow_admin_rdp" {
-  name                        = "allow-admin-rdp"
-  priority                    = 110
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "3389"
-  source_address_prefix       = var.admin_cidr
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.lab.name
-  network_security_group_name = azurerm_network_security_group.web.name
-}
-
 resource "azurerm_subnet_network_security_group_association" "web" {
   subnet_id                 = azurerm_subnet.web.id
   network_security_group_id = azurerm_network_security_group.web.id
@@ -92,6 +79,7 @@ module "windows_iis_vmss" {
   subnet_id           = azurerm_subnet.web.id
   admin_username      = var.admin_username
   admin_password      = random_password.windows_admin.result
+  vm_size             = var.vm_size
   instance_count      = var.instance_count
   tags                = local.tags
   site_message        = "Azure From Zero To Hero VMSS ${local.prefix}"

@@ -1,57 +1,102 @@
-# CLZ-140 - Resource Groups And Tags
+# CLZ-140 - Resource Groups and Tags
 
-![Resource Groups And Tags architecture](../assets/diagrams/resource-naming.svg)
+![Resource Groups and Tags architecture](../assets/diagrams/resource-naming.svg)
 
-## Overview
-A naming and tagging pattern for the Azure From Zero To Hero estate.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Create a predictable Azure resource-group boundary and use consistent tags for ownership, environment, management source, and lesson identity.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-130.
+- Permission to create and delete a resource group in the selected subscription.
+
+## Architecture
+
+Four inputs feed fixed locals for the lesson ID, normalized prefix, and standard tag map. The resource group applies that metadata at the lifecycle boundary so cost, policy, and cleanup queries remain understandable.
+
+## Resources And Cost
+
+**Relative cost: Low.** The empty resource group and tags have no direct charge.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | Resource groups, standard tags, and naming |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz140-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Resource group | Groups the lesson lifecycle and establishes location metadata. |
+| Tags | `Project`, `Environment`, `ManagedBy`, and `Lab` values used by later resources. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Use clz prefixes; tag resources consistently; make cleanup and cost review easier.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `lab.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for Azure plan, apply, and destroy; copy the exact ID returned by Azure CLI. |
+| `environment` | Keep `dev` for the lab or choose `test`/`prod` only to study the naming boundary. |
+| `location` | Use a region where your subscription has access and sufficient quota. |
+| `name_prefix` | Use a short lowercase prefix; resource names derive from it. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz140`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-140-resource-groups-tags
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+az group show --name $resourceGroup --query '{name:name,tags:tags}' --output json
+az resource list --tag "Lab=CLZ-140" --query '[].name' --output tsv
+```
+
+Expected result:
+
+- The group name follows `<prefix>-<environment>-clz140-rg`.
+- All four standard tags are present with the expected values.
+- The tag query can find the lesson boundary without relying on a portal search.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| A tag is missing after apply | Inspect `local.tags` and check whether an Azure Policy modified or denied the request. |
+| The resource-group name differs from the README | Review only the four inputs; the lesson ID is fixed locally and is no longer configurable. |
+| A tag query returns nothing | Use exact tag case and confirm the selected subscription. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Make the configuration reusable with inputs and outputs.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+az group exists --name $resourceGroup
+```
+
+The group no longer exists. No separately owned resource should remain inside it.
+
+## Production Delta
+
+- Add organization-specific owner, cost-center, data-classification, and expiration metadata.
+- Enforce required tags with Azure Policy while preserving a documented exception process.
+
+## Exercises
+
+1. Add an `Owner` local tag in a temporary branch and inspect the in-place plan.
+2. Query all learning resources by `Project` and then narrow the result by `Environment`.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-130 - Provider Authentication](../CLZ-130-provider-authentication/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-150 - Variables, Locals, and Outputs &rarr;](../CLZ-150-variables-locals-outputs/README.md)
+<!-- lesson-navigation:end -->

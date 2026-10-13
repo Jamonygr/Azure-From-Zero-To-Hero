@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["lessonId", "questions"],
+  "properties": {
+    "lessonId": {"type":"string", "pattern":"^CLZ-(?:1[0-9]0|2[0-9]0|3[0-9]0)$"},
+    "questions": {"type":"array", "minItems":30, "maxItems":30, "items":{"$ref":"#/$defs/question"}}
+  },
+  "$defs": {
+    "choices": {"type":"object", "additionalProperties":false, "required":["A","B","C","D"], "properties":{"A":{"type":"string","minLength":1},"B":{"type":"string","minLength":1},"C":{"type":"string","minLength":1},"D":{"type":"string","minLength":1}}},
+    "question": {
+      "type":"object", "additionalProperties":false,
+      "required":["id","learningObjective","stem","options","correctOption","optionExplanations","remediationAnchor","sources","lastVerified"],
+      "properties": {
+        "id":{"type":"string","pattern":"^CLZ[123][0-9]0-Q(?:0[1-9]|[12][0-9]|30)$"},
+        "learningObjective":{"type":"string","minLength":8},
+        "stem":{"type":"string","minLength":20},
+        "options":{"$ref":"#/$defs/choices"},
+        "correctOption":{"enum":["A","B","C","D"]},
+        "optionExplanations":{"$ref":"#/$defs/choices"},
+        "remediationAnchor":{"type":"string","pattern":"^#[a-z0-9-]+$"},
+        "lastVerified":{"type":"string","format":"date"},
+        "sources":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["title","url"],"properties":{"title":{"type":"string","minLength":1},"url":{"type":"string","pattern":"^https://(learn\\.microsoft\\.com|developer\\.hashicorp\\.com)/"}}}}
+      }
+    }
+  }
+}

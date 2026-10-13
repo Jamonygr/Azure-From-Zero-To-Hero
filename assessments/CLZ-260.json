@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-260",
+  "questions": [
+    {
+      "id": "CLZ260-Q01",
+      "learningObjective": "Choose the VMSS abstraction",
+      "stem": "What changes in CLZ-260 compared with independently keyed Windows VMs?",
+      "options": {
+        "A": "Each instance must have a different long-lived role definition",
+        "B": "The VNet is replaced by Terraform state",
+        "C": "The application tier is managed as instances of one shared scale-set model",
+        "D": "All instances become public DNS zones"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That is closer to individually keyed servers than this uniform fleet.",
+        "B": "State tracks resources but cannot provide networking.",
+        "C": "VMSS applies a common compute model to an interchangeable fleet.",
+        "D": "The instances remain Windows compute resources."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q02",
+      "learningObjective": "Identify the module boundary",
+      "stem": "Which CLZ-260 component encapsulates the Windows VMSS and its load balancer?",
+      "options": {
+        "A": "The resource-group output",
+        "B": "The shared windows-iis-vmss module",
+        "C": "The provider version constraint alone",
+        "D": "The admin_username variable"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "An output exposes a value and does not contain resource definitions.",
+        "B": "The root passes context, credentials, sizing, tags, and the web subnet to this module.",
+        "C": "A version constraint selects tooling, not a workload module.",
+        "D": "That is one module input rather than the module itself."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q03",
+      "learningObjective": "Trace subnet input",
+      "stem": "Why does the root module pass azurerm_subnet.web.id to windows_iis_vmss?",
+      "options": {
+        "A": "To place the scale-set NIC configurations in the intended web subnet",
+        "B": "To place the resource group inside the subnet",
+        "C": "To turn the subnet into a Windows administrator credential",
+        "D": "To create one Terraform workspace per subnet address"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The shared module uses that ID for its instance network configuration.",
+        "B": "Resource groups are logical containers, not subnet residents.",
+        "C": "The subnet identity has no credential role.",
+        "D": "The reference does not configure Terraform workspaces."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q04",
+      "learningObjective": "Locate manual capacity",
+      "stem": "Which root input controls the CLZ-260 VMSS instance capacity?",
+      "options": {
+        "A": "admin_cidr",
+        "B": "site_message",
+        "C": "instance_count",
+        "D": "environment"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "This lesson does not use that input to determine fleet capacity.",
+        "B": "The page text does not determine the number of instances.",
+        "C": "The root passes this validated value to the module's instances argument.",
+        "D": "The environment contributes naming and tags, not the capacity count."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q05",
+      "learningObjective": "Validate instance cardinality",
+      "stem": "Why does instance_count = 1.5 fail in the lesson?",
+      "options": {
+        "A": "The module automatically chooses the next lower integer but then rejects the SKU",
+        "B": "Every scale set must have at least three instances",
+        "C": "The Standard public IP requires an even count",
+        "D": "The capacity validation requires a whole number from one through five"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "It does not silently round the count.",
+        "B": "The lesson permits one through five.",
+        "C": "A public frontend does not require even fleet capacity.",
+        "D": "Scale-set instance cardinality is an integer."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q06",
+      "learningObjective": "Review deliberate scale-out",
+      "stem": "A learner increases instance_count from two to three. Which evidence should be checked after applying the reviewed plan?",
+      "options": {
+        "A": "VMSS capacity is three and the frontend still serves healthy IIS responses",
+        "B": "Only that the input file contains the number three",
+        "C": "Only that the public IP changed",
+        "D": "Only that a new Azure subscription appears"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Both desired compute capacity and application delivery should be verified.",
+        "B": "Configuration text is not deployed-service evidence.",
+        "C": "Scale-out does not require a different frontend IP.",
+        "D": "Capacity changes do not create subscriptions."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q07",
+      "learningObjective": "Differentiate manual scaling from autoscaling",
+      "stem": "Does CLZ-260 add instances in response to CPU demand automatically?",
+      "options": {
+        "A": "Yes; every VMSS has a default 70-percent CPU rule",
+        "B": "No; the lesson changes capacity deliberately through Terraform inputs",
+        "C": "Yes; the TCP probe creates new instances when busy",
+        "D": "No; because Windows scale sets cannot autoscale"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Autoscaling requires a configured policy.",
+        "B": "The autoscale setting is introduced in the following lesson.",
+        "C": "A probe controls backend health eligibility, not demand-based capacity.",
+        "D": "Windows VMSS can autoscale when appropriately configured."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q08",
+      "learningObjective": "Identify uniform size",
+      "stem": "Which input determines the common VM size of the scale-set instances?",
+      "options": {
+        "A": "A different each.value.vm_size for every instance",
+        "B": "The current HTTP response length",
+        "C": "vm_size",
+        "D": "The frontend port number"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "This lesson uses a uniform scale-set model, not the keyed VM map.",
+        "B": "Page content does not select the VM SKU.",
+        "C": "The root passes one SKU to the shared VMSS model.",
+        "D": "Networking ports do not determine compute sizing."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q09",
+      "learningObjective": "Interpret replaceable instance design",
+      "stem": "Why should production application data not rely solely on one scale-set instance's local filesystem?",
+      "options": {
+        "A": "Instances can be replaced or removed as capacity and models change",
+        "B": "VMSS always converts local files into Private DNS records",
+        "C": "Windows has no filesystem when used in VMSS",
+        "D": "The load balancer stores a copy of every guest disk"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Durable application data needs a storage design independent of an interchangeable instance.",
+        "B": "No automatic DNS storage conversion occurs.",
+        "C": "Windows instances have filesystems.",
+        "D": "Load Balancer forwards flows and does not back up disks."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q10",
+      "learningObjective": "Distinguish model policy from capacity control",
+      "stem": "The module sets upgrade_mode = Manual. What does that setting govern?",
+      "options": {
+        "A": "The VM count allowed by the subscription",
+        "B": "The rate at which TCP packets pass through the load balancer",
+        "C": "The number of quiz answers needed for grading",
+        "D": "How existing instances are brought up to date with scale-set model changes"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Quota is not defined by upgrade mode.",
+        "B": "Upgrade policy does not rate-limit network traffic.",
+        "C": "Browser quizzes are unrelated to Azure upgrade policy.",
+        "D": "Upgrade policy is separate from the requested number of instances."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "VMSS upgrade policy modes",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-upgrade-policy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q11",
+      "learningObjective": "Account for manual extension propagation",
+      "stem": "The IIS extension has been added to a Manual-policy scale-set model, but older instances do not show it. What should be checked?",
+      "options": {
+        "A": "Whether a Role tag contains the extension publisher",
+        "B": "Whether those instances have been explicitly updated to the latest model",
+        "C": "Whether the public frontend has two DNS names",
+        "D": "Whether Terraform formatting adds a semicolon"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A tag does not install the extension.",
+        "B": "Manual policy does not automatically apply all model additions to existing instances.",
+        "C": "DNS labels do not synchronize instance models.",
+        "D": "Formatting does not update deployed instances."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Deploy applications to VMSS",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-deploy-app"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q12",
+      "learningObjective": "Verify guest bootstrap rather than only the model",
+      "stem": "Which validation best confirms that IIS is usable on the intended VMSS instances?",
+      "options": {
+        "A": "Inspect instance extension/model state, probe health, and frontend HTTP responses",
+        "B": "Only list the extension resource in Terraform state",
+        "C": "Only read the module source path",
+        "D": "Only check the admin_username input syntax"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Model presence alone is insufficient evidence of successful guest installation.",
+        "B": "State records configuration identity rather than the complete guest outcome.",
+        "C": "The source path says nothing about runtime health.",
+        "D": "A valid username does not demonstrate web serving."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Deploy applications to VMSS",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-deploy-app"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q13",
+      "learningObjective": "Understand the module's egress",
+      "stem": "How does the shared module provide explicit Internet egress for private backends?",
+      "options": {
+        "A": "Public IPs attached individually to every scale-set NIC",
+        "B": "An inbound RDP NAT mapping on every instance",
+        "C": "An outbound rule on its Standard public load balancer",
+        "D": "The health probe's source address"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The module's NIC configuration has only a private subnet association.",
+        "B": "No such general egress design is declared by this module.",
+        "C": "The pool uses the public frontend for declared SNAT.",
+        "D": "Probes are not backend Internet egress."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q14",
+      "learningObjective": "Separate health from capacity",
+      "stem": "VMSS capacity equals two, but the frontend times out. What should the learner investigate?",
+      "options": {
+        "A": "Increase the maximum map key length",
+        "B": "Instance bootstrap, model readiness, NSG access, and health probes",
+        "C": "Assume the Azure capacity report is automatically an HTTP success",
+        "D": "Publish the administrator password so the frontend can authenticate clients"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "This lesson does not use map key length for guest readiness.",
+        "B": "A correct instance count does not guarantee an application listener is ready.",
+        "C": "Control-plane capacity and data-plane delivery are separate.",
+        "D": "The HTTP teaching path does not require publishing guest credentials."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q15",
+      "learningObjective": "Interpret TCP probe scope",
+      "stem": "The module's TCP probe on port 80 is healthy. Which assertion is still too strong?",
+      "options": {
+        "A": "The backend accepts TCP on the configured probe port",
+        "B": "The probe configuration is targeting port 80",
+        "C": "The healthy backend can receive new eligible load-balanced flows",
+        "D": "All business dependencies and page content are correct"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That is what a successful TCP probe supports.",
+        "B": "That is the module's declared port.",
+        "C": "Probe health supports eligibility for those flows.",
+        "D": "A TCP connection check does not inspect application semantics."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q16",
+      "learningObjective": "Plan fleet quota",
+      "stem": "How should a learner assess quota for instance_count = 4?",
+      "options": {
+        "A": "Check only that one instance can be created",
+        "B": "Check the selected VM size's regional quota and capacity for four instances",
+        "C": "Multiply only the number of public frontend IPs",
+        "D": "Assume a valid size string reserves four instances"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "One available instance does not establish capacity for four.",
+        "B": "The full requested fleet must fit the target subscription and region.",
+        "C": "The compute quota concerns VM instances and their sizes.",
+        "D": "Input syntax does not reserve Azure capacity."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q17",
+      "learningObjective": "Evaluate capacity cost",
+      "stem": "Why should the default small instance_count remain small during manual-scaling practice?",
+      "options": {
+        "A": "Terraform charges a fee for every integer in the input",
+        "B": "The page message is priced per character",
+        "C": "The resource-group name costs more when capacity increases",
+        "D": "Each additional running VMSS instance adds compute and managed-disk cost"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The input number itself is not billable.",
+        "B": "Page text length is not the fleet's main cost driver.",
+        "C": "Group naming does not incur per-instance charges.",
+        "D": "Manual capacity is a direct lab cost driver."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q18",
+      "learningObjective": "Read the generated HTTP endpoint",
+      "stem": "What does vmss_load_balancer_url expose?",
+      "options": {
+        "A": "The private IP of the first instance's RDP listener",
+        "B": "A signed URL containing the administrator password",
+        "C": "The HTTP URL of the module-created public load balancer",
+        "D": "The Terraform remote-state storage key"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That is not the module's output.",
+        "B": "The endpoint does not need to embed that secret.",
+        "C": "The root forwards the module's load_balancer_url output.",
+        "D": "This module output is a web endpoint, not backend configuration."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q19",
+      "learningObjective": "Understand extension responsibility",
+      "stem": "Why is selecting the Windows Server 2022 platform image alone not enough to serve the lesson page?",
+      "options": {
+        "A": "The IIS extension separately installs the web role and writes the page",
+        "B": "The Standard load balancer stores index.html itself",
+        "C": "VMSS only supports Linux web pages",
+        "D": "The public IP is the operating-system installer"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The application configuration is distinct from the base operating system.",
+        "B": "Content is served by guest IIS.",
+        "C": "This module deploys Windows instances.",
+        "D": "Public IP provisioning does not install IIS."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Deploy applications to VMSS",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-deploy-app"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q20",
+      "learningObjective": "Interpret site_message encoding",
+      "stem": "The module base64-encodes site_message before its PowerShell command decodes it. Why is that helpful?",
+      "options": {
+        "A": "It encrypts an administrator password against every reader",
+        "B": "It causes the VMSS to autoscale on message length",
+        "C": "It replaces the need for jsonencode on extension settings",
+        "D": "It transports the page text through the nested command-string quoting safely"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Base64 is encoding, not encryption.",
+        "B": "Text encoding does not control capacity.",
+        "C": "The settings still require valid JSON.",
+        "D": "The decoded text is then written into the intended web file."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Custom Script Extension for Windows",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-windows"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q21",
+      "learningObjective": "Protect the module credential input",
+      "stem": "The module admin_password variable is sensitive. What still needs protection?",
+      "options": {
+        "A": "The public page message as if it were always a password",
+        "B": "Only the CSS file",
+        "C": "Terraform state and any explicit secret artifacts",
+        "D": "Nothing after the module has received the password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The page message is intended nonsecret lesson content.",
+        "B": "CSS is not the VM administrator credential store.",
+        "C": "Sensitive marking limits display but does not erase stored credentials.",
+        "D": "The password can remain in Terraform-managed values."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform sensitive state",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q22",
+      "learningObjective": "Use the module contract correctly",
+      "stem": "A learner passes the VNet's address prefix string as subnet_id. Why is that wrong?",
+      "options": {
+        "A": "The module expects the subnet's Azure resource ID",
+        "B": "A subnet prefix is valid only in a Role tag",
+        "C": "The module expects the administrator password for subnet_id",
+        "D": "The module automatically creates a subnet from any string"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The NIC configuration requires a resource identity, not an IP range.",
+        "B": "Prefixes can define networks, but are not resource IDs.",
+        "C": "Credentials and subnet identities are separate inputs.",
+        "D": "It consumes an existing declared subnet rather than inferring one."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q23",
+      "learningObjective": "Review a VM size model change",
+      "stem": "The exercise changes only vm_size in a disposable plan. What should be reviewed?",
+      "options": {
+        "A": "Only the page's font size",
+        "B": "The proposed scale-set model update and consequences for existing instances",
+        "C": "Only whether Terraform renamed the lesson folder",
+        "D": "Only the frontend port, because it encodes the SKU"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "CSS is unrelated to compute SKU.",
+        "B": "SKU changes affect the model and may require explicit instance updates under Manual policy.",
+        "C": "A size input does not rename the local folder.",
+        "D": "The port does not encode compute size."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "VMSS upgrade policy modes",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-upgrade-policy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q24",
+      "learningObjective": "Improve production rollout behavior",
+      "stem": "Which improvement fits the lesson's production guidance for fleet upgrades?",
+      "options": {
+        "A": "Change all instances at once without health checks",
+        "B": "Use a shared browser cookie as the upgrade policy",
+        "C": "Versioned images, tested rolling rollout, and application health monitoring",
+        "D": "Keep every obsolete model indefinitely and never inspect instances"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That risks simultaneous unavailability.",
+        "B": "Browser state cannot orchestrate Azure instance upgrades.",
+        "C": "Controlled upgrades reduce unmanaged instance drift and service disruption.",
+        "D": "Unreviewed drift is not a sound production rollout."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "VMSS upgrade policy modes",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-upgrade-policy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q25",
+      "learningObjective": "Manage long bootstrap delays",
+      "stem": "New scale-set instances have been created but are not yet eligible for frontend traffic. Which explanation is plausible?",
+      "options": {
+        "A": "Every new instance must wait for the public IP to change",
+        "B": "Guest bootstrap and probe readiness may lag instance provisioning",
+        "C": "Terraform plan is continuously serving HTTP requests",
+        "D": "The public IP must be assigned directly to each guest first"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The frontend address can remain stable during scale-out.",
+        "B": "Application warm-up is a separate stage after compute creation.",
+        "C": "Terraform is a deployment tool, not the web server.",
+        "D": "The pool is intended to serve private backend NICs."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Deploy applications to VMSS",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-deploy-app"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q26",
+      "learningObjective": "Validate common subnet policy",
+      "stem": "Where does CLZ-260 attach the web NSG in its root configuration?",
+      "options": {
+        "A": "Only to the Terraform working directory",
+        "B": "To the administrator password output",
+        "C": "To a Bastion subnet that the module creates",
+        "D": "To the web subnet used by the VMSS"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Azure NSGs attach to network resources, not local directories.",
+        "B": "An output is not a network policy attachment point.",
+        "C": "The module does not create a Bastion subnet.",
+        "D": "The subnet association applies the declared policy to that network tier."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q27",
+      "learningObjective": "Avoid state-based ownership loss",
+      "stem": "Why should a learner not delete the Terraform state file as a substitute for VMSS cleanup?",
+      "options": {
+        "A": "It can leave the VMSS, disks, and frontend resources running without tracking",
+        "B": "State deletion guarantees the VMSS stops immediately",
+        "C": "State is the load balancer's CPU controller",
+        "D": "State deletion always preserves safe resource ownership"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Deleting metadata does not call Azure deletion APIs.",
+        "B": "That is not its effect.",
+        "C": "State is deployment tracking, not an autoscale controller.",
+        "D": "It instead weakens the ability to track ownership."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform sensitive state",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q28",
+      "learningObjective": "Compare capacity and health signals",
+      "stem": "Which pair most directly supports CLZ-260's expected outcome?",
+      "options": {
+        "A": "Azure reports the requested capacity and HTTP returns the intended IIS response",
+        "B": "A matching local folder name and a successful terraform fmt",
+        "C": "A saved password and a resource-group Project tag",
+        "D": "A public IP address and an empty browser history"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "One verifies compute state; the other exercises web delivery.",
+        "B": "These do not prove deployed capacity or application readiness.",
+        "C": "Credentials and tags do not demonstrate service health.",
+        "D": "Neither pair checks the intended fleet count and endpoint."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q29",
+      "learningObjective": "Verify complete teardown",
+      "stem": "Which resources must the final documented cleanup remove?",
+      "options": {
+        "A": "Only the HTTP page file in one guest",
+        "B": "Only the local tfvars example",
+        "C": "Only the quiz answers for CLZ-260",
+        "D": "The VMSS instances, load balancer, public IP, and supporting lesson network"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That leaves the Azure fleet and network resources.",
+        "B": "Deleting an example does not remove deployed infrastructure.",
+        "C": "Browser progress is independent of Azure resource cleanup.",
+        "D": "Destroy should remove the entire managed lab footprint."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ260-Q30",
+      "learningObjective": "Keep scaling deliberate and reviewable",
+      "stem": "What is the preferred sequence for a capacity change in CLZ-260?",
+      "options": {
+        "A": "Edit the input and assume Azure detects the file automatically",
+        "B": "Edit the validated input, create and inspect a plan, apply it, and verify Azure capacity and HTTP",
+        "C": "Remove state locking and submit multiple simultaneous applies",
+        "D": "Only restart one guest without updating Terraform's desired capacity"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Azure does not watch local Terraform files for automatic apply.",
+        "B": "The sequence connects intent, review, execution, and evidence.",
+        "C": "Concurrent uncoordinated changes threaten state consistency.",
+        "D": "A guest restart does not make a capacity change."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

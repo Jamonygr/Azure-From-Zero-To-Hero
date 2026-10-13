@@ -1,19 +1,51 @@
+[CmdletBinding()]
 param(
   [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
   [switch]$Format,
   [switch]$Validate,
-  [switch]$PlanSafeLessons,
+  [switch]$Test,
+  [switch]$LockfileReadonly,
+  [switch]$PlanAuthenticatedLessons,
+  [string]$SubscriptionId,
   [string]$ReportPath
 )
 
 $ErrorActionPreference = "Stop"
 
-if (-not ($Format -or $Validate -or $PlanSafeLessons)) {
+if (-not ($Format -or $Validate -or $Test -or $PlanAuthenticatedLessons)) {
   $Format = $true
+}
+
+if ($PlanAuthenticatedLessons -and [string]::IsNullOrWhiteSpace($SubscriptionId)) {
+  throw "-PlanAuthenticatedLessons requires an explicit -SubscriptionId. No Azure account is selected implicitly."
 }
 
 $results = [System.Collections.Generic.List[object]]::new()
 $failureCount = 0
+
+function Protect-SubscriptionDetail {
+  param([AllowEmptyString()][string]$Text)
+
+  if ([string]::IsNullOrEmpty($Text)) {
+    return $Text
+  }
+
+  $protectedText = [regex]::Replace(
+    $Text,
+    '(?i)(/subscriptions/)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+    '$1<masked-subscription-id>'
+  )
+  if (-not [string]::IsNullOrWhiteSpace($SubscriptionId)) {
+    $protectedText = [regex]::Replace(
+      $protectedText,
+      [regex]::Escape($SubscriptionId),
+      '<masked-subscription-id>',
+      [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+    )
+  }
+
+  return $protectedText
+}
 
 function Add-Result {
   param(
@@ -45,10 +77,11 @@ function Invoke-RepoStep {
   )
 
   $commandLine = "$Command $($Arguments -join ' ')".Trim()
+  $commandLine = Protect-SubscriptionDetail -Text $commandLine
   $timer = [System.Diagnostics.Stopwatch]::StartNew()
   Push-Location $WorkingDirectory
   try {
-    $output = & $Command @Arguments 2>&1 | ForEach-Object { $_.ToString() }
+    $output = & $Command @Arguments 2>&1 | ForEach-Object { Protect-SubscriptionDetail -Text $_.ToString() }
     $exitCode = if ($null -ne $LASTEXITCODE) { $LASTEXITCODE } else { 0 }
 
     if ($exitCode -ne 0) {
@@ -62,29 +95,49 @@ function Invoke-RepoStep {
   catch {
     $timer.Stop()
     $script:failureCount++
-    Add-Result -Mode $Mode -Lesson $Lesson -CommandLine $commandLine -Status "failed" -DurationSeconds $timer.Elapsed.TotalSeconds -Message $_.Exception.Message
+    $protectedMessage = Protect-SubscriptionDetail -Text $_.Exception.Message
+    Add-Result -Mode $Mode -Lesson $Lesson -CommandLine $commandLine -Status "failed" -DurationSeconds $timer.Elapsed.TotalSeconds -Message $protectedMessage
     Write-Host "[$Mode] FAIL $Lesson"
-    Write-Host $_.Exception.Message
+    Write-Host $protectedMessage
   }
   finally {
     Pop-Location
   }
 }
 
-function Get-LessonFolders {
-  Get-ChildItem -Path $Root -Directory -Filter "CLZ-*" | Sort-Object Name
+function Get-LessonFolder {
+  Get-ChildItem -Path $Root -Directory -Filter "CLZ-*" |
+    Where-Object { Get-ChildItem -Path $_.FullName -File -Filter "*.tf" -ErrorAction SilentlyContinue } |
+    Sort-Object Name
+}
+
+function Get-TerraformTestFolder {
+  $candidateFolders = @(
+    Get-LessonFolder
+    Get-ChildItem -Path (Join-Path $Root "modules") -Directory -ErrorAction SilentlyContinue
+  )
+
+  $candidateFolders |
+    Where-Object {
+      $testDirectory = Join-Path $_.FullName "tests"
+      (Test-Path -LiteralPath $testDirectory -PathType Container) -and
+      @(Get-ChildItem -Path $testDirectory -File -Filter "*.tftest.hcl" -ErrorAction SilentlyContinue).Count -gt 0
+    } |
+    Sort-Object FullName -Unique
 }
 
 function Write-ValidationReport {
-  if (-not $ReportPath) {
+  param([string]$Destination)
+
+  if ([string]::IsNullOrWhiteSpace($Destination)) {
     return
   }
 
-  $resolvedReportPath = if ([System.IO.Path]::IsPathRooted($ReportPath)) {
-    $ReportPath
+  $resolvedReportPath = if ([System.IO.Path]::IsPathRooted($Destination)) {
+    $Destination
   }
   else {
-    Join-Path $Root $ReportPath
+    Join-Path $Root $Destination
   }
 
   $reportDirectory = Split-Path -Parent $resolvedReportPath
@@ -100,40 +153,92 @@ function Write-ValidationReport {
   } | ConvertTo-Json -Depth 8 | Set-Content -Path $resolvedReportPath -Encoding utf8
 }
 
-$safePlanExclusions = @(
+$planExclusions = @(
+  "CLZ-090-optional-vscode-terraform-powershell-setup",
+  "CLZ-100-foundations",
+  "CLZ-110-windows-workstation-setup",
   "CLZ-300-public-dns-optional",
   "CLZ-320-cross-environment-state"
 )
 
+if ($PlanAuthenticatedLessons) {
+  $accountId = & az account show --query id --output tsv 2>$null
+  if ($LASTEXITCODE -ne 0 -or -not $accountId) {
+    throw "Azure CLI is not signed in. Run az login, select the intended lab subscription, and retry."
+  }
+
+  if ($accountId -ne $SubscriptionId) {
+    throw "The active Azure CLI account does not match -SubscriptionId. Account details are intentionally masked."
+  }
+
+  Write-Warning "Authenticated Terraform plans can query Azure and may trigger provider behavior. This command never applies changes."
+}
+
 Push-Location $Root
 try {
   if ($Format) {
-    Invoke-RepoStep -Mode "format" -Lesson "." -WorkingDirectory $Root -Command "terraform" -Arguments @("fmt", "-check", "-recursive")
+    Invoke-RepoStep -Mode "format" -Lesson "." -WorkingDirectory $Root -Command "terraform" -Arguments @("fmt", "-check")
+    $formatFolders = @(Get-LessonFolder) + @(Get-Item -LiteralPath (Join-Path $Root "modules"))
+    foreach ($formatFolder in $formatFolders) {
+      Invoke-RepoStep -Mode "format" -Lesson $formatFolder.Name -WorkingDirectory $formatFolder.FullName -Command "terraform" -Arguments @("fmt", "-check", "-recursive")
+    }
   }
 
   if ($Validate) {
-    foreach ($folder in Get-LessonFolders) {
-      Invoke-RepoStep -Mode "init" -Lesson $folder.Name -WorkingDirectory $folder.FullName -Command "terraform" -Arguments @("init", "-backend=false", "-input=false", "-no-color")
+    foreach ($folder in Get-LessonFolder) {
+      $initArguments = @("init", "-backend=false", "-input=false", "-no-color")
+      if ($LockfileReadonly) {
+        $initArguments += "-lockfile=readonly"
+      }
+
+      Invoke-RepoStep -Mode "init" -Lesson $folder.Name -WorkingDirectory $folder.FullName -Command "terraform" -Arguments $initArguments
       Invoke-RepoStep -Mode "validate" -Lesson $folder.Name -WorkingDirectory $folder.FullName -Command "terraform" -Arguments @("validate", "-no-color")
     }
   }
 
-  if ($PlanSafeLessons) {
-    foreach ($folder in Get-LessonFolders) {
-      if ($safePlanExclusions -contains $folder.Name) {
-        Add-Result -Mode "plan" -Lesson $folder.Name -CommandLine "terraform plan -refresh=false -input=false -lock=false -no-color" -Status "skipped" -DurationSeconds 0 -Message "Excluded because the lesson depends on owned DNS or existing remote state."
+  if ($Test) {
+    foreach ($folder in Get-TerraformTestFolder) {
+      $relativeFolder = [System.IO.Path]::GetRelativePath($Root, $folder.FullName).Replace("\", "/")
+      $initArguments = @("init", "-backend=false", "-input=false", "-no-color")
+      if ($LockfileReadonly) {
+        $initArguments += "-lockfile=readonly"
+      }
+
+      Invoke-RepoStep -Mode "test-init" -Lesson $relativeFolder -WorkingDirectory $folder.FullName -Command "terraform" -Arguments $initArguments
+      Invoke-RepoStep -Mode "test" -Lesson $relativeFolder -WorkingDirectory $folder.FullName -Command "terraform" -Arguments @("test", "-no-color")
+    }
+  }
+
+  if ($PlanAuthenticatedLessons) {
+    foreach ($folder in Get-LessonFolder) {
+      if ($planExclusions -contains $folder.Name) {
+        Add-Result -Mode "plan" -Lesson $folder.Name -CommandLine "terraform plan" -Status "skipped" -DurationSeconds 0 -Message "Excluded because this lesson is credential-free, opt-in, or depends on existing remote state."
         Write-Host "[plan] SKIP $($folder.Name)"
         continue
       }
 
-      Invoke-RepoStep -Mode "init" -Lesson $folder.Name -WorkingDirectory $folder.FullName -Command "terraform" -Arguments @("init", "-backend=false", "-input=false", "-no-color")
-      Invoke-RepoStep -Mode "plan" -Lesson $folder.Name -WorkingDirectory $folder.FullName -Command "terraform" -Arguments @("plan", "-refresh=false", "-input=false", "-lock=false", "-no-color")
+      $initArguments = @("init", "-backend=false", "-input=false", "-no-color")
+      if ($LockfileReadonly) {
+        $initArguments += "-lockfile=readonly"
+      }
+
+      Invoke-RepoStep -Mode "init" -Lesson $folder.Name -WorkingDirectory $folder.FullName -Command "terraform" -Arguments $initArguments
+      Invoke-RepoStep -Mode "plan" -Lesson $folder.Name -WorkingDirectory $folder.FullName -Command "terraform" -Arguments @(
+        "plan",
+        "-refresh=false",
+        "-input=false",
+        "-lock=false",
+        "-no-color",
+        "-var-file=terraform.tfvars.example",
+        "-var",
+        "subscription_id=$SubscriptionId"
+      )
     }
   }
 }
 finally {
   Pop-Location
-  Write-ValidationReport
+  Write-ValidationReport -Destination $ReportPath
 }
 
 if ($failureCount -gt 0) {

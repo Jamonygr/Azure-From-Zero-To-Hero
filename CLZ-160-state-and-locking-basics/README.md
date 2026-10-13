@@ -1,57 +1,105 @@
-# CLZ-160 - State And Locking Basics
+# CLZ-160 - State and Locking Basics
 
-![State And Locking Basics architecture](../assets/diagrams/remote-state.svg)
+![State and Locking Basics architecture](../assets/diagrams/remote-state.svg)
 
-## Overview
-A local-state workflow with clear safety rules.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Inspect how Terraform binds configuration addresses to an Azure object, and practice safe state ownership before moving to a shared backend.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-150.
+- Use only this lesson folder for its apply and destroy operations.
+
+## Architecture
+
+One resource group is recorded in local `terraform.tfstate`. Terraform refreshes it through AzureRM before calculating changes. The state file is local for teaching purposes; CLZ-310 later introduces an Azure Storage backend and locking.
+
+## Resources And Cost
+
+**Relative cost: Low.** The resource group has no direct charge; local state uses workstation storage.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | Local state safety and cleanup discipline |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz160-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Tagged resource group | A simple real object for state inspection. |
+| Local state | Maps `azurerm_resource_group.lab` to its Azure resource ID. |
+| State lock | A short-lived local lock prevents concurrent writes in this folder. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Identify state files; avoid committing runtime data; destroy resources from the owning folder.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `lab.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for Azure plan, apply, and destroy; copy the exact ID returned by Azure CLI. |
+| `environment` | Keep `dev` for the lab or choose `test`/`prod` only to study the naming boundary. |
+| `location` | Use a region where your subscription has access and sufficient quota. |
+| `name_prefix` | Use a short lowercase prefix; resource names derive from it. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz160`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-160-state-and-locking-basics
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+terraform state list
+terraform state show azurerm_resource_group.lab
+terraform show -json | ConvertFrom-Json | Select-Object -ExpandProperty values
+git status --short
+```
+
+Expected result:
+
+- Exactly one managed address is listed.
+- State shows the same resource ID and tags as Azure.
+- Git does not list state, plan, or `.terraform` runtime data as tracked content.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| Terraform reports a state lock | Stop the other Terraform process; use force-unlock only after proving the lock is stale. |
+| State and Azure disagree | Run `terraform plan` to refresh; do not edit state JSON by hand. |
+| State was deleted while the resource remains | Recover the state backup or import the known object before attempting cleanup. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Start the Azure network foundation.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+terraform state list
+az group exists --name $resourceGroup
+```
+
+State is empty and Azure CLI returns `false`. Keep the committed dependency lockfile.
+
+## Production Delta
+
+- Store team state in a protected remote backend with Azure AD authorization, locking, network controls, versioning, and recovery.
+- Separate state by environment and restrict who can read it because state may contain secrets.
+
+## Exercises
+
+1. Open two terminals and observe how locking protects a state-changing operation without forcing a stale lock.
+2. Compare the resource ID in `terraform state show` with `az group show`.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-150 - Variables, Locals, and Outputs](../CLZ-150-variables-locals-outputs/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-170 - Virtual Network Foundation &rarr;](../CLZ-170-virtual-network-foundation/README.md)
+<!-- lesson-navigation:end -->

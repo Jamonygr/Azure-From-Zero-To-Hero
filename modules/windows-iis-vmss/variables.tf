@@ -49,13 +49,24 @@ variable "admin_password" {
   sensitive   = true
 }
 
+variable "vm_size" {
+  description = "Azure VM size used by the scale set."
+  type        = string
+  default     = "Standard_B2s"
+
+  validation {
+    condition     = can(regex("^Standard_[A-Za-z0-9_]+$", var.vm_size))
+    error_message = "vm_size must be an Azure size name such as Standard_B2s."
+  }
+}
+
 variable "instance_count" {
   description = "Number of VMSS instances."
   type        = number
 
   validation {
-    condition     = var.instance_count >= 1 && var.instance_count <= 5
-    error_message = "instance_count must be between 1 and 5 for this lab curriculum."
+    condition     = var.instance_count >= 1 && var.instance_count <= 5 && floor(var.instance_count) == var.instance_count
+    error_message = "instance_count must be a whole number from 1 through 5."
   }
 }
 
@@ -75,8 +86,8 @@ variable "site_message" {
   default     = "Azure From Zero To Hero VMSS"
 
   validation {
-    condition     = length(trimspace(var.site_message)) > 0
-    error_message = "site_message must not be empty."
+    condition     = length(trimspace(var.site_message)) > 0 && length(var.site_message) <= 200
+    error_message = "site_message must contain 1 to 200 characters."
   }
 }
 

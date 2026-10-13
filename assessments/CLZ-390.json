@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-390",
+  "questions": [
+    {
+      "id": "CLZ390-Q01",
+      "learningObjective": "Capstone component map",
+      "stem": "Which pair of reusable modules forms the capstone's main workload foundation?",
+      "options": {
+        "A": "sql-managed-instance and Cosmos DB",
+        "B": "Traffic Manager and Front Door",
+        "C": "An external registrar and Public DNS only",
+        "D": "network-core and windows-iis-vmss"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Those data modules are not used here.",
+        "B": "Neither global-routing service is deployed by this capstone.",
+        "C": "Public DNS is not the workload foundation.",
+        "D": "The configuration composes network and Windows IIS VMSS modules."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform modules",
+          "url": "https://developer.hashicorp.com/terraform/language/modules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q02",
+      "learningObjective": "Inbound HTTP path",
+      "stem": "Which sequence matches the capstone's intended public web path?",
+      "options": {
+        "A": "Client to Key Vault to Log Analytics",
+        "B": "Client to Standard Load Balancer to IIS VMSS",
+        "C": "Client to Terraform state to SQL",
+        "D": "Client to Bastion to a WAF"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Secret and log services are not HTTP relays.",
+        "B": "The VMSS module owns the Load Balancer web frontend and backends.",
+        "C": "No SQL path is deployed here.",
+        "D": "Bastion is for administration, not web delivery."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q03",
+      "learningObjective": "RDP source restriction",
+      "stem": "Which source is explicitly allowed for web-subnet RDP in the capstone?",
+      "options": {
+        "A": "Any Internet address",
+        "B": "The GitHub Pages hostname",
+        "C": "AzureBastionSubnet's 10.40.20.0/26",
+        "D": "All addresses through a rule at priority 120"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The subsequent rule denies other RDP sources.",
+        "B": "A site hostname is not the configured source CIDR.",
+        "C": "The allow rule scopes RDP to the Bastion subnet.",
+        "D": "Priority 120 is the deny-other-RDP rule."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q04",
+      "learningObjective": "NSG priority evaluation",
+      "stem": "Internet RDP reaches the web NSG. Which explicit rule addresses sources not covered by the Bastion allow?",
+      "options": {
+        "A": "DenyOtherRdp at priority 120",
+        "B": "AllowHttpFromInternet at priority 100",
+        "C": "An automatic quiz-completion rule",
+        "D": "The Key Vault /32 rule"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The higher-numbered RDP deny follows the specific allow.",
+        "B": "The HTTP rule applies to port 80.",
+        "C": "Progress does not configure an NSG.",
+        "D": "Vault rules protect a different service."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure network security groups",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q05",
+      "learningObjective": "Bastion administration",
+      "stem": "Why include Azure Bastion in this capstone?",
+      "options": {
+        "A": "Provide the private administration path to Windows instances",
+        "B": "Terminate public HTTP for the Load Balancer",
+        "C": "Store Terraform state snapshots",
+        "D": "Create SQL database users"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Bastion provides managed RDP connectivity to private targets.",
+        "B": "The Load Balancer handles the web frontend.",
+        "C": "Backend state storage is a different service.",
+        "D": "No SQL database is created here."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q06",
+      "learningObjective": "Bastion subnet requirements",
+      "stem": "Which dedicated subnet is declared for the Bastion host?",
+      "options": {
+        "A": "data-snet at 10.40.3.0/24",
+        "B": "The GitHub runner subnet",
+        "C": "AzureBastionSubnet at 10.40.20.0/26",
+        "D": "The VMSS's public Internet subnet"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That workload subnet is not the Bastion resource's target.",
+        "B": "The runner is not an Azure subnet managed here.",
+        "C": "The exact Bastion subnet name and /26 are declared.",
+        "D": "VMSS instances use the private web subnet."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q07",
+      "learningObjective": "Public IP ownership",
+      "stem": "Which statement fits the public IPs in this capstone?",
+      "options": {
+        "A": "Each VMSS instance is assigned its own public IP here",
+        "B": "Load Balancer and Bastion have public frontends while VMSS instance NICs use private addresses",
+        "C": "The Key Vault has a dedicated VM public IP resource",
+        "D": "The workspace routes every HTTP request"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The module's instance NIC configuration is private.",
+        "B": "Public frontend resources do not require per-instance public NIC addresses.",
+        "C": "No such vault VM IP resource is declared.",
+        "D": "A workspace is not a web proxy."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q08",
+      "learningObjective": "Explicit outbound design",
+      "stem": "What resource declares outbound behavior for the VMSS backend pool?",
+      "options": {
+        "A": "A Traffic Manager priority",
+        "B": "An inbound RDP allow only",
+        "C": "A Private DNS registrar record",
+        "D": "A Load Balancer outbound rule"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "DNS routing does not provide outbound SNAT.",
+        "B": "Inbound administration does not define egress.",
+        "C": "Private DNS is not an outbound translation service.",
+        "D": "The module explicitly defines web-outbound."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Load Balancer outbound rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/outbound-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q09",
+      "learningObjective": "Inbound SNAT separation",
+      "stem": "Why does the module's HTTP Load Balancer rule set disable_outbound_snat=true?",
+      "options": {
+        "A": "It disables all VMSS Internet access permanently",
+        "B": "It prevents inbound port 80 traffic",
+        "C": "Outbound SNAT is separately defined by the outbound rule",
+        "D": "It enables SQL private access"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "An outbound rule is also configured.",
+        "B": "The setting does not remove the inbound HTTP rule.",
+        "C": "The explicit outbound rule controls egress for that pool.",
+        "D": "SQL is not part of this capstone."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Load Balancer outbound rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/outbound-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q10",
+      "learningObjective": "Probe protocol accuracy",
+      "stem": "The probe resource is named http-probe. Which protocol does its configuration actually use?",
+      "options": {
+        "A": "TCP on port 80",
+        "B": "HTTPS with path /health",
+        "C": "HTTP with path /admin",
+        "D": "RDP on port 3389"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The code explicitly sets protocol Tcp and port 80.",
+        "B": "No HTTPS monitor path is configured.",
+        "C": "No HTTP path is configured in this probe.",
+        "D": "RDP is not the web-health probe."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q11",
+      "learningObjective": "Probe evidence boundary",
+      "stem": "The TCP port-80 probe is healthy. Which additional evidence should still be collected?",
+      "options": {
+        "A": "Every application transaction is guaranteed correct",
+        "B": "The VMSS password was rotated automatically",
+        "C": "All Log Analytics tables contain data",
+        "D": "A real HTTP request returns the expected service response"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A probe cannot prove every transaction.",
+        "B": "Probe health does not rotate credentials.",
+        "C": "Probe health does not configure log collection.",
+        "D": "A TCP listener does not prove complete application behavior."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q12",
+      "learningObjective": "IIS bootstrap",
+      "stem": "How does the VMSS module configure the demonstration IIS page?",
+      "options": {
+        "A": "Key Vault renders the page",
+        "B": "A Custom Script Extension installs Web-Server and writes index.html",
+        "C": "Bastion writes every HTTP response",
+        "D": "The NSG compiles an IIS module"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Key Vault stores secrets.",
+        "B": "The extension runs the Windows bootstrap commands.",
+        "C": "Bastion is an administration service.",
+        "D": "NSGs filter network traffic."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Virtual machine scale sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q13",
+      "learningObjective": "Bootstrap timing diagnosis",
+      "stem": "Apply completes but the first HTTP request fails. What should be inspected?",
+      "options": {
+        "A": "Only the site's dark theme",
+        "B": "Extension progress, probe health, NSG, and backend membership",
+        "C": "Only workspace retention",
+        "D": "Only the random suffix length"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Docs theme cannot affect IIS.",
+        "B": "Provisioning can precede a healthy application path.",
+        "C": "Retention is unrelated to HTTP reachability.",
+        "D": "Name length does not prove application readiness."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q14",
+      "learningObjective": "Bastion connection diagnosis",
+      "stem": "Bastion cannot reach a VMSS instance. Which set follows the lesson's troubleshooting?",
+      "options": {
+        "A": "Traffic Manager targets and DNS TTL only",
+        "B": "SQL admin login and blob subresource only",
+        "C": "Quiz score and progress import only",
+        "D": "Bastion subnet, RDP NSG source, instance health, and credentials"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "No Traffic Manager path is deployed here.",
+        "B": "Those services are not the RDP target.",
+        "C": "Browser progress is not connectivity evidence.",
+        "D": "The administration path has network, host, and identity requirements."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Bastion overview",
+          "url": "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q15",
+      "learningObjective": "Vault access boundary",
+      "stem": "Key Vault returns Forbidden to the applying workstation. What should be checked?",
+      "options": {
+        "A": "Current public /32, applying identity policy, and propagation",
+        "B": "Whether public HTTP port 80 is open",
+        "C": "Whether the Load Balancer probe is named http",
+        "D": "Whether the book's PDF downloaded"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The vault has its own network and authorization boundary.",
+        "B": "HTTP NSG admission does not grant vault access.",
+        "C": "A probe name does not authorize secret reads.",
+        "D": "Book downloads are unrelated."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Key Vault network security",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/network-security"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q16",
+      "learningObjective": "Credential data flow",
+      "stem": "What does the generated Windows password supply in this capstone?",
+      "options": {
+        "A": "Only a public README example",
+        "B": "SQL Managed Instance login",
+        "C": "VMSS administrator input and a Key Vault secret",
+        "D": "The browser progress export password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The value is not published in README.",
+        "B": "No SQL Managed Instance is deployed.",
+        "C": "The same generated credential is passed to the VMSS and stored in the vault.",
+        "D": "Progress is not password protected by this credential."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q17",
+      "learningObjective": "Not yet identity-based retrieval",
+      "stem": "Which production improvement is still needed beyond the capstone's password wiring?",
+      "options": {
+        "A": "Assume VMSS already fetches the secret using managed identity",
+        "B": "Share the generated password in public outputs",
+        "C": "Replace TLS with plain text everywhere",
+        "D": "Managed identity secret retrieval and coordinated rotation"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "No managed identity retrieval flow is declared.",
+        "B": "Publishing the credential expands exposure.",
+        "C": "Weakening transport security is not the stated improvement.",
+        "D": "The current module receives the generated password directly."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q18",
+      "learningObjective": "State protection",
+      "stem": "The password is in Key Vault. What Terraform artifact still needs sensitive handling?",
+      "options": {
+        "A": "Only the SVG diagram",
+        "B": "Only resource-group tags",
+        "C": "State and potentially saved plans",
+        "D": "Only module source folder names"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The illustration contains no generated password.",
+        "B": "Tags are metadata.",
+        "C": "Generating and assigning credentials stores values in Terraform artifacts.",
+        "D": "Folder names are not credential values."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q19",
+      "learningObjective": "Observability foundation",
+      "stem": "What does creating Log Analytics alone establish in this capstone?",
+      "options": {
+        "A": "Automatic collection of every VM log",
+        "B": "A workspace boundary, not guaranteed VM telemetry collection",
+        "C": "A configured alert for every failure",
+        "D": "Automatic incident response"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A workspace does not automatically attach all agents and sources.",
+        "B": "Collection and alert configuration require additional production work.",
+        "C": "No universal alert setup is declared.",
+        "D": "Incident handling needs its own design."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Log Analytics workspace overview",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q20",
+      "learningObjective": "Instance count cost",
+      "stem": "Why keep instance_count small during the capstone?",
+      "options": {
+        "A": "Each instance adds VM and disk costs",
+        "B": "It changes the PDF license",
+        "C": "It reduces the required NSG rule name length",
+        "D": "It eliminates Bastion's fixed hourly cost"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Scale count multiplies compute and disk capacity.",
+        "B": "Compute sizing does not change licensing notices.",
+        "C": "Rule names do not set compute cost.",
+        "D": "Bastion cost is independently incurred."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Virtual machine scale sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q21",
+      "learningObjective": "Budget readiness",
+      "stem": "Which prerequisite specifically guards against an expensive failed capstone attempt?",
+      "options": {
+        "A": "A matching browser color scheme",
+        "B": "A 100 percent quiz score as cloud permission",
+        "C": "Quota and budget for Bastion and the intended VMSS size/count",
+        "D": "A public registrar transfer"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Theme does not reserve quota or budget.",
+        "B": "Quiz scores do not authorize Azure deployments.",
+        "C": "The deployment combines high-cost compute and administration services.",
+        "D": "This capstone does not require domain transfer."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Virtual machine scale sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q22",
+      "learningObjective": "Manual scaling boundary",
+      "stem": "Does the VMSS module automatically create autoscale rules in this capstone?",
+      "options": {
+        "A": "Yes; every VMSS implicitly scales by CPU",
+        "B": "No; instance_count is configured and autoscale is a production addition",
+        "C": "Yes; Key Vault controls scale count",
+        "D": "Only if the workbook is downloaded"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "VMSS capability alone does not create a policy.",
+        "B": "The capstone does not declare an autoscale setting.",
+        "C": "Vault storage does not scale compute.",
+        "D": "Book access has no compute effect."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Virtual machine scale sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q23",
+      "learningObjective": "Windows update mode",
+      "stem": "The module declares upgrade_mode=Manual. What should a production plan include?",
+      "options": {
+        "A": "A deliberate rollout and patching strategy for instances",
+        "B": "Assume every instance automatically adopts all future model changes",
+        "C": "Disable backups to save update time",
+        "D": "Use DNS TTL as the patch schedule"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Manual mode needs an intentional operational update approach.",
+        "B": "Automatic rollout is not implied by Manual.",
+        "C": "Recovery remains important.",
+        "D": "DNS caching is unrelated to VM updates."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Virtual machine scale sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q24",
+      "learningObjective": "Public HTTP limitation",
+      "stem": "The demo Load Balancer URL uses HTTP. What should a production gap review include?",
+      "options": {
+        "A": "Assume Standard Load Balancer terminates HTTPS certificates",
+        "B": "Use the Key Vault secret name as a TLS certificate",
+        "C": "Treat TCP port 80 as encrypted traffic",
+        "D": "TLS and appropriate application-layer protection"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A network Load Balancer does not provide managed TLS termination.",
+        "B": "A password secret name is not a certificate.",
+        "C": "HTTP on port 80 is not inherently encrypted.",
+        "D": "Production needs an intentional TLS/application gateway or Front Door design."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q25",
+      "learningObjective": "Reusable module contract",
+      "stem": "Why pass subnet_id and explicit VM inputs into the VMSS module?",
+      "options": {
+        "A": "Keep reusable component dependencies and configuration explicit",
+        "B": "Let the module discover arbitrary tenant networks",
+        "C": "Hide every resource from Terraform state",
+        "D": "Make every caller share one global name"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Clear inputs make module composition reviewable.",
+        "B": "Uncontrolled discovery would blur ownership and scope.",
+        "C": "Module resources remain managed in state.",
+        "D": "Caller prefixes and context still determine resource names."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform modules",
+          "url": "https://developer.hashicorp.com/terraform/language/modules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q26",
+      "learningObjective": "Production lifecycle design",
+      "stem": "Why split platform, network, security, and workloads into reviewed states/modules for production?",
+      "options": {
+        "A": "Guarantee no dependencies remain",
+        "B": "Allow every destroy to delete the whole tenant",
+        "C": "Eliminate the need for identity scoping",
+        "D": "Reduce lifecycle coupling and assign clear ownership"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Dependencies still require contracts and coordination.",
+        "B": "Broad destruction is contrary to scoped ownership.",
+        "C": "Least-privilege identities remain required.",
+        "D": "Separate lifecycles reduce unintended shared-resource deletion risks."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform modules",
+          "url": "https://developer.hashicorp.com/terraform/language/modules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q27",
+      "learningObjective": "CLI-only acceptance evidence",
+      "stem": "Which set best supports this capstone's acceptance criteria?",
+      "options": {
+        "A": "Only Terraform's final Apply complete line",
+        "B": "Only the illustrated architecture",
+        "C": "HTTP 200, NSG rule inspection, Bastion/vault state, and outbound-rule readback",
+        "D": "Only a browser score of 100 percent"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Apply success alone is narrower than acceptance evidence.",
+        "B": "A diagram is not live validation.",
+        "C": "The set checks actual resource and application outcomes.",
+        "D": "A score is learner progress, not Azure evidence."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure Load Balancer outbound rules",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/outbound-rules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q28",
+      "learningObjective": "Recovery gap ranking",
+      "stem": "The production gap exercise should rank items using which considerations?",
+      "options": {
+        "A": "Only how colorful their icons are",
+        "B": "Security risk, availability impact, operational effort, and cost",
+        "C": "Only alphabetical service order",
+        "D": "Only the number of Markdown lines"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Artwork does not rank production risk.",
+        "B": "The exercise asks for a prioritized engineering gap list.",
+        "C": "Alphabetical order does not prioritize impact.",
+        "D": "Line count does not measure operational importance."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform modules",
+          "url": "https://developer.hashicorp.com/terraform/language/modules"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q29",
+      "learningObjective": "Destroy verification",
+      "stem": "After capstone destroy, which evidence matches the documented expected outcome?",
+      "options": {
+        "A": "Only the VMSS is stopped",
+        "B": "Only the Load Balancer page times out",
+        "C": "Managed state is empty and the lesson resource group no longer exists",
+        "D": "Only the browser status says Complete"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Stopped resources can remain billable.",
+        "B": "An outage does not prove every resource was removed.",
+        "C": "State plus Azure readback checks the managed lifecycle removal.",
+        "D": "Local status is self-reported."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Virtual machine scale sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ390-Q30",
+      "learningObjective": "Retained secret caveat",
+      "stem": "The active capstone group is gone. What should secret cleanup evidence still acknowledge?",
+      "options": {
+        "A": "All historic passwords are guaranteed securely erased",
+        "B": "A deleted group grants anonymous access to retained secrets",
+        "C": "The VMSS keeps serving through the deleted Load Balancer",
+        "D": "Key Vault may be soft-deleted and local artifacts may retain credentials"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Destroy does not promise secure erasure of all history.",
+        "B": "Deletion does not authorize anonymous retrieval.",
+        "C": "Deleted owned networking cannot provide that original service path.",
+        "D": "Service retention and artifact handling are separate from active deletion."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Key Vault soft delete",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

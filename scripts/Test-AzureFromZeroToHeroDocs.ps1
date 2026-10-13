@@ -1,3 +1,4 @@
+[CmdletBinding()]
 param(
   [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
   [string]$ReportPath
@@ -7,6 +8,8 @@ $ErrorActionPreference = "Stop"
 
 $results = [System.Collections.Generic.List[object]]::new()
 $failureCount = 0
+$manifestPath = Join-Path $Root "curriculum\lessons.psd1"
+$manifest = Import-PowerShellDataFile -Path $manifestPath
 
 function Add-CheckResult {
   param(
@@ -56,17 +59,32 @@ function Resolve-MarkdownTarget {
   return Join-Path $MarkdownFile.DirectoryName $pathOnly
 }
 
+$requiredLessonSections = @(
+  "## Goal",
+  "## Prerequisites",
+  "## Architecture",
+  "## Resources And Cost",
+  "## Inputs",
+  "## Deploy",
+  "## Validate",
+  "## Troubleshooting",
+  "## Cleanup",
+  "## Production Delta",
+  "## Exercises",
+  "## Navigation"
+)
+
 Push-Location $Root
 try {
   $markdownFiles = Get-ChildItem -Path $Root -Recurse -File -Filter "*.md" |
-    Where-Object { $_.FullName -notmatch '\\.terraform\\' }
+    Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\' }
 
   foreach ($file in $markdownFiles) {
     $content = Get-Content -Raw -Path $file.FullName
-    $matches = [regex]::Matches($content, '!?\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)')
+    $linkMatches = [regex]::Matches($content, '!?\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)')
 
-    foreach ($match in $matches) {
-      $target = $match.Groups[1].Value
+    foreach ($linkMatch in $linkMatches) {
+      $target = $linkMatch.Groups[1].Value
       $resolvedTarget = Resolve-MarkdownTarget -MarkdownFile $file -Target $target
       if (-not $resolvedTarget) {
         continue
@@ -81,8 +99,8 @@ try {
     }
   }
 
-  $powerShellFiles = Get-ChildItem -Path $Root -Recurse -File -Filter "*.ps1" |
-    Where-Object { $_.FullName -notmatch '\\.terraform\\' }
+  $powerShellFiles = Get-ChildItem -Path $Root -Recurse -File -Include "*.ps1", "*.psm1", "*.psd1" |
+    Where-Object { $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\' }
 
   foreach ($file in $powerShellFiles) {
     $tokens = $null
@@ -97,29 +115,61 @@ try {
     }
   }
 
-  $requiredLessonSections = @(
-    "## Cost Awareness",
-    "## Validation Checklist",
-    "## Cleanup",
-    "## Next Lesson"
-  )
-
-  foreach ($folder in Get-ChildItem -Path $Root -Directory -Filter "CLZ-*" | Sort-Object Name) {
-    $readme = Join-Path $folder.FullName "README.md"
+  foreach ($lesson in $manifest.Lessons) {
+    $readme = Join-Path $Root "$($lesson.Folder)\README.md"
     if (-not (Test-Path -LiteralPath $readme)) {
-      Add-CheckResult -Check "lesson-readme" -Target $folder.Name -Status "failed" -Message "README.md is missing."
+      Add-CheckResult -Check "lesson-readme" -Target $lesson.Folder -Status "failed" -Message "README.md is missing."
       continue
     }
 
     $content = Get-Content -Raw -Path $readme
+    if ($content -match "(?m)^#\s+$([regex]::Escape($lesson.Id))\s+-\s+") {
+      Add-CheckResult -Check "lesson-title" -Target $lesson.Folder -Status "passed" -Message "OK"
+    }
+    else {
+      Add-CheckResult -Check "lesson-title" -Target $lesson.Folder -Status "failed" -Message "The H1 title must begin with '$($lesson.Id) -'."
+    }
+
     foreach ($section in $requiredLessonSections) {
       if ($content.Contains($section)) {
-        Add-CheckResult -Check "lesson-readme" -Target "$($folder.Name) $section" -Status "passed" -Message "OK"
+        Add-CheckResult -Check "lesson-section" -Target "$($lesson.Folder) $section" -Status "passed" -Message "OK"
       }
       else {
-        Add-CheckResult -Check "lesson-readme" -Target "$($folder.Name) $section" -Status "failed" -Message "Required section is missing."
+        Add-CheckResult -Check "lesson-section" -Target "$($lesson.Folder) $section" -Status "failed" -Message "Required section is missing."
       }
     }
+
+    $navigationStarts = ([regex]::Matches($content, '<!-- lesson-navigation:start -->')).Count
+    $navigationEnds = ([regex]::Matches($content, '<!-- lesson-navigation:end -->')).Count
+    $navigationLinks = ([regex]::Matches(($content -split '## Navigation', 2)[-1], '\[[^\]]+\]\([^)]+README\.md(?:#[^)]+)?\)')).Count
+    if ($navigationStarts -eq 1 -and $navigationEnds -eq 1 -and $navigationLinks -ge 1) {
+      Add-CheckResult -Check "lesson-navigation" -Target $lesson.Folder -Status "passed" -Message "OK"
+    }
+    else {
+      Add-CheckResult -Check "lesson-navigation" -Target $lesson.Folder -Status "failed" -Message "Navigation markers or linked targets are missing."
+    }
+  }
+
+  $rootReadme = Get-Content -Raw -Path (Join-Path $Root "README.md")
+  if (([regex]::Matches($rootReadme, '<!-- curriculum:start -->')).Count -eq 1 -and ([regex]::Matches($rootReadme, '<!-- curriculum:end -->')).Count -eq 1) {
+    Add-CheckResult -Check "curriculum-markers" -Target "README.md" -Status "passed" -Message "OK"
+  }
+  else {
+    Add-CheckResult -Check "curriculum-markers" -Target "README.md" -Status "failed" -Message "The generated curriculum block markers are missing or duplicated."
+  }
+
+  $legacyPath = "Chriz" + " Labz"
+  $editableFiles = Get-ChildItem -Path $Root -Recurse -File |
+    Where-Object {
+      $_.Extension -in @(".md", ".ps1", ".psd1", ".tf", ".tfvars", ".hcl", ".yml", ".yaml", ".json", ".jsonc") -and
+      $_.FullName -notmatch '\\.terraform\\|\\artifacts\\|\\.site-docs(?:.tmp)?\\|\\site\\|\\.venv\\|\\venv\\'
+    }
+  $staleReferences = @($editableFiles | Select-String -SimpleMatch $legacyPath)
+  if ($staleReferences.Count -eq 0) {
+    Add-CheckResult -Check "stale-path" -Target "repository" -Status "passed" -Message "OK"
+  }
+  else {
+    Add-CheckResult -Check "stale-path" -Target "repository" -Status "failed" -Message "$($staleReferences.Count) stale path reference(s) found."
   }
 }
 finally {

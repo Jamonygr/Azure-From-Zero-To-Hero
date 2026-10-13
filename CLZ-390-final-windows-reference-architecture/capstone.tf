@@ -7,6 +7,17 @@ resource "random_password" "windows_admin" {
   min_special      = 2
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
+
+resource "random_string" "suffix" {
+  length  = 6
+  upper   = false
+  special = false
+
+  keepers = {
+    prefix = local.compact_prefix
+  }
+}
+
 module "network" {
   source              = "../modules/network-core"
   resource_group_name = azurerm_resource_group.lab.name
@@ -23,9 +34,58 @@ module "windows_iis_vmss" {
   subnet_id           = module.network.web_subnet_id
   admin_username      = var.admin_username
   admin_password      = random_password.windows_admin.result
+  vm_size             = var.vm_size
   instance_count      = var.instance_count
   tags                = local.tags
   site_message        = "Azure From Zero To Hero capstone VMSS"
+}
+
+resource "azurerm_network_security_group" "web" {
+  name                = "${local.prefix}-web-nsg"
+  location            = azurerm_resource_group.lab.location
+  resource_group_name = azurerm_resource_group.lab.name
+  tags                = local.tags
+
+  security_rule {
+    name                       = "AllowHttpFromInternet"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "Internet"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "AllowRdpFromAzureBastion"
+    priority                   = 110
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "10.40.20.0/26"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "DenyOtherRdp"
+    priority                   = 120
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "web" {
+  subnet_id                 = module.network.web_subnet_id
+  network_security_group_id = azurerm_network_security_group.web.id
 }
 
 resource "azurerm_subnet" "bastion" {
@@ -59,12 +119,11 @@ resource "azurerm_bastion_host" "main" {
 
 data "azurerm_client_config" "current" {}
 
-# Lab exception: the capstone keeps Key Vault reachable for local Terraform secret
-# creation; production designs should deny by default and use private access.
-#trivy:ignore:AVD-AZU-0013
-#trivy:ignore:AZU-0013
+# Lab cleanup exception: purge protection is disabled so learners can fully
+# remove the globally named vault after the exercise.
+#trivy:ignore:AZU-0016
 resource "azurerm_key_vault" "lab" {
-  name                       = substr("kv-${local.compact_prefix}", 0, 24)
+  name                       = "kv-${local.compact_prefix}-${random_string.suffix.result}"
   location                   = azurerm_resource_group.lab.location
   resource_group_name        = azurerm_resource_group.lab.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -72,6 +131,12 @@ resource "azurerm_key_vault" "lab" {
   soft_delete_retention_days = 7
   purge_protection_enabled   = false
   tags                       = local.tags
+
+  network_acls {
+    bypass         = "AzureServices"
+    default_action = "Deny"
+    ip_rules       = [split("/", var.key_vault_access_cidr)[0]]
+  }
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id

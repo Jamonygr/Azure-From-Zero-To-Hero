@@ -18,6 +18,11 @@
   "globs": [
     "**/*.md",
     "!**/.terraform/**",
-    "!artifacts/**"
+    "!artifacts/**",
+    "!.site-docs/**",
+    "!.site-docs.tmp/**",
+    "!site/**",
+    "!.venv/**",
+    "!venv/**"
   ]
 }

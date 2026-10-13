@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-250",
+  "questions": [
+    {
+      "id": "CLZ250-Q01",
+      "learningObjective": "Read named Terraform identity",
+      "stem": "Which Terraform address matches the web entry in CLZ-250's vm_definitions map?",
+      "options": {
+        "A": "azurerm_windows_virtual_machine.web[0]",
+        "B": "azurerm_windows_virtual_machine.web[\"web\"]",
+        "C": "azurerm_windows_virtual_machine.web[\"Standard_B2s\"]",
+        "D": "azurerm_windows_virtual_machine.web.role"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That is a count-style numeric address.",
+        "B": "Map keys supply the instance identities used by for_each.",
+        "C": "VM size is a value, not the chosen key.",
+        "D": "The Role tag is metadata, not an individual resource address."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q02",
+      "learningObjective": "Understand the input object shape",
+      "stem": "A new batch map entry must provide which attributes to fit CLZ-250's typed vm_definitions input?",
+      "options": {
+        "A": "minimum, default, and maximum as numbers",
+        "B": "frontend_port and backend_port only",
+        "C": "Only a Windows password as a string",
+        "D": "vm_size and role as strings"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Those are autoscale capacity attributes from a later lesson.",
+        "B": "Those describe port forwarding, not the VM definition object.",
+        "C": "The administrator password is generated separately.",
+        "D": "Each map value is an object containing those two attributes."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform type constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/type-constraints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q03",
+      "learningObjective": "Trace named dependencies",
+      "stem": "Why does a NIC reference azurerm_public_ip.web[each.key].id?",
+      "options": {
+        "A": "To attach the public IP belonging to the same named map entry",
+        "B": "To attach the alphabetically first public IP to every NIC",
+        "C": "To allocate a public IP inside each VM's password",
+        "D": "To change the map key to the public IP's numeric address"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The key aligns corresponding network resource instances.",
+        "B": "The expression selects the current key.",
+        "C": "Credentials are unrelated to IP association.",
+        "D": "The expression does not redefine for_each identity."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q04",
+      "learningObjective": "Use per-entry VM sizes",
+      "stem": "The web object specifies Standard_B2s and batch specifies another valid SKU. Which expression lets the VMs differ in size?",
+      "options": {
+        "A": "size = each.value.vm_size",
+        "B": "size = each.key",
+        "C": "size = count.index",
+        "D": "size = length(var.vm_definitions)"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Each instance reads its own object value.",
+        "B": "The key is a workload name, not a SKU.",
+        "C": "This block uses for_each and does not have count.index.",
+        "D": "The number of entries is not a VM size."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q05",
+      "learningObjective": "Distinguish identity from role metadata",
+      "stem": "A learner changes only the web entry's role from web to frontend. What remains the Terraform identity?",
+      "options": {
+        "A": "The new Role tag frontend",
+        "B": "The generated administrator password",
+        "C": "The position where web appears in the map text",
+        "D": "The map key web"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags are metadata; they are not for_each keys.",
+        "B": "Passwords do not identify the Terraform instance.",
+        "C": "Map identity is not based on textual ordering.",
+        "D": "Changing a value attribute does not rename the key."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q06",
+      "learningObjective": "Evaluate key removal",
+      "stem": "The ops entry is removed while web remains unchanged. What should the plan normally do?",
+      "options": {
+        "A": "Delete web because it is the first alphabetical entry",
+        "B": "Delete the keyed ops resources and preserve the unchanged web identities",
+        "C": "Rename web to ops automatically",
+        "D": "Only remove the Role tag while retaining every ops resource"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "for_each does not remove objects by index position.",
+        "B": "Each key controls its corresponding VM, NIC, IP, and association.",
+        "C": "Removing a key does not rename another key.",
+        "D": "The removed key no longer describes those resource instances."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q07",
+      "learningObjective": "Predict an added workload",
+      "stem": "A valid batch entry is added to vm_definitions. What should a learner expect in the plan?",
+      "options": {
+        "A": "Renumbering web and ops into [1] and [2]",
+        "B": "Only one additional Terraform output string and no Azure resources",
+        "C": "New resources addressed with the batch key",
+        "D": "A replacement of all existing VMs solely due to map insertion"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Named identities do not become numeric indexes.",
+        "B": "The map drives VM and networking resource creation.",
+        "C": "The repetition uses one resource instance per map key.",
+        "D": "Unchanged keys need not be replaced by an added entry."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q08",
+      "learningObjective": "Understand a key rename",
+      "stem": "A learner renames the map key web to frontend without a moved block. Why does the plan propose delete/create?",
+      "options": {
+        "A": "Role tags cannot contain the word frontend",
+        "B": "The old and new keys are different Terraform instance addresses",
+        "C": "Azure forbids changing any configuration file",
+        "D": "for_each only accepts one key"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The issue is identity, not that role value.",
+        "B": "Terraform cannot infer that a renamed key should preserve the existing object.",
+        "C": "Terraform supports changes, subject to resource semantics.",
+        "D": "The lesson allows a small map of multiple entries."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform refactoring with moved blocks",
+          "url": "https://developer.hashicorp.com/terraform/language/modules/develop/refactoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q09",
+      "learningObjective": "Use a deliberate moved mapping",
+      "stem": "During a real key refactor, what can a moved block communicate to Terraform?",
+      "options": {
+        "A": "That a former instance address corresponds to a new instance address",
+        "B": "That all future VM size changes must be ignored",
+        "C": "That the guest RDP port should become 443",
+        "D": "That the Terraform password should be removed from every backup"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It preserves state identity through a documented address move when applicable.",
+        "B": "That is not the purpose of moved blocks.",
+        "C": "Address moves do not configure guest services.",
+        "D": "A moved block does not sanitize stored secrets."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform refactoring with moved blocks",
+          "url": "https://developer.hashicorp.com/terraform/language/modules/develop/refactoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q10",
+      "learningObjective": "Refactor an entire keyed pattern",
+      "stem": "A rename affects a VM, its NIC, public IP, and NSG association. What should the refactor review cover?",
+      "options": {
+        "A": "Only the VM's Role tag",
+        "B": "Only the browser quiz score",
+        "C": "Address mappings and planned changes for every affected resource",
+        "D": "Only the README heading, without a Terraform plan"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Other keyed resource addresses are affected as well.",
+        "B": "Progress data has no effect on Terraform identity.",
+        "C": "The related resource graph also uses the renamed key.",
+        "D": "The infrastructure changes must be inspected."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform refactoring with moved blocks",
+          "url": "https://developer.hashicorp.com/terraform/language/modules/develop/refactoring"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q11",
+      "learningObjective": "Keep keys known before apply",
+      "stem": "Can for_each use map keys that are unknown until a new Azure resource is created?",
+      "options": {
+        "A": "Yes; it creates every possible key in the subscription",
+        "B": "Yes; only the map's Role tags must be known",
+        "C": "No; because for_each never accepts maps",
+        "D": "No; Terraform must know instance keys before remote operations"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Terraform does not enumerate arbitrary future keys.",
+        "B": "The identities themselves must be known.",
+        "C": "Maps are a primary supported input.",
+        "D": "The planner needs stable known identities to construct instances."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q12",
+      "learningObjective": "Avoid sensitive identities",
+      "stem": "Why should credentials not be used as for_each keys?",
+      "options": {
+        "A": "Keys are exposed as resource identities and sensitive values cannot be used for for_each identity",
+        "B": "Keys are encrypted into the VM's managed disk automatically",
+        "C": "Every key becomes an administrator password by default",
+        "D": "The Role tag is the only visible identity anywhere"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Instance addressing must not reveal secrets.",
+        "B": "Resource addresses are not encrypted guest storage.",
+        "C": "Keys do not supply authentication unless configured as a value.",
+        "D": "Plans and state expose instance keys as addresses."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q13",
+      "learningObjective": "Distinguish maps from string sets",
+      "stem": "Why does CLZ-250 use a map of objects rather than just a set of workload names?",
+      "options": {
+        "A": "A set of strings cannot be used with for_each in any Terraform configuration",
+        "B": "Each named workload needs its own size and role values",
+        "C": "Maps hide all resource identities from plans",
+        "D": "Objects prevent Azure from charging for compute"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Terraform supports string sets, but this lesson needs richer values.",
+        "B": "Typed object values carry configuration beyond identity.",
+        "C": "Map keys appear in addresses.",
+        "D": "Data types do not change Azure billing."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Terraform type constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/type-constraints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q14",
+      "learningObjective": "Reject a missing required attribute",
+      "stem": "A learner adds batch = { vm_size = \"Standard_B2s\" } but omits role. Why does the typed input fail?",
+      "options": {
+        "A": "Terraform requires every object to include a public IP literal",
+        "B": "Windows size strings must be numeric",
+        "C": "The object does not satisfy the required role attribute",
+        "D": "The batch key must be the first item in the map"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The public IP is created by another resource.",
+        "B": "The input expects a SKU string.",
+        "C": "Every entry needs both string attributes.",
+        "D": "Map order is not this constraint."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform type constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/type-constraints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q15",
+      "learningObjective": "Understand map-order independence",
+      "stem": "The learner rearranges the same web and ops map entries without changing keys or values. What should identity do?",
+      "options": {
+        "A": "Remain based on the same named keys",
+        "B": "Switch from web to ops at index zero",
+        "C": "Rotate every generated password due to sorting",
+        "D": "Create duplicate VMs for both orderings"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Reordering textual map entries does not change their identity.",
+        "B": "This is not a count-based list.",
+        "C": "Text order alone does not request credential replacement.",
+        "D": "The map still contains the same two keys."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q16",
+      "learningObjective": "Read the output's keyed shape",
+      "stem": "Why is windows_vm_public_ips a map keyed by workload name in CLZ-250?",
+      "options": {
+        "A": "Because every output must be a map in Terraform",
+        "B": "Because public IP resources cannot use numeric addresses",
+        "C": "Because it contains administrator passwords instead of IP addresses",
+        "D": "It preserves the correspondence between each identity and its public endpoint"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Outputs can have many value types.",
+        "B": "Public IPs have numeric IP values; the map keys provide labels.",
+        "C": "The output is an endpoint map, not a credential store.",
+        "D": "Named outputs help validate the same keys used by the resources."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q17",
+      "learningObjective": "Validate role metadata",
+      "stem": "Which Azure observation shows that each.value.role is actually used by the implementation?",
+      "options": {
+        "A": "The VM's public IP ends in the role name",
+        "B": "Each VM's Role tag matches its map entry",
+        "C": "The Windows RDP login screen automatically names the role",
+        "D": "The Terraform binary changes its filename to the role"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "IP numbers do not encode the Role tag.",
+        "B": "The code merges Role into resource tags from the object value.",
+        "C": "Guest login display is not evidence of Azure tagging.",
+        "D": "Binary filenames are independent of map values."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q18",
+      "learningObjective": "Inspect state identities",
+      "stem": "Which lesson command helps confirm that named keys replaced positional count addresses?",
+      "options": {
+        "A": "terraform state list with a filter for quoted keys",
+        "B": "terraform fmt with the -recursive flag",
+        "C": "az account list alone",
+        "D": "Test-NetConnection against the resource-group name"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The resulting addresses should contain keys such as [\"web\"].",
+        "B": "Formatting does not show tracked resource identities.",
+        "C": "That lists account context rather than Terraform addresses.",
+        "D": "A connectivity test is not an identity listing."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q19",
+      "learningObjective": "Keep the intended source restriction",
+      "stem": "The named VMs have public IPs for this teaching pattern. Which administration input still must be supplied?",
+      "options": {
+        "A": "An Internet-wide /0 to ensure every keyed VM works",
+        "B": "A distinct Azure subscription GUID for each map key",
+        "C": "The current administrator's real public IPv4 /32",
+        "D": "The Role tag as a firewall source"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The lesson rejects a broad RDP source.",
+        "B": "All instances can exist in the selected lesson subscription.",
+        "C": "Public reachability must retain the lesson's narrow RDP source rule.",
+        "D": "Metadata is not a network CIDR."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q20",
+      "learningObjective": "Evaluate heterogeneous cost",
+      "stem": "Why can two map entries have different ongoing compute costs?",
+      "options": {
+        "A": "Alphabetically later keys always receive a discount",
+        "B": "Each value can select a different vm_size",
+        "C": "Only the Role tag decides the compute bill",
+        "D": "for_each makes all VMs free after the first entry"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Key sorting does not set Azure price.",
+        "B": "Different sizes can have different price and capacity requirements.",
+        "C": "Tags support organization, not SKU pricing.",
+        "D": "Each running VM is separately billable."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q21",
+      "learningObjective": "Respect lesson map bounds",
+      "stem": "A learner supplies an empty vm_definitions map. Why does CLZ-250 reject it?",
+      "options": {
+        "A": "Terraform for_each globally forbids empty maps",
+        "B": "Azure requires the names web and ops in every VM deployment",
+        "C": "An empty map automatically creates a sixth VM",
+        "D": "The lesson requires one through five validated entries"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Generic for_each can accept an empty map.",
+        "B": "Those defaults are not Azure requirements.",
+        "C": "An empty collection does not imply extra instances.",
+        "D": "The bounds keep a meaningful and limited learning set."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform type constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/type-constraints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q22",
+      "learningObjective": "Choose modules for repeated designs",
+      "stem": "The pattern will be reused in several environments. What production improvement reduces repeated implementation code?",
+      "options": {
+        "A": "Copying tfstate into every folder as a template",
+        "B": "A module with a clear typed input contract",
+        "C": "Renaming all keys to the same word",
+        "D": "Removing input validation so each environment can guess the shape"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Copying state can duplicate ownership and expose secrets.",
+        "B": "A module can encapsulate the VM and networking pattern while retaining named inputs.",
+        "C": "A map needs distinct keys; identical identities cannot describe separate entries.",
+        "D": "Explicit contracts reduce ambiguity."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform type constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/type-constraints"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q23",
+      "learningObjective": "Handle one unavailable VM size",
+      "stem": "Only the batch entry's chosen SKU lacks regional quota. What corrective approach fits this lesson?",
+      "options": {
+        "A": "Rename every key to force quota to refresh",
+        "B": "Change every Role tag to quota-approved",
+        "C": "Remove the state file so Azure ignores limits",
+        "D": "Choose an approved available size for batch and review the new plan"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Resource names do not create quota.",
+        "B": "Tags cannot reserve capacity.",
+        "C": "State deletion cannot bypass Azure quota.",
+        "D": "The per-entry value lets the adjustment stay focused."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q24",
+      "learningObjective": "Understand common network policy",
+      "stem": "The VMs use different Role tags. Does that alone give each role a different NSG rule set?",
+      "options": {
+        "A": "Yes; Azure interprets the Role tag as an NSG template",
+        "B": "Yes; each.value.role replaces every NSG destination port",
+        "C": "No; the implementation attaches the same web NSG to each NIC",
+        "D": "No; because tagged NICs cannot have NSGs"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "There is no such automatic tag-to-policy mapping here.",
+        "B": "The code does not use role to define ports.",
+        "C": "Tags do not automatically create role-specific filtering.",
+        "D": "NICs can have tags and NSG associations."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q25",
+      "learningObjective": "Recognize intentional public exposure",
+      "stem": "Which design change belongs in a production version of CLZ-250?",
+      "options": {
+        "A": "Private administration and an explicit approved egress path instead of direct VM public access",
+        "B": "Universal RDP access so every role can be tested",
+        "C": "Publishing the keyed IP map together with administrator credentials",
+        "D": "Removing the VNet because for_each keys isolate workloads"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The README labels public NIC IPs as an educational exception.",
+        "B": "Broad administration access is not the production guidance.",
+        "C": "Credentials must not be made public.",
+        "D": "Terraform identity is not network isolation."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q26",
+      "learningObjective": "Use values rather than identity for routine metadata edits",
+      "stem": "A learner only wants a different descriptive role for ops. Which input change preserves its key?",
+      "options": {
+        "A": "Rename ops to the new role on every resource automatically",
+        "B": "Replace for_each with count without planning a state refactor",
+        "C": "Delete every map entry except web",
+        "D": "Edit vm_definitions.ops.role while keeping the ops key"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Changing a key changes its Terraform address.",
+        "B": "That changes the identity model.",
+        "C": "That removes resources rather than editing metadata.",
+        "D": "Routine metadata changes need not rename the instance."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q27",
+      "learningObjective": "Review a key-based deletion",
+      "stem": "What should be reviewed before applying a plan that removes ops?",
+      "options": {
+        "A": "Only whether the word ops appears in the book",
+        "B": "Only the order of the map's closing braces",
+        "C": "All resources addressed by ops and any dependent changes",
+        "D": "Only the local PowerShell window color"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Book text does not describe the Terraform actions.",
+        "B": "Syntax layout is not the resource change.",
+        "C": "Removal affects the VM and related keyed network resources.",
+        "D": "UI colors do not show deletion scope."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q28",
+      "learningObjective": "Protect credentials in keyed resources",
+      "stem": "Does using readable map keys remove the need to protect the generated Windows password in state?",
+      "options": {
+        "A": "No; stable identities and secret protection solve different problems",
+        "B": "Yes; only count resources can contain sensitive values",
+        "C": "Yes; map keys encrypt every object attribute",
+        "D": "No; because Role tags themselves always contain passwords"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "State can retain guest credentials regardless of repetition model.",
+        "B": "for_each resources can also store secrets in state.",
+        "C": "Keys do not provide encryption.",
+        "D": "Role is ordinary metadata here."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform sensitive state",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q29",
+      "learningObjective": "Keep the cleanup context",
+      "stem": "After destroy removes the outputs, how can the learner verify the intended group is absent?",
+      "options": {
+        "A": "Use an arbitrary group name from a previous lesson",
+        "B": "Use the resource-group name captured before destroy in az group exists",
+        "C": "Only check that the output map was printed once",
+        "D": "Resolve the Role tag in public DNS"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That can verify the wrong target.",
+        "B": "The saved identity supports a precise independent check.",
+        "C": "Printing an output does not prove deletion.",
+        "D": "Tags are not public DNS records."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ250-Q30",
+      "learningObjective": "Compare named VMs with a fleet model",
+      "stem": "When should the team consider VMSS instead of many distinct for_each VMs?",
+      "options": {
+        "A": "When every server must retain a unique long-lived individual role and configuration",
+        "B": "When a Role tag must be added to only one VM",
+        "C": "When the instances should be interchangeable members of one scalable workload",
+        "D": "When map textual ordering changes"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That is a reason to consider distinct keyed identities.",
+        "B": "A tag edit alone does not require VMSS.",
+        "C": "VMSS applies a common fleet model rather than maintaining distinct named servers.",
+        "D": "Named-map order does not require a new compute abstraction."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

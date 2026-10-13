@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-320",
+  "questions": [
+    {
+      "id": "CLZ320-Q01",
+      "learningObjective": "Producer prerequisite",
+      "stem": "What must be completed before deploying CLZ-320?",
+      "options": {
+        "A": "Only CLZ-310 terraform fmt",
+        "B": "Only the optional Public DNS zone",
+        "C": "Deleting the CLZ-310 account",
+        "D": "CLZ-310 bootstrap and remote-state migration"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Formatting does not create remote state.",
+        "B": "DNS does not host this state.",
+        "C": "That removes the dependency.",
+        "D": "The consumer needs the real producer blob."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q02",
+      "learningObjective": "Typed contract",
+      "stem": "Which fields belong in CLZ-320's required remote_state object?",
+      "options": {
+        "A": "vm_size, instance_count, admin_username, location",
+        "B": "resource_group_name, storage_account_name, container_name, key",
+        "C": "name_servers, dns_zone_name, ttl, registrar",
+        "D": "client_secret, password, rdp_port, public_ip"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Those are compute inputs.",
+        "B": "These identify the Azure state blob.",
+        "C": "Those describe DNS, not state storage.",
+        "D": "The contract uses coordinates and Entra access."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q03",
+      "learningObjective": "Authoritative coordinates",
+      "stem": "Which command's output should supply the typed object?",
+      "options": {
+        "A": "CLZ-300 public_dns_name_servers",
+        "B": "A copied unchanged placeholder account",
+        "C": "CLZ-310 terraform output -json backend_configuration",
+        "D": "A generated Windows administrator password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That describes DNS servers.",
+        "B": "Placeholder values do not identify the producer.",
+        "C": "It exposes the producer's actual backend coordinates.",
+        "D": "The object requires state location metadata."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q04",
+      "learningObjective": "Consumer ownership",
+      "stem": "What Azure resource does CLZ-320 create for itself?",
+      "options": {
+        "A": "A separate consumer resource group",
+        "B": "A replacement CLZ-310 Storage account",
+        "C": "A public DNS registrar",
+        "D": "A Windows VMSS"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The consumer demonstrates an independent lifecycle.",
+        "B": "The producer retains its backend ownership.",
+        "C": "The lesson manages no registrar.",
+        "D": "This consumer creates no compute resources."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q05",
+      "learningObjective": "Read versus manage",
+      "stem": "What role does terraform_remote_state.shared play?",
+      "options": {
+        "A": "It reads the producer's root outputs",
+        "B": "It imports every producer resource into the consumer",
+        "C": "It destroys the producer after each read",
+        "D": "It changes the producer's resource tags"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A data source does not transfer resource ownership.",
+        "B": "Remote-state data does not import resources.",
+        "C": "Reading state is not a destroy operation.",
+        "D": "The consumer does not manage those resources."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q06",
+      "learningObjective": "Independent state",
+      "stem": "Where does CLZ-320 keep its own Terraform state as written?",
+      "options": {
+        "A": "Inside the producer's blob using the same key",
+        "B": "In an Azure DNS TXT record",
+        "C": "Its own local backend",
+        "D": "Only in GitHub's README renderer"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The lesson does not configure that as its backend.",
+        "B": "DNS is not this consumer backend.",
+        "C": "It reads remote producer state separately.",
+        "D": "Rendering has no Terraform state function."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q07",
+      "learningObjective": "Azure authorization",
+      "stem": "Why is use_azuread_auth=true configured on the data source?",
+      "options": {
+        "A": "To make all producer outputs public",
+        "B": "To authorize blob access through Microsoft Entra identity",
+        "C": "To create a new tenant automatically",
+        "D": "To bypass Storage firewall rules"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Identity authorization is not anonymous access.",
+        "B": "The consumer avoids a static account-key contract.",
+        "C": "No tenant is created by this option.",
+        "D": "Identity and network access remain separate."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q08",
+      "learningObjective": "Placeholder rejection",
+      "stem": "Why is replacewithstateaccount rejected by the input validation?",
+      "options": {
+        "A": "All Storage names containing lowercase letters are invalid",
+        "B": "The consumer requires an HTTP URL",
+        "C": "It identifies a load-balancer backend pool",
+        "D": "It is an example placeholder rather than real backend data"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Lowercase names are required for accounts.",
+        "B": "It requires an account name, not a URL.",
+        "C": "The typed object describes Storage state.",
+        "D": "Validation catches that mistake before use."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform configuration validation",
+          "url": "https://developer.hashicorp.com/terraform/language/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q09",
+      "learningObjective": "Absent state blob",
+      "stem": "The consumer reports that its state blob is not found. What should be compared first?",
+      "options": {
+        "A": "The Windows VM image version",
+        "B": "The registrar's TTL",
+        "C": "The key and coordinates against CLZ-310 output",
+        "D": "The Bastion subnet's CIDR"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The consumer deploys no VM.",
+        "B": "Public DNS caching does not choose a blob key.",
+        "C": "A wrong key can select no blob.",
+        "D": "Bastion is not used by this consumer."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q10",
+      "learningObjective": "Missing producer output",
+      "stem": "A newly added output is not visible to the consumer. What producer action is needed?",
+      "options": {
+        "A": "Apply the producer configuration so its state snapshot includes the output",
+        "B": "Edit only the consumer's README",
+        "C": "Rename the Storage account randomly",
+        "D": "Delete CLZ-320's resource group manually"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The data source reads stored root outputs.",
+        "B": "Documentation does not update producer state.",
+        "C": "That risks breaking the backend.",
+        "D": "Deletion does not add producer outputs."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q11",
+      "learningObjective": "Console verification",
+      "stem": "Which expression inspects the documented backend metadata in Terraform console?",
+      "options": {
+        "A": "azurerm_dns_zone.public.name_servers",
+        "B": "var.admin_password",
+        "C": "terraform_remote_state.shared.resources",
+        "D": "data.terraform_remote_state.shared.outputs.backend_configuration"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The consumer defines no DNS zone.",
+        "B": "That input is not this contract.",
+        "C": "Remote state exposes outputs, not a resources interface.",
+        "D": "It accesses the producer's exported root output."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q12",
+      "learningObjective": "Published output keys",
+      "stem": "What does shared_output_keys intentionally expose?",
+      "options": {
+        "A": "The contents of all Azure access keys",
+        "B": "The names of available producer output entries",
+        "C": "The resource IDs of every subscription object",
+        "D": "A list of DNS registrars"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "It is not an access-key dump.",
+        "B": "The output returns keys, not every value.",
+        "C": "It covers producer outputs only.",
+        "D": "Those are unrelated to producer state."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q13",
+      "learningObjective": "Initialization versus data access",
+      "stem": "Terraform init succeeds, but a remote-state read receives 403. Why can both happen?",
+      "options": {
+        "A": "Init grants every Azure data permission automatically",
+        "B": "Provider initialization can succeed before the data-source read is authorized",
+        "C": "A successful init proves all future network paths",
+        "D": "The consumer needs an IIS extension"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Initialization grants no Azure role.",
+        "B": "Read authorization is a separate operation.",
+        "C": "It does not prove data-plane reachability.",
+        "D": "There is no VM-based dependency."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q14",
+      "learningObjective": "Firewall dependency",
+      "stem": "Which change can break a previously working consumer without changing its typed object?",
+      "options": {
+        "A": "Changing the Markdown heading color",
+        "B": "Opening the visual gallery",
+        "C": "Reading the companion book",
+        "D": "The runner's public IP no longer matches the producer firewall"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Styling does not alter Storage networking.",
+        "B": "Browsing does not change state access.",
+        "C": "Reading does not change the Azure firewall.",
+        "D": "The same coordinates can still be network-denied."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q15",
+      "learningObjective": "Root outputs",
+      "stem": "A producer module has a useful value but the root exports nothing. Can remote_state read the nested module output directly?",
+      "options": {
+        "A": "No; the producer root must expose it",
+        "B": "Yes; every internal module output is automatically public",
+        "C": "Only if the consumer renames its resource group",
+        "D": "Only if a public DNS zone is created"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The data source presents root outputs.",
+        "B": "Nested outputs are not exported automatically.",
+        "C": "Resource-group naming does not export outputs.",
+        "D": "DNS cannot change Terraform output visibility."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q16",
+      "learningObjective": "State sensitivity boundary",
+      "stem": "Why can access to a producer state snapshot be broader than access to one desired output?",
+      "options": {
+        "A": "Terraform strips all secret values before backend storage",
+        "B": "Remote state always serves an anonymous HTTP page",
+        "C": "Reading outputs requires access to the underlying state snapshot",
+        "D": "Every output is separately encrypted with a unique user password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Sensitive marking is not automatic state removal.",
+        "B": "Azure identity access is used here.",
+        "C": "Backend permissions can expose more sensitive state.",
+        "D": "The lesson provides no per-output security boundary."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q17",
+      "learningObjective": "Narrow service contracts",
+      "stem": "What production alternative can reduce broad state coupling?",
+      "options": {
+        "A": "Give every consumer owner rights on all producer resources",
+        "B": "Share an unprotected state file publicly",
+        "C": "Merge all environments into one state key",
+        "D": "Publish narrow versioned values through an approved service interface"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That increases coupling and privilege.",
+        "B": "That exposes implementation and secrets.",
+        "C": "That increases shared blast radius.",
+        "D": "Consumers avoid reading an entire producer snapshot."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q18",
+      "learningObjective": "Environment identity separation",
+      "stem": "Why use distinct producer and consumer deployment identities?",
+      "options": {
+        "A": "Azure forbids one identity from reading state",
+        "B": "It removes the need for state backups",
+        "C": "Permissions and ownership can match each lifecycle",
+        "D": "It makes all data-source errors impossible"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The reason is least privilege, not a universal prohibition.",
+        "B": "Recovery is still needed.",
+        "C": "A reader need not own the backend resources.",
+        "D": "Configuration and connectivity can still fail."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q19",
+      "learningObjective": "Consumer destroy boundary",
+      "stem": "What should CLZ-320 destroy remove?",
+      "options": {
+        "A": "The producer account and blob container",
+        "B": "Its resource group, leaving CLZ-310 backend alive",
+        "C": "All environments that read the producer",
+        "D": "The workstation's Terraform installation"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Those are not consumer-managed resources.",
+        "B": "The producer resources belong to another state.",
+        "C": "Each consumer has its own lifecycle.",
+        "D": "Destroy manages Azure resources in state."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q20",
+      "learningObjective": "Reverse cleanup sequence",
+      "stem": "What is the correct producer-consumer cleanup order?",
+      "options": {
+        "A": "Destroy CLZ-320, then migrate CLZ-310 locally and destroy it",
+        "B": "Destroy CLZ-310 Storage before the consumer",
+        "C": "Delete both state files first",
+        "D": "Purge the blob before reading the producer outputs"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The dependency must survive until the consumer is removed.",
+        "B": "The consumer loses its required state source.",
+        "C": "That discards tracked ownership.",
+        "D": "That removes the recovery and cleanup context."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform init command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q21",
+      "learningObjective": "Producer availability",
+      "stem": "Why must the CLZ-310 account and blob remain alive during CLZ-320 work?",
+      "options": {
+        "A": "The consumer runs its VMs in the Storage account",
+        "B": "Every Terraform command must create the blob anew",
+        "C": "The consumer reads its documented outputs",
+        "D": "The account acts as the consumer's public DNS registrar"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Storage is not a compute host.",
+        "B": "The producer already owns it.",
+        "C": "The typed object alone does not contain the snapshot.",
+        "D": "It does not register domains."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q22",
+      "learningObjective": "Key isolation",
+      "stem": "Two environments use the same account and container. What helps avoid reading the wrong state?",
+      "options": {
+        "A": "Identical keys for every producer",
+        "B": "Documented distinct keys and explicit coordinate review",
+        "C": "Only different terminal background colors",
+        "D": "Changing README titles without configuration"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Identical keys collide within the same container.",
+        "B": "A key selects a particular snapshot.",
+        "C": "Colors do not identify backend storage.",
+        "D": "Titles cannot change the blob selected."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q23",
+      "learningObjective": "Output schema changes",
+      "stem": "A producer renames backend_configuration without coordination. What consumer risk follows?",
+      "options": {
+        "A": "The expected output contract may no longer exist",
+        "B": "The Storage service automatically repairs the Terraform expression",
+        "C": "All consumer tags become encrypted",
+        "D": "The consumer automatically imports the producer configuration"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Consumers depend on exported names.",
+        "B": "Storage knows blobs, not contract semantics.",
+        "C": "Output names do not encrypt metadata.",
+        "D": "The data source does not copy configuration."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q24",
+      "learningObjective": "Wrong-key exercise",
+      "stem": "How should the lesson's deliberately wrong-key exercise be performed?",
+      "options": {
+        "A": "Apply a plan despite the missing state",
+        "B": "Create another producer with a guessed key",
+        "C": "Delete the real producer blob to match the wrong key",
+        "D": "Observe the read error, then restore the real typed coordinates"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That ignores a dependency failure.",
+        "B": "That changes infrastructure unnecessarily.",
+        "C": "That loses state and does not teach safe recovery.",
+        "D": "The purpose is diagnosis without applying changes."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q25",
+      "learningObjective": "State refresh expectation",
+      "stem": "When does the consumer learn about current stored producer outputs?",
+      "options": {
+        "A": "When Terraform reads the remote-state data source",
+        "B": "Whenever the producer README is edited",
+        "C": "Only when a registrar delegates a domain",
+        "D": "Only after importing every producer resource"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It reads the producer snapshot during evaluation.",
+        "B": "Markdown is not the state snapshot.",
+        "C": "Delegation is irrelevant to this data source.",
+        "D": "No resource import is needed for output reading."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q26",
+      "learningObjective": "Local cleanup evidence",
+      "stem": "Which pair verifies consumer removal in Terraform and Azure?",
+      "options": {
+        "A": "terraform fmt and a browser screenshot",
+        "B": "Producer output keys and DNS resolution",
+        "C": "An action-group test and a VM CPU graph",
+        "D": "Empty terraform state list and az group exists returning false"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Neither proves resource absence.",
+        "B": "Those do not prove consumer deletion.",
+        "C": "The consumer has neither resource.",
+        "D": "They check tracked state and Azure existence."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q27",
+      "learningObjective": "State storage credentials",
+      "stem": "What belongs in the documented typed object?",
+      "options": {
+        "A": "A production password copied from Key Vault",
+        "B": "A client-secret value committed to Git",
+        "C": "Backend locations without an account access key",
+        "D": "A public SAS URL with full write permission"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The contract is not a secret-value object.",
+        "B": "Static secrets are not required by this object.",
+        "C": "Identity supplies authorization separately.",
+        "D": "The lesson uses Azure AD authorization."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform AzureRM backend",
+          "url": "https://developer.hashicorp.com/terraform/language/backend/azurerm"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q28",
+      "learningObjective": "Independent failure domains",
+      "stem": "What benefit comes from separate producer and consumer states?",
+      "options": {
+        "A": "They eliminate all dependencies between lessons",
+        "B": "Each can track its own managed resources and lifecycle",
+        "C": "They make producer cleanup automatically safe",
+        "D": "They automatically grant each other Owner"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The consumer still depends on producer outputs.",
+        "B": "Read dependencies remain explicit.",
+        "C": "The documented order must still be followed.",
+        "D": "State separation does not grant permissions."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform remote-state data source",
+          "url": "https://developer.hashicorp.com/terraform/language/state/remote-state-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q29",
+      "learningObjective": "Container syntax",
+      "stem": "Which remote_state container value violates the lesson's lowercase container validation?",
+      "options": {
+        "A": "tfstate",
+        "B": "state-prod",
+        "C": "TFSTATE",
+        "D": "state123"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "This matches the documented container.",
+        "B": "Lowercase letters and a hyphen are permitted.",
+        "C": "Uppercase does not match the configured pattern.",
+        "D": "Lowercase alphanumeric syntax is permitted."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform configuration validation",
+          "url": "https://developer.hashicorp.com/terraform/language/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ320-Q30",
+      "learningObjective": "Remote key syntax",
+      "stem": "Which typed-object key is rejected by this lesson?",
+      "options": {
+        "A": "clz310.tfstate",
+        "B": "state/clz310.tfstate",
+        "C": "prod.tfstate",
+        "D": "/clz310.tfstate"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "This is the documented key.",
+        "B": "The validation allows a nonempty relative key.",
+        "C": "It is valid syntax, though it must match the producer.",
+        "D": "The configured validation rejects a leading slash."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform configuration validation",
+          "url": "https://developer.hashicorp.com/terraform/language/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-380",
+  "questions": [
+    {
+      "id": "CLZ380-Q01",
+      "learningObjective": "SQL private access path",
+      "stem": "Which Azure SQL subresource does CLZ-380 connect through its Private Endpoint?",
+      "options": {
+        "A": "blob",
+        "B": "file",
+        "C": "sqlServer",
+        "D": "AzureBastionSubnet"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "blob belongs to Storage.",
+        "B": "file belongs to Storage.",
+        "C": "The connection explicitly selects sqlServer.",
+        "D": "That is a Bastion subnet name, not a SQL subresource."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q02",
+      "learningObjective": "SQL private DNS name",
+      "stem": "Which zone supplies the SQL Private Link overlay in this lesson?",
+      "options": {
+        "A": "privatelink.database.windows.net",
+        "B": "privatelink.blob.core.windows.net",
+        "C": "trafficmanager.net",
+        "D": "windows.net"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The zone matches the SQL service.",
+        "B": "Blob has a different private zone.",
+        "C": "Traffic Manager is unrelated to SQL private resolution.",
+        "D": "The broad public parent is not the intended overlay."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q03",
+      "learningObjective": "Application server hostname",
+      "stem": "Which hostname should an application normally use for this private SQL server?",
+      "options": {
+        "A": "The endpoint's raw private IP as the server name",
+        "B": "<server>.database.windows.net",
+        "C": "The Terraform resource-group address",
+        "D": "The storage account's blob FQDN"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A raw IP can break hostname and TLS expectations.",
+        "B": "DNS resolves the normal SQL host to the private path.",
+        "C": "A Terraform address is not a SQL service endpoint.",
+        "D": "Blob naming belongs to Storage."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q04",
+      "learningObjective": "Public network restriction",
+      "stem": "A SQL Private Endpoint exists. What explicit server setting enforces this lesson's public-access policy?",
+      "options": {
+        "A": "A tag named secure",
+        "B": "The Basic SKU",
+        "C": "A generated suffix",
+        "D": "public_network_access_enabled=false"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags cannot enforce network admission.",
+        "B": "SKU is not a network isolation setting.",
+        "C": "Naming uniqueness is not isolation.",
+        "D": "The server resource separately disables public network access."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q05",
+      "learningObjective": "Private client prerequisite",
+      "stem": "Where should the documented SQL DNS/TCP tests be run?",
+      "options": {
+        "A": "On any unrelated Internet laptop",
+        "B": "On GitHub Pages by assumption",
+        "C": "Only inside Terraform console",
+        "D": "Inside the linked VNet or a correctly connected private network"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Public access is intentionally disabled.",
+        "B": "Docs hosting does not imply VNet access.",
+        "C": "Terraform console is not a representative network client.",
+        "D": "The client needs the private routing and DNS path."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q06",
+      "learningObjective": "Control plane versus query",
+      "stem": "The endpoint is Approved and SQL server is ready. Which result is still unproven?",
+      "options": {
+        "A": "The connection resource is approved",
+        "B": "An application can authenticate and execute its SQL query",
+        "C": "The server resource exists",
+        "D": "Public access is reported disabled"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Approved is directly reported.",
+        "B": "Provisioning evidence does not exercise database permissions or workload queries.",
+        "C": "The show query establishes server existence.",
+        "D": "The metadata reports this setting."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q07",
+      "learningObjective": "TCP test boundary",
+      "stem": "Test-NetConnection to the private SQL FQDN on port 1433 succeeds. What does that prove?",
+      "options": {
+        "A": "A TCP path to that host and port, not successful database login",
+        "B": "The administrator password is correct",
+        "C": "Every database role is assigned",
+        "D": "All query results are accurate"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Transport reachability is narrower than authentication and SQL behavior.",
+        "B": "TCP cannot validate a password.",
+        "C": "Network tests do not grant database roles.",
+        "D": "Queries need independent functional evidence."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q08",
+      "learningObjective": "Expected off-network failure",
+      "stem": "A learner's ordinary Internet laptop cannot connect to the database. What follows the design?",
+      "options": {
+        "A": "Disable all SQL authentication",
+        "B": "Publish the generated administrator password",
+        "C": "Use a representative private client instead of reopening public access",
+        "D": "Delete the Private DNS zone"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Authentication is not the network repair.",
+        "B": "Publishing credentials is unsafe and does not add routes.",
+        "C": "The failure may be the expected private-only boundary.",
+        "D": "Removing DNS weakens the intended private path."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q09",
+      "learningObjective": "Pending approval diagnosis",
+      "stem": "The SQL endpoint remains Pending. Which fact should be checked?",
+      "options": {
+        "A": "Traffic Manager priority",
+        "B": "Service connection approval and sqlServer subresource",
+        "C": "Action group email address",
+        "D": "The book cover image format"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "No Traffic Manager is deployed here.",
+        "B": "Approval and the target service determine connection readiness.",
+        "C": "Notification targets do not approve SQL Private Link.",
+        "D": "Artwork is unrelated."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q10",
+      "learningObjective": "DNS public result",
+      "stem": "An in-VNet client resolves the SQL host publicly. What should be examined?",
+      "options": {
+        "A": "Only administrator username length",
+        "B": "Only database SKU",
+        "C": "Only VMSS instance count",
+        "D": "Private zone group/link, forwarding, and resolver cache"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Username does not configure the resolver.",
+        "B": "SKU does not attach a private zone.",
+        "C": "This lesson does not deploy a VMSS.",
+        "D": "Private DNS integration determines the service address returned."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q11",
+      "learningObjective": "Database resource identity",
+      "stem": "What database resource does the Terraform configuration create beneath the logical server?",
+      "options": {
+        "A": "A Windows database VM",
+        "B": "A Cosmos DB container",
+        "C": "clzdb on the Basic SKU",
+        "D": "An SQL Managed Instance"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "SQL Database is managed, not this VM pattern.",
+        "B": "Cosmos DB is a different service.",
+        "C": "The mssql database resource has name clzdb and sku_name Basic.",
+        "D": "The configuration is a logical server/database, not Managed Instance."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure SQL Basic tier",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/service-tiers-dtu?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q12",
+      "learningObjective": "Logical server distinction",
+      "stem": "What does the Azure SQL logical server represent in this lesson?",
+      "options": {
+        "A": "The management and connection boundary for its managed database",
+        "B": "A Windows Server VM requiring RDP patching",
+        "C": "The Terraform workstation",
+        "D": "An IIS VMSS instance"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It groups database settings and hosts the logical service endpoint.",
+        "B": "No Windows server VM is deployed for SQL Database.",
+        "C": "The workstation is a separate client.",
+        "D": "IIS compute belongs to other lessons."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q13",
+      "learningObjective": "Generated credential state",
+      "stem": "Where must the generated SQL administrator password still be treated as sensitive?",
+      "options": {
+        "A": "Terraform state and potentially saved plans",
+        "B": "Only the illustrated diagram",
+        "C": "Only public server-name metadata",
+        "D": "Only the database's tag values"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The resource configuration records the credential in Terraform artifacts.",
+        "B": "The diagram contains no generated password.",
+        "C": "A hostname is not the credential.",
+        "D": "Tags do not contain this generated result."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q14",
+      "learningObjective": "Production authentication fit",
+      "stem": "Which production approach can reduce reliance on the shared SQL administrator?",
+      "options": {
+        "A": "Sharing the administrator password with every app",
+        "B": "Publishing the password as an output without sensitive markings",
+        "C": "Entra authentication with appropriately scoped managed identities",
+        "D": "Allowing anonymous SQL queries"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Broadly sharing admin credentials expands risk.",
+        "B": "Removing redaction exposes secrets.",
+        "C": "Identity-based access and least-privilege roles reduce shared credentials.",
+        "D": "SQL data access still requires authorization."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure SQL authentication",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q15",
+      "learningObjective": "DNS exercise evidence",
+      "stem": "Which evidence fits the private SQL DNS exercise without exposing credentials?",
+      "options": {
+        "A": "The full administrator password",
+        "B": "A public state-file download",
+        "C": "Only a SQL server tag screenshot",
+        "D": "The CNAME/A chain from an in-VNet client"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The password is unnecessary sensitive material.",
+        "B": "State may contain the credential.",
+        "C": "Tags do not demonstrate DNS resolution.",
+        "D": "It documents name resolution to the private path."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q16",
+      "learningObjective": "TLS setting",
+      "stem": "Which minimum TLS version is declared for the logical server?",
+      "options": {
+        "A": "SSL 3.0",
+        "B": "1.2",
+        "C": "TLS disabled",
+        "D": "A DNS TTL of 60"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "SSL 3.0 does not match this configuration.",
+        "B": "minimum_tls_version is explicitly 1.2.",
+        "C": "Transport protection is enabled.",
+        "D": "DNS caching is unrelated to TLS protocol selection."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q17",
+      "learningObjective": "Subnet placement",
+      "stem": "Where is the SQL Private Endpoint placed in this network?",
+      "options": {
+        "A": "AzureBastionSubnet only",
+        "B": "The GitHub runner's local network",
+        "C": "data-snet with 10.40.3.0/24",
+        "D": "A Traffic Manager global subnet"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "No Bastion subnet is required here.",
+        "B": "The service NIC belongs in the Azure VNet.",
+        "C": "The endpoint refers to azurerm_subnet.data.",
+        "D": "Traffic Manager does not provide such a subnet."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private Endpoint DNS configuration",
+          "url": "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q18",
+      "learningObjective": "No client VM claim",
+      "stem": "Which component is not created by this SQL lesson?",
+      "options": {
+        "A": "The SQL logical server",
+        "B": "A client VM for testing SQL queries",
+        "C": "A Basic database",
+        "D": "A Private Endpoint"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The server is explicitly declared.",
+        "B": "An existing private client is a prerequisite.",
+        "C": "The database is explicitly declared.",
+        "D": "The endpoint is explicitly declared."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q19",
+      "learningObjective": "Cost estimate boundary",
+      "stem": "Which pair can incur ongoing cost even before an application query is executed?",
+      "options": {
+        "A": "The database service and Private Endpoint hours",
+        "B": "README headings and JSON question IDs",
+        "C": "Only resource-group tags",
+        "D": "Only Terraform console input"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Managed database capacity and private connectivity have service charges.",
+        "B": "Documentation identifiers are not Azure meters.",
+        "C": "Tags do not account for the main charges.",
+        "D": "Local console use is not the service capacity cost."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure SQL Basic tier",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/service-tiers-dtu?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q20",
+      "learningObjective": "Private Link is not permission",
+      "stem": "A client reaches private SQL but receives a login failure. Which independent area needs review?",
+      "options": {
+        "A": "Only Private DNS zone existence",
+        "B": "Only whether the address is private",
+        "C": "Only the diagram's arrow direction",
+        "D": "Database identity and permissions"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A zone alone cannot authorize a SQL login.",
+        "B": "A private IP is not a credential.",
+        "C": "Illustration edits cannot assign SQL permissions.",
+        "D": "Network reachability does not authenticate a database principal."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure SQL authentication",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q21",
+      "learningObjective": "Auditing expectations",
+      "stem": "The Terraform server includes an extended auditing policy. What production work should still be assessed?",
+      "options": {
+        "A": "Assume the policy proves every audit record is queryable",
+        "B": "Actual audit destinations, retention, and retrieval evidence",
+        "C": "Disable diagnostics because the policy exists",
+        "D": "Publish SQL passwords inside audit evidence"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Configuration alone does not prove retrieved audit data.",
+        "B": "A configured policy needs an operational logging design and verification.",
+        "C": "Diagnostics still need intentional configuration.",
+        "D": "Credentials should not appear in evidence."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure SQL auditing",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q22",
+      "learningObjective": "Availability beyond provisioning",
+      "stem": "Which production practice tests the SQL access path continuously?",
+      "options": {
+        "A": "Representative private client DNS and SQL connectivity checks",
+        "B": "Only comparing resource-group tag counts",
+        "C": "Only checking the MkDocs build",
+        "D": "Only counting provider plugins"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Client-path tests address real application connectivity.",
+        "B": "Tags do not exercise SQL.",
+        "C": "Docs builds do not test Azure networking.",
+        "D": "Plugin counts do not measure service availability."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q23",
+      "learningObjective": "Optional public relaxation",
+      "stem": "An off-network validation fails. What change would contradict the intended lesson outcome?",
+      "options": {
+        "A": "Using an existing in-VNet test client",
+        "B": "Inspecting the Private DNS VNet link",
+        "C": "Checking the endpoint approval",
+        "D": "Enabling public SQL access solely to make that laptop test pass"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A private client is the expected test location.",
+        "B": "DNS inspection diagnoses the intended path.",
+        "C": "Approval inspection is part of control-plane validation.",
+        "D": "The goal is private-only SQL access."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure SQL Private Link",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/private-endpoint-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q24",
+      "learningObjective": "Production query authorization",
+      "stem": "An app is redesigned to use managed identity. What database task remains necessary?",
+      "options": {
+        "A": "Assume the identity's private IP grants SELECT",
+        "B": "Use the logical server's tags as permissions",
+        "C": "Provision and grant the required database principal permissions",
+        "D": "Disable all authentication methods"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Network location is not database authorization.",
+        "B": "Tags are not database grants.",
+        "C": "The identity still needs appropriately scoped database access.",
+        "D": "Removing authentication defeats security."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure SQL authentication",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q25",
+      "learningObjective": "Saved plan hygiene",
+      "stem": "A learner wants to upload tfplan as proof of SQL deployment. What concern needs assessment first?",
+      "options": {
+        "A": "It necessarily contains no sensitive information",
+        "B": "It is only a plain screenshot",
+        "C": "It automatically sanitizes every password",
+        "D": "It can contain the generated SQL credential"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Sensitive markings do not guarantee removal.",
+        "B": "A plan is structured Terraform data, not an image.",
+        "C": "Artifact protection must be explicit.",
+        "D": "Plans may embed secret-bearing planned values."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q26",
+      "learningObjective": "Stable naming intent",
+      "stem": "Why retain the random suffix state for the SQL server?",
+      "options": {
+        "A": "Automatically rotate database users",
+        "B": "Automatically replicate the database",
+        "C": "Avoid accidental global-name churn on no-change runs",
+        "D": "Change query syntax for each run"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Naming is separate from user credential lifecycle.",
+        "B": "No replication follows from suffix storage.",
+        "C": "The persisted suffix stabilizes the global hostname.",
+        "D": "SQL syntax does not depend on the suffix."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q27",
+      "learningObjective": "Recovery design gap",
+      "stem": "The database passes private connectivity tests. What production concern is still separate?",
+      "options": {
+        "A": "The number of illustrated cards",
+        "B": "Backup retention, resilience, and tested recovery",
+        "C": "The terminal font size",
+        "D": "The browser's theme preference"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Artwork does not establish data restoration.",
+        "B": "Connectivity is not a recovery strategy.",
+        "C": "Font size is unrelated to database durability.",
+        "D": "Theme is not service resilience."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure SQL Basic tier",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-sql/database/service-tiers-dtu?view=azuresql"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q28",
+      "learningObjective": "Cleanup dependency scope",
+      "stem": "Which resources should this lesson's destroy remove together?",
+      "options": {
+        "A": "Its SQL database/server, endpoint, private DNS, and network",
+        "B": "Every database in the tenant",
+        "C": "The unrelated external test client automatically",
+        "D": "CLZ-310's state account"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "These resources are in this lesson's state.",
+        "B": "Tenant-wide deletion is outside ownership.",
+        "C": "The client is a prerequisite, not a managed resource.",
+        "D": "The state lesson has a separate lifecycle."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q29",
+      "learningObjective": "Active deletion evidence",
+      "stem": "Which pair strengthens the documented post-destroy check?",
+      "options": {
+        "A": "A new server FQDN only",
+        "B": "Empty managed state plus az group exists returning false",
+        "C": "A successful old cached DNS lookup only",
+        "D": "A completed browser quiz only"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A name alone is not deletion evidence.",
+        "B": "State and Azure readback address managed resource removal.",
+        "C": "Caches can outlive resources.",
+        "D": "Learner scores do not inspect Azure."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ380-Q30",
+      "learningObjective": "Credential cleanup caveat",
+      "stem": "Destroy removes the SQL resources. What local artifact still needs protected handling?",
+      "options": {
+        "A": "Only the public cover illustration",
+        "B": "Only the public server name",
+        "C": "Secret-bearing state backups or saved plans",
+        "D": "Only a lesson navigation link"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Artwork contains no generated credential.",
+        "B": "Names are metadata.",
+        "C": "Local historical artifacts may retain sensitive values.",
+        "D": "Navigation has no credential data."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform sensitive data",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

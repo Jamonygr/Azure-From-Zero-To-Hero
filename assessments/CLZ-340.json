@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-340",
+  "questions": [
+    {
+      "id": "CLZ340-Q01",
+      "learningObjective": "Secret-bearing state",
+      "stem": "CLZ-340 stores a generated password in Key Vault. Which storage still requires secret protection?",
+      "options": {
+        "A": "Only the public README",
+        "B": "Only the vault's DNS name",
+        "C": "Terraform state containing the password",
+        "D": "Only the lesson's resource-group tags"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The README contains no generated password.",
+        "B": "The name is metadata, not the value.",
+        "C": "The Terraform resources record secret values in state.",
+        "D": "Tags do not contain the generated value."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q02",
+      "learningObjective": "Sensitive output limits",
+      "stem": "A sensitive value is hidden in ordinary terraform output. What does that establish?",
+      "options": {
+        "A": "Display redaction, not removal from Terraform state",
+        "B": "Encryption of every local state file",
+        "C": "Automatic password rotation",
+        "D": "Removal of all saved-plan secrets"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Sensitive markings suppress normal display.",
+        "B": "State encryption needs separate protection.",
+        "C": "Marking a value does not rotate it.",
+        "D": "Saved plans may contain sensitive data."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q03",
+      "learningObjective": "Metadata-only evidence",
+      "stem": "Which CLI query follows the lesson's secret validation approach?",
+      "options": {
+        "A": "Print secret value into a transcript",
+        "B": "Query secret id and attributes.enabled",
+        "C": "Copy the password into README.md",
+        "D": "Export every secret as a public artifact"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That leaks secret material to logs.",
+        "B": "It validates metadata without displaying the credential.",
+        "C": "The generated secret must not be published.",
+        "D": "Public artifacts are an inappropriate secret store."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q04",
+      "learningObjective": "Firewall access boundary",
+      "stem": "Which value matches key_vault_access_cidr's intended workstation restriction?",
+      "options": {
+        "A": "Entire Internet 0.0.0.0/0",
+        "B": "Private laptop address 192.168.1.5/32",
+        "C": "All corporate IPv6 ranges",
+        "D": "Current public IPv4 with /32"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The input deliberately rejects broad exposure.",
+        "B": "An Internet request arrives from public egress, not private LAN IP.",
+        "C": "This lab variable is IPv4-specific.",
+        "D": "The lesson admits one current public IPv4."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Key Vault network security",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/network-security"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q05",
+      "learningObjective": "Changed egress address",
+      "stem": "Secret access worked yesterday but returns Forbidden after changing networks. What should be checked?",
+      "options": {
+        "A": "Whether the vault tag count increased",
+        "B": "Whether the secret name has a hyphen",
+        "C": "Whether Terraform files were sorted alphabetically",
+        "D": "Current public egress IP against the allowed /32"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags do not admit data-plane traffic.",
+        "B": "The lesson secret name is valid.",
+        "C": "File ordering does not control network admission.",
+        "D": "The firewall still may admit only the old public IP."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Key Vault network security",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/network-security"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q06",
+      "learningObjective": "Identity and networking",
+      "stem": "A client IP is allowed but secret access fails. What independent control must be verified?",
+      "options": {
+        "A": "Only the public DNS TTL",
+        "B": "The signed-in identity's secret permissions",
+        "C": "Only the storage replication setting",
+        "D": "Only the VM size"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "DNS caching is not a secret access policy.",
+        "B": "Network admission does not grant secret authorization.",
+        "C": "This lesson has no storage replication setting.",
+        "D": "This lesson deploys no VM."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q07",
+      "learningObjective": "Control and data planes",
+      "stem": "az keyvault show succeeds while secret access is denied by the firewall. Why is that possible?",
+      "options": {
+        "A": "Vault management and secret data operations have different access paths",
+        "B": "A management read automatically grants every secret permission",
+        "C": "The vault cannot contain secrets",
+        "D": "Terraform always bypasses all firewalls"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Management visibility does not prove data-plane reachability or authorization.",
+        "B": "Management permissions do not grant all data operations.",
+        "C": "A denial does not mean the secret is absent.",
+        "D": "Terraform's secret resource still needs permitted access."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Key Vault network security",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/network-security"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q08",
+      "learningObjective": "Lab authorization model",
+      "stem": "Which principal receives the access policy in CLZ-340?",
+      "options": {
+        "A": "Every Internet user",
+        "B": "Only Azure Bastion's IP address",
+        "C": "The applying identity returned by azurerm_client_config",
+        "D": "Every subscription in the tenant"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The policy is not anonymous.",
+        "B": "An IP is not the identity object ID.",
+        "C": "The data source supplies the active tenant and object IDs.",
+        "D": "The policy is not tenant-wide subscription delegation."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q09",
+      "learningObjective": "Production authorization",
+      "stem": "Which production change reduces broad routine secret-administration permissions?",
+      "options": {
+        "A": "Give all consumers Purge and Set",
+        "B": "Use Azure RBAC and separate administrators from secret consumers",
+        "C": "Remove identity authentication",
+        "D": "Store the secret in a public Git tag"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Consumers generally do not need destructive administration.",
+        "B": "The lesson recommends role separation and RBAC.",
+        "C": "Network controls do not replace authentication.",
+        "D": "Git tags are public metadata, not secret stores."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q10",
+      "learningObjective": "Stable vault naming",
+      "stem": "A no-change plan should preserve the vault's suffix. Which practice supports that?",
+      "options": {
+        "A": "Regenerate the suffix on every login",
+        "B": "Rename the vault directly in the portal",
+        "C": "Use a timestamp as every plan's suffix",
+        "D": "Retain random_string.suffix state"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Logins should not rotate resource naming.",
+        "B": "Manual changes do not preserve declared ownership.",
+        "C": "Per-run timestamps cause name churn.",
+        "D": "The generated value persists in Terraform state."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q11",
+      "learningObjective": "Vault name collision",
+      "stem": "A deleted vault name is unavailable for immediate reuse. What should be investigated?",
+      "options": {
+        "A": "Only the secret's enabled flag",
+        "B": "Only the NSG priority",
+        "C": "Soft-deleted vault retention and organization policy",
+        "D": "Only the Windows image version"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Secret enabled status does not free a vault name.",
+        "B": "No NSG is deployed here.",
+        "C": "Retained soft-deleted vaults reserve their names.",
+        "D": "No Windows VM is deployed here."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Key Vault soft delete",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q12",
+      "learningObjective": "Soft delete boundary",
+      "stem": "What does soft delete provide after accidental secret deletion?",
+      "options": {
+        "A": "A recovery window before final deletion",
+        "B": "An anonymous read endpoint",
+        "C": "Guaranteed indefinite retention",
+        "D": "Automatic migration to another tenant"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Recoverability is bounded by the configured retention policy.",
+        "B": "Deletion does not grant anonymous access.",
+        "C": "Retention is finite.",
+        "D": "No tenant migration is implied."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Key Vault soft delete",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q13",
+      "learningObjective": "Purge protection difference",
+      "stem": "Why should a production vault enable purge protection despite the disposable-lab exception?",
+      "options": {
+        "A": "To prevent permanent purge during the protected retention interval",
+        "B": "To reveal passwords in CLI output",
+        "C": "To replace all identity permissions",
+        "D": "To make every operation free"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It protects the recovery interval from early permanent deletion.",
+        "B": "Output disclosure is unrelated.",
+        "C": "Authorization is still required.",
+        "D": "Protection is not a zero-cost pricing tier."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Key Vault soft delete",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q14",
+      "learningObjective": "Lab purge permission",
+      "stem": "Why is routine Purge permission called out as a production gap in this lesson?",
+      "options": {
+        "A": "It makes secret creation impossible",
+        "B": "It disables the storage firewall",
+        "C": "It can permanently remove recoverable secret material when protection permits",
+        "D": "It only reads vault tags"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Purge is not a ban on creation.",
+        "B": "Storage rules are unrelated.",
+        "C": "Purge is a destructive capability that needs separation.",
+        "D": "The permission is more powerful than metadata reads."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Key Vault soft delete",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q15",
+      "learningObjective": "Trusted-service bypass",
+      "stem": "The firewall uses bypass=AzureServices. What should a learner avoid assuming?",
+      "options": {
+        "A": "That the supplied /32 is an IPv4 rule",
+        "B": "That default_action=Deny restricts ordinary public clients",
+        "C": "That secret authorization still matters",
+        "D": "That every Azure-hosted application automatically bypasses the firewall"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The /32 really is an IPv4 boundary.",
+        "B": "Default deny is a relevant access restriction.",
+        "C": "Authorization remains necessary.",
+        "D": "The trusted-services exception is limited, not blanket Azure access."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Key Vault network security",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/network-security"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q16",
+      "learningObjective": "Secret rotation planning",
+      "stem": "A disposable rotation changes the generated password. What must be reviewed before applying?",
+      "options": {
+        "A": "Only the random suffix's text color",
+        "B": "Consumers and secret-bearing state or plan implications",
+        "C": "Only the README line count",
+        "D": "Only the vault's region spelling"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Presentation color does not assess rotation.",
+        "B": "Credential rotation affects consumers and sensitive artifacts.",
+        "C": "Line count does not describe consumers.",
+        "D": "A valid region is not enough to assess secret impact."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q17",
+      "learningObjective": "Key Vault purpose",
+      "stem": "Which use is demonstrated by the windows-admin-password secret?",
+      "options": {
+        "A": "Automatic IIS installation",
+        "B": "Terraform backend locking",
+        "C": "Central storage of a generated credential",
+        "D": "VMSS autoscaling"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "IIS deployment is a different lesson.",
+        "B": "Backend locking uses state storage.",
+        "C": "This lesson stores a secret; it does not deploy its consumer.",
+        "D": "No autoscale resource is created here."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q18",
+      "learningObjective": "No implicit VM consumer",
+      "stem": "After CLZ-340 apply, which resource should not be claimed as deployed by this lesson?",
+      "options": {
+        "A": "A Standard Key Vault",
+        "B": "A Windows VM consuming the secret",
+        "C": "A secret named windows-admin-password",
+        "D": "A stable random suffix"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The vault is explicitly configured.",
+        "B": "The lesson generates a credential without deploying a VM.",
+        "C": "The secret resource is explicitly configured.",
+        "D": "The random naming resource is explicitly configured."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q19",
+      "learningObjective": "Generated password properties",
+      "stem": "Why use the configured random_password resource instead of a shared sample password?",
+      "options": {
+        "A": "It creates a strong per-deployment value with defined character requirements",
+        "B": "It removes the password from state",
+        "C": "It grants database roles",
+        "D": "It prevents all credential disclosure"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Generation avoids reusing a known sample credential.",
+        "B": "The generated result is still stored in state.",
+        "C": "No database role is managed here.",
+        "D": "Handling and logging can still disclose it."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q20",
+      "learningObjective": "Secret artifact hygiene",
+      "stem": "A saved plan contains the generated secret. Where should that plan be kept?",
+      "options": {
+        "A": "In the public lesson download folder",
+        "B": "In an issue attachment",
+        "C": "In the illustrated SVG caption",
+        "D": "In protected, untracked local storage with limited access"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Public downloads expose plan contents.",
+        "B": "Issue attachments can disclose sensitive data.",
+        "C": "Captions are public documentation.",
+        "D": "Plans can contain secret values and require protection."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q21",
+      "learningObjective": "Firewall repair discipline",
+      "stem": "A 403 tempts a learner to allow 0.0.0.0/0. What is the better first repair?",
+      "options": {
+        "A": "Disable all vault authorization",
+        "B": "Verify identity, current public /32, and policy propagation",
+        "C": "Publish the secret for easier testing",
+        "D": "Rename the vault repeatedly"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Removing authorization weakens security.",
+        "B": "Diagnose the actual boundary instead of broadening exposure.",
+        "C": "Publication is not a connectivity repair.",
+        "D": "Name churn does not repair permissions."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Key Vault network security",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/network-security"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q22",
+      "learningObjective": "Cost classification",
+      "stem": "Which item can materially increase cost beyond this small Standard secret lesson?",
+      "options": {
+        "A": "Private endpoints or high operation volume",
+        "B": "The length of the vault's Terraform address",
+        "C": "Adding another Markdown heading",
+        "D": "The PowerShell prompt color"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Networking and service usage can change the estimate.",
+        "B": "Resource address length is not a billing meter.",
+        "C": "Documentation headings have no Azure cost.",
+        "D": "Prompt styling has no Azure cost."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q23",
+      "learningObjective": "Cleanup scope",
+      "stem": "Terraform destroy removes the resource group. Which caveat still applies to the vault?",
+      "options": {
+        "A": "All old local state backups are securely erased",
+        "B": "Every consumer automatically gets a replacement password",
+        "C": "Retention policy ceases to matter",
+        "D": "Azure may retain a soft-deleted name"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Destroy does not guarantee secure erasure of every local file.",
+        "B": "Consumer rotation is separate.",
+        "C": "Soft-delete policy remains relevant.",
+        "D": "Service retention can survive active resource removal."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Key Vault soft delete",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q24",
+      "learningObjective": "Output classification",
+      "stem": "Which value is suitable for normal lesson evidence when no secret values are printed?",
+      "options": {
+        "A": "Administrator password",
+        "B": "Raw secret-bearing state contents",
+        "C": "Vault name and secret enabled status",
+        "D": "Unsanitized plan containing credentials"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A password is sensitive credential material.",
+        "B": "State can contain the generated secret.",
+        "C": "These are metadata needed for validation.",
+        "D": "Plan contents may contain secrets."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Manage sensitive data in Terraform",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q25",
+      "learningObjective": "Security layers",
+      "stem": "A vault has a restricted firewall. What remains required for an admitted client's secret request?",
+      "options": {
+        "A": "Only a matching resource-group tag",
+        "B": "Only a successful DNS lookup",
+        "C": "Only knowledge of the secret name",
+        "D": "Authentication and authorized secret operation permissions"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags do not authorize secret reads.",
+        "B": "DNS success is not permission.",
+        "C": "A name does not authorize a value read.",
+        "D": "Network access and identity authorization are distinct."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q26",
+      "learningObjective": "Retention configuration",
+      "stem": "The lesson configures seven-day soft-delete retention. What should be considered before recreating a vault?",
+      "options": {
+        "A": "Retention changes automatically with every tag edit",
+        "B": "The value controls password length",
+        "C": "Retention is chosen at creation and retained names can affect reuse",
+        "D": "The value defines DNS record TTL"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Tag edits do not change this interval.",
+        "B": "Password length is separately set to 20.",
+        "C": "Vault retention affects recovery and name reuse.",
+        "D": "DNS TTL is unrelated."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Key Vault soft delete",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q27",
+      "learningObjective": "Least disclosure exercise",
+      "stem": "What evidence best completes the metadata inspection exercise?",
+      "options": {
+        "A": "A screenshot of the entire secret value",
+        "B": "A sanitized result showing secret id and enabled status plus the risk explanation",
+        "C": "The password copied to the discussion thread",
+        "D": "A public state file"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A full value screenshot leaks the credential.",
+        "B": "It proves the metadata check without exposing the credential.",
+        "C": "Discussion is not a secret store.",
+        "D": "State contains sensitive values."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q28",
+      "learningObjective": "Production identity fit",
+      "stem": "An application needs to retrieve the secret without a stored application password. What production approach fits?",
+      "options": {
+        "A": "Managed identity with narrowly scoped secret access",
+        "B": "Shared vault administrator credentials in source",
+        "C": "Anonymous access through the vault firewall",
+        "D": "Routine Purge permission for the application"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Managed identity reduces stored credentials and permits role scoping.",
+        "B": "Source credentials create another secret risk.",
+        "C": "Vault data still requires identity authorization.",
+        "D": "Reading a secret does not require purge administration."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q29",
+      "learningObjective": "Saved-plan review",
+      "stem": "The vault /32 was corrected after tfplan was created. Which apply preparation is safe?",
+      "options": {
+        "A": "Apply the existing plan because tfvars edits always replace its values",
+        "B": "Recreate and inspect the plan with the corrected input",
+        "C": "Edit only the printed plan summary",
+        "D": "Assume the AzureServices bypass admits the workstation"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The saved plan is not rewritten by tfvars edits.",
+        "B": "Saved plans preserve planned values; regenerate after input changes.",
+        "C": "Displayed text is not executable plan data.",
+        "D": "Bypass is not a general workstation exception."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ340-Q30",
+      "learningObjective": "Rotation completeness",
+      "stem": "A secret is rotated in Key Vault but an existing consumer still uses the old password. What is missing?",
+      "options": {
+        "A": "A larger vault naming suffix",
+        "B": "More secret metadata tags",
+        "C": "A coordinated consumer update and verification",
+        "D": "A longer DNS TTL"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Naming does not change consumer credentials.",
+        "B": "Tags do not distribute passwords.",
+        "C": "Secret storage alone does not update every consumer.",
+        "D": "DNS caching does not synchronize credentials."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Secure Azure Key Vault",
+          "url": "https://learn.microsoft.com/en-us/azure/key-vault/general/secure-key-vault"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

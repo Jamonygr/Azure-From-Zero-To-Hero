@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-290",
+  "questions": [
+    {
+      "id": "CLZ290-Q01",
+      "learningObjective": "Form the private FQDN",
+      "stem": "The record name is web and its private zone is clz.internal. Which name does that create?",
+      "options": {
+        "A": "web.clz.internal",
+        "B": "clz.internal.web",
+        "C": "web.internal.clz",
+        "D": "web.10.40.1.10"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A relative record name combines with the zone name to form the FQDN.",
+        "B": "That reverses the DNS label order.",
+        "C": "That is a different name from the declared zone and record.",
+        "D": "The record's IPv4 value is not appended as a DNS suffix."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q02",
+      "learningObjective": "Identify the A-record value",
+      "stem": "Which address is configured for web.clz.internal in CLZ-290?",
+      "options": {
+        "A": "10.40.1.10",
+        "B": "The NAT public IP from CLZ-280 automatically",
+        "C": "The first public IP created by every prior lesson",
+        "D": "The entire 10.40.0.0/16 prefix"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The Terraform A record contains that teaching-only private IPv4.",
+        "B": "The separate configuration declares a literal private address.",
+        "C": "Prior lessons are not implicitly queried by this record.",
+        "D": "An A record contains individual IPv4 addresses, not a subnet prefix."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q03",
+      "learningObjective": "Distinguish a DNS record from a workload",
+      "stem": "The name resolves to 10.40.1.10 but no web service responds. Why is that expected in the unmodified lesson?",
+      "options": {
+        "A": "Private DNS always blocks HTTP even when a VM exists",
+        "B": "The A record installs only Linux applications",
+        "C": "The zone requires an administrator password for HTTP resolution",
+        "D": "No VM or application is created at the illustrative record address"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "DNS does not itself block application ports.",
+        "B": "An A record does not install any application.",
+        "C": "The lesson does not use guest authentication to resolve this name.",
+        "D": "DNS data can exist without a running endpoint at its value."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q04",
+      "learningObjective": "Explain the VNet link",
+      "stem": "What does the zone's virtual network link provide?",
+      "options": {
+        "A": "A public Internet delegation for clz.internal",
+        "B": "Resolution scope for the private zone from the linked VNet",
+        "C": "An inbound RDP rule for all VMs",
+        "D": "A VM image containing the lesson page"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A private VNet link is not public DNS delegation.",
+        "B": "The relationship makes the zone available through the appropriate resolver path.",
+        "C": "DNS linkage does not open guest management ports.",
+        "D": "The link is DNS configuration, not an image resource."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private DNS virtual network links",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-virtual-network-links"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q05",
+      "learningObjective": "Interpret disabled autoregistration",
+      "stem": "registration_enabled is false in CLZ-290. What is the intended consequence?",
+      "options": {
+        "A": "The linked VNet cannot resolve any private records",
+        "B": "The zone is automatically deleted after one query",
+        "C": "The link does not automatically create VM hostname records",
+        "D": "Every DNS response becomes a public IP"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Resolution links can work without autoregistration.",
+        "B": "Autoregistration is not a lifetime timer.",
+        "C": "The declared web A record is managed explicitly by Terraform.",
+        "D": "Registration setting does not translate addresses."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private DNS autoregistration",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-autoregistration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q06",
+      "learningObjective": "Choose the correct validation client",
+      "stem": "Where should Resolve-DnsName web.clz.internal be run for the stated data-plane test?",
+      "options": {
+        "A": "On any Internet laptop with no VPN or resolver connection",
+        "B": "On a client in the linked VNet using an appropriate Azure DNS resolver path",
+        "C": "Only inside the Terraform provider's source repository",
+        "D": "On the GitHub Pages hosting server automatically"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That laptop lacks the intended private DNS path.",
+        "B": "The client needs access to the private resolution scope.",
+        "C": "The repository location is unrelated to live DNS resolution.",
+        "D": "The static site does not join the Azure VNet."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q07",
+      "learningObjective": "Separate Azure inventory from resolution",
+      "stem": "Azure CLI shows the A record's value. What does that alone prove?",
+      "options": {
+        "A": "The record exists in Azure control-plane configuration",
+        "B": "Every on-premises client can resolve the private name",
+        "C": "The target address runs a healthy IIS service",
+        "D": "The zone's public registrar delegation is correct"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "A separate client query is needed to demonstrate actual resolver behavior.",
+        "B": "Configuration listing does not verify hybrid forwarding.",
+        "C": "No endpoint test has occurred.",
+        "D": "This private zone does not rely on public delegation."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q08",
+      "learningObjective": "Diagnose custom DNS clients",
+      "stem": "A VM is in the linked VNet but uses custom DNS servers that do not forward clz.internal. What should be reviewed?",
+      "options": {
+        "A": "Only the VM's local administrator username",
+        "B": "Only the load balancer's frontend port",
+        "C": "Conditional forwarding or an appropriate Azure DNS Private Resolver design",
+        "D": "Only the browser's saved quiz percentage"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Guest usernames do not configure DNS forwarding.",
+        "B": "The lesson creates no load balancer for private name resolution.",
+        "C": "The custom resolver needs a route for the private namespace.",
+        "D": "Learning progress has no effect on DNS servers."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure DNS Private Resolver overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-private-resolver-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q09",
+      "learningObjective": "Distinguish networking from naming",
+      "stem": "Does creating web.clz.internal automatically create a route or permit application traffic to 10.40.1.10?",
+      "options": {
+        "A": "Yes; all A records create an Internet route",
+        "B": "Yes; an A record bypasses every NSG",
+        "C": "No; because private names cannot contain A records",
+        "D": "No; routing, security policy, and a service listener remain separate requirements"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "DNS does not program an Internet route for each record.",
+        "B": "Name resolution cannot override network filtering.",
+        "C": "Private zones can host A records.",
+        "D": "DNS maps names to values but does not establish the full network path."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q10",
+      "learningObjective": "Read DNS TTL",
+      "stem": "The web A record has ttl = 300. What does that mean?",
+      "options": {
+        "A": "DNS clients and resolvers may cache the record for 300 seconds according to its TTL",
+        "B": "The target VM must remain running for exactly 300 minutes",
+        "C": "Azure assigns 300 private IPs to the hostname",
+        "D": "The DNS zone deletes itself after 300 queries"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "TTL is a caching duration for the record set.",
+        "B": "There is no VM runtime timer here.",
+        "C": "TTL does not define record cardinality.",
+        "D": "TTL is not a query-count limit."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q11",
+      "learningObjective": "Diagnose stale cached answers",
+      "stem": "The record value is changed, but a client briefly returns the old address. What is a plausible explanation?",
+      "options": {
+        "A": "The Role tag forces the original IP forever",
+        "B": "The old DNS answer may still be cached until its TTL expires",
+        "C": "Terraform changed the VNet into a public DNS zone",
+        "D": "The private zone copies the old VM disk contents"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tags do not pin DNS answer caching.",
+        "B": "Inspect client and resolver caching before assuming the control-plane update failed.",
+        "C": "A record value update does not do that.",
+        "D": "DNS caches answers, not guest disks."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q12",
+      "learningObjective": "Understand manual records versus autoregistration",
+      "stem": "Would deleting an unrelated future VM automatically remove this explicitly declared web A record with autoregistration disabled?",
+      "options": {
+        "A": "Yes; Azure deletes every record whenever any VM is removed",
+        "B": "Yes; /24 subnet membership controls all DNS record deletion",
+        "C": "No; the record is managed explicitly rather than as that VM's autoregistered hostname",
+        "D": "No; because A records can never be deleted"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That would not describe manually managed records.",
+        "B": "Subnet membership does not own this explicit record.",
+        "C": "Its lifecycle follows the configured DNS resource.",
+        "D": "They can be deleted through their management lifecycle."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Private DNS autoregistration",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-autoregistration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q13",
+      "learningObjective": "Plan another private record",
+      "stem": "The exercise adds app.clz.internal for an approved private IPv4. What record resource fits that goal?",
+      "options": {
+        "A": "Another A record named app in the existing private zone",
+        "B": "A public load-balancing rule on TCP 80",
+        "C": "A Role tag containing app.clz.internal",
+        "D": "An outbound SNAT rule whose name is app"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The relative name and IPv4 value describe the intended mapping.",
+        "B": "That does not create the private DNS name.",
+        "C": "Tags do not define DNS records.",
+        "D": "SNAT resource names do not create DNS records."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q14",
+      "learningObjective": "Keep Azure links distinct from peering",
+      "stem": "A second VNet is peered with the lesson VNet. Should private-zone resolution from the second VNet be assumed without DNS configuration?",
+      "options": {
+        "A": "Yes; peering automatically copies every private DNS link",
+        "B": "Yes; matching subnet names guarantee DNS sharing",
+        "C": "No; because peered VNets can never use private DNS",
+        "D": "No; review private-zone links or a suitable forwarding/resolver path for the second VNet"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Do not assume private-zone links are inherited that way.",
+        "B": "Subnet names do not create resolution scope.",
+        "C": "They can use it with the appropriate design.",
+        "D": "Peering and name-resolution scope are different relationships."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Private DNS virtual network links",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-virtual-network-links"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q15",
+      "learningObjective": "Support on-premises private resolution",
+      "stem": "An on-premises client needs to resolve the private zone. Which additional design is appropriate?",
+      "options": {
+        "A": "Publish the VM administrator password in the DNS record",
+        "B": "Private connectivity plus conditional forwarding to an Azure DNS Private Resolver or approved DNS forwarder",
+        "C": "Replace the A record's value with the whole VNet prefix",
+        "D": "Rely on the ordinary Internet laptop's public resolver alone"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Passwords do not establish hybrid DNS forwarding.",
+        "B": "The hybrid client needs a reachable resolver path for the namespace.",
+        "C": "A prefix is not a valid single A-record address.",
+        "D": "The private zone is not publicly delegated to that resolver."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure DNS Private Resolver overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-private-resolver-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q16",
+      "learningObjective": "Use the right record type",
+      "stem": "Why does the lesson choose an A record for web?",
+      "options": {
+        "A": "It maps the hostname to an IPv4 address",
+        "B": "It aliases the hostname to another hostname",
+        "C": "It specifies the preferred email server",
+        "D": "It configures the TLS certificate authority"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The configured value is an IPv4 literal.",
+        "B": "That would describe a CNAME record.",
+        "C": "That would describe an MX record.",
+        "D": "That is not the function of an A record."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q17",
+      "learningObjective": "Check the current zone link target",
+      "stem": "Which Terraform value ensures the private link refers to this lesson's VNet?",
+      "options": {
+        "A": "The name web-snet alone",
+        "B": "The prior lesson's NAT public IP",
+        "C": "azurerm_virtual_network.main.id",
+        "D": "The Windows username from CLZ-210"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A subnet display name is not the VNet resource ID.",
+        "B": "An egress IP does not identify the linked VNet.",
+        "C": "The link's virtual_network_id uses that resource identity.",
+        "D": "Guest identity does not identify this DNS resolution scope."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private DNS virtual network links",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-virtual-network-links"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q18",
+      "learningObjective": "Interpret laptop lookup failure correctly",
+      "stem": "An ordinary unconnected Internet laptop cannot resolve web.clz.internal while Azure CLI lists the record. What conclusion is reasonable?",
+      "options": {
+        "A": "The Azure record must be corrupt because all DNS is public",
+        "B": "That client has no demonstrated private resolver path; the CLI result is still control-plane evidence",
+        "C": "The laptop must run Terraform apply again without a plan",
+        "D": "The NAT gateway output is guaranteed to repair name resolution"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Private DNS records are intentionally not globally public.",
+        "B": "Private DNS scope explains why those two observations can coexist.",
+        "C": "Reapplying does not provide the laptop with private resolver connectivity.",
+        "D": "NAT egress is not private-zone resolution scope."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q19",
+      "learningObjective": "Choose meaningful data-plane evidence",
+      "stem": "Which observation demonstrates the lesson's intended name-resolution result?",
+      "options": {
+        "A": "A screenshot of the local terraform.tfvars.example file",
+        "B": "A Terraform plan showing no proposed changes only",
+        "C": "The homepage displays a DNS illustration",
+        "D": "A linked-VNet client resolves web.clz.internal to 10.40.1.10"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That shows a source example, not a DNS response.",
+        "B": "That does not execute a client DNS query.",
+        "C": "A teaching diagram is not a live DNS test.",
+        "D": "The query exercises the actual resolver path and compares the expected value."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q20",
+      "learningObjective": "Avoid treating resolution as service health",
+      "stem": "A linked client resolves the expected A record successfully. Which follow-up is needed before claiming a real application is healthy?",
+      "options": {
+        "A": "Nothing; any DNS answer proves HTTP 200",
+        "B": "Test the actual service endpoint and its network permissions, if a workload is deployed",
+        "C": "Only confirm the DNS TTL equals the port number",
+        "D": "Only change the private zone to a different capitalization"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Address resolution does not run an HTTP health check.",
+        "B": "DNS success is only one part of application connectivity.",
+        "C": "TTL and service ports are unrelated.",
+        "D": "Naming case is not application health evidence."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q21",
+      "learningObjective": "Preserve safe namespace design",
+      "stem": "Which production consideration belongs in selecting a private DNS namespace?",
+      "options": {
+        "A": "Use any existing production zone name without permission",
+        "B": "Use the administrator password as the zone name",
+        "C": "Assume every private namespace is visible only to its creator account",
+        "D": "Avoid collisions with public and Active Directory namespaces and define ownership"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Unreviewed reuse can create conflicts.",
+        "B": "Namespace labels must not publish credentials.",
+        "C": "Resolution scope depends on network and resolver design, not that assumption.",
+        "D": "Name collisions and ambiguous authority can disrupt intended resolution."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q22",
+      "learningObjective": "Interpret disabled registration with later VMs",
+      "stem": "A new VM is later deployed into the linked VNet. Does this lesson's disabled registration automatically create its hostname record?",
+      "options": {
+        "A": "Yes; any VNet link always enables registration",
+        "B": "Yes; a Standard public IP creates its private hostname",
+        "C": "No; explicitly manage its record or deliberately configure an appropriate registration design",
+        "D": "No; because private zones cannot represent VM names"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The setting is explicitly false.",
+        "B": "A public IP is unrelated to private VM autoregistration.",
+        "C": "The current link is for resolution without automatic VM registration.",
+        "D": "They can represent them through manual or appropriate automatic records."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private DNS autoregistration",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-autoregistration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q23",
+      "learningObjective": "Understand Azure-provided DNS scope",
+      "stem": "A client in the linked VNet uses Azure-provided DNS. Why is it an appropriate positive test location?",
+      "options": {
+        "A": "The resolver can consult private zones linked to that VNet",
+        "B": "It bypasses every firewall between client and application",
+        "C": "It converts private A records into public Internet routes",
+        "D": "It automatically starts a web VM at 10.40.1.10"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The link connects the namespace to the client's resolution scope.",
+        "B": "DNS resolution does not bypass security policy.",
+        "C": "The answer remains an address value.",
+        "D": "The resolver does not create workloads."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure DNS Private Resolver overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-private-resolver-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q24",
+      "learningObjective": "Plan operational record ownership",
+      "stem": "Why should production DNS records follow service ownership rather than indefinite manual guesses?",
+      "options": {
+        "A": "DNS queries automatically correct every stale endpoint value",
+        "B": "Terraform cannot manage DNS record resources",
+        "C": "Private records cannot change after creation",
+        "D": "Records must remain aligned with the actual endpoint lifecycle and address"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Resolvers do not infer the intended new address.",
+        "B": "The lesson explicitly manages one with Terraform.",
+        "C": "Their values can be updated through their resource lifecycle.",
+        "D": "Stale mappings can resolve successfully while directing clients incorrectly."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q25",
+      "learningObjective": "Understand independent lesson networks",
+      "stem": "Does the CLZ-290 zone automatically link to CLZ-280's previously deployed VNet?",
+      "options": {
+        "A": "Yes; the sequential lesson ID automatically joins both VNets",
+        "B": "Yes; a common environment tag merges the networks",
+        "C": "No; the configuration links its own azurerm_virtual_network.main",
+        "D": "No; because one zone can only ever link to one VNet"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Curriculum order does not create Azure relationships.",
+        "B": "Tags do not merge VNets.",
+        "C": "A new lesson does not implicitly change a separate deployment's DNS links.",
+        "D": "A zone can have multiple links when appropriately configured."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Private DNS virtual network links",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-virtual-network-links"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q26",
+      "learningObjective": "Diagnose an unexpected answer",
+      "stem": "A client resolves web.clz.internal to an unexpected address after an environment change. What should be examined?",
+      "options": {
+        "A": "The active resolver path, zone authority, record value, and cached answers",
+        "B": "Only the VM's administrator password",
+        "C": "Only the public IP's SKU",
+        "D": "Only the quiz question ID"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "These identify which DNS data the client is actually using.",
+        "B": "Credentials do not reveal DNS authority.",
+        "C": "No public IP controls this literal private A-record value.",
+        "D": "Assessment identifiers are not resolver configuration."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q27",
+      "learningObjective": "Keep cost claims specific",
+      "stem": "Which CLZ-290 resource contributes DNS-service cost even though no VM is deployed?",
+      "options": {
+        "A": "Only the local PowerShell Resolve-DnsName command itself",
+        "B": "The Private DNS zone and its query usage",
+        "C": "The numerical value 10.40.1.10 as a standalone hourly resource",
+        "D": "The Markdown navigation link"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "A local command is not the Azure hosted zone charge.",
+        "B": "The lesson's DNS service can be billable without compute.",
+        "C": "The record's address literal is not a provisioned VM or IP resource.",
+        "D": "A documentation link has no Azure DNS hourly charge."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure Private DNS overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/private-dns-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q28",
+      "learningObjective": "Review planned DNS edits",
+      "stem": "Before applying a change to the web A-record value, what does Terraform plan help the learner inspect?",
+      "options": {
+        "A": "Every cached answer on every client",
+        "B": "The service's HTTP response before a workload exists",
+        "C": "The intended record update and other proposed resource changes",
+        "D": "The Windows password of a VM at the illustrative address"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Terraform cannot list all clients' DNS caches.",
+        "B": "A plan does not create or test an undeployed application.",
+        "C": "Planning is a nonapplying review of the desired infrastructure change.",
+        "D": "The lesson creates no such VM."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q29",
+      "learningObjective": "Remove dependencies during teardown",
+      "stem": "What should the managed cleanup remove from CLZ-290?",
+      "options": {
+        "A": "Only the cached answer on the learner's laptop",
+        "B": "The private zone, VNet link, explicit A record, and lesson network",
+        "C": "Only the record's TTL while keeping the zone forever",
+        "D": "Only the web application at 10.40.1.10"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Clearing a client cache does not delete Azure resources.",
+        "B": "Destroy should remove the configured DNS and supporting lab resources.",
+        "C": "That is not full managed teardown.",
+        "D": "No application exists there in the unmodified lesson."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ290-Q30",
+      "learningObjective": "Verify the exact cleanup target",
+      "stem": "Which final verification matches the documented cleanup after destroy?",
+      "options": {
+        "A": "A laptop still returns a cached DNS answer",
+        "B": "terraform fmt reports no changes",
+        "C": "An Internet lookup times out for a private zone",
+        "D": "az group exists returns false for the resource-group name captured before deletion"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Caches can persist briefly and do not prove current Azure resources exist.",
+        "B": "Formatting is unrelated to cloud absence.",
+        "C": "That could occur before cleanup and is not sufficient evidence.",
+        "D": "It confirms absence of the intended managed group."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

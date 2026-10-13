@@ -60,7 +60,6 @@ The repository `.gitignore` excludes state and plan artifacts:
 *.tfstate.*
 *.tfplan
 **/.terraform/*
-.terraform.lock.hcl
 terraform.tfvars
 *.auto.tfvars
 ~~~
@@ -92,11 +91,17 @@ If a folder behaves strangely after provider or backend changes, removing `.terr
 
 ## Dependency Lock Files
 
-Terraform can create `.terraform.lock.hcl` to record provider selections. In many production repositories, lock files are committed for repeatable provider installation. Azure From Zero To Hero currently ignores them to keep every lesson lightweight and avoid committing one lock file per lesson folder.
+Terraform creates `.terraform.lock.hcl` to record exact provider selections and
+checksums. Azure From Zero To Hero commits one lock file for every lesson root
+and tested shared module. Each lock includes Windows AMD64 and Linux AMD64
+checksums so local Windows work and GitHub Actions resolve the same provider
+versions.
 
-This is a deliberate curriculum choice. The provider version constraints in `versions.tf` already define the accepted version range. The validation workflow initializes each lesson from those constraints.
-
-If you want stricter provider repeatability later, you can choose to commit lock files intentionally. Do that as a separate repository policy decision, not as an accidental byproduct of local validation.
+Do not hand-edit or delete the tracked lock files during normal work. The local
+and CI gates use `terraform init -lockfile=readonly`; an unexpected provider
+selection therefore fails validation instead of silently rewriting the lock.
+When maintainers intentionally update a provider, they regenerate and review
+the affected locks for both platforms as part of that change.
 
 ## Remote State In Azure Storage
 
@@ -118,23 +123,29 @@ The storage lesson outputs values that can be used to configure a backend:
 | `state_storage_account_name` | Backend storage account |
 | `state_container_name` | Backend container |
 | `resource_group_name` | Backend resource group |
+| `backend_configuration` | Typed resource group, account, container, and `clz310.tfstate` key for migration/consumer setup |
 
 ## Backend Configuration Shape
 
-A backend configuration usually looks like this:
+A backend block and its separate runtime configuration look like this:
 
 ~~~hcl
 terraform {
-  backend "azurerm" {
-    resource_group_name  = "clz-dev-clz310-rg"
-    storage_account_name = "replacewithstateaccount"
-    container_name       = "tfstate"
-    key                  = "clz-dev.tfstate"
-  }
+  backend "azurerm" {}
 }
 ~~~
 
-Azure From Zero To Hero does not put backend blocks into every lesson by default because the lessons should run independently. The remote-state lesson teaches the backend shape, and later work can adopt it where needed.
+~~~hcl
+resource_group_name  = "<CLZ-310 output>"
+storage_account_name = "<CLZ-310 output>"
+container_name       = "tfstate"
+key                  = "clz310.tfstate"
+use_azuread_auth     = true
+~~~
+
+CLZ-310 bootstraps locally because a backend cannot create itself. After apply,
+copy `backend.tf.example` and `backend.hcl.example` to their ignored runtime
+names, fill in `backend_configuration`, and run `terraform init -migrate-state`.
 
 ## State Keys
 
@@ -170,10 +181,11 @@ data "terraform_remote_state" "shared" {
   backend = "azurerm"
 
   config = {
-    resource_group_name  = var.remote_state_resource_group_name
-    storage_account_name = var.remote_state_storage_account_name
-    container_name       = var.remote_state_container_name
-    key                  = var.remote_state_key
+    resource_group_name  = var.remote_state.resource_group_name
+    storage_account_name = var.remote_state.storage_account_name
+    container_name       = var.remote_state.container_name
+    key                  = var.remote_state.key
+    use_azuread_auth     = true
   }
 }
 ~~~

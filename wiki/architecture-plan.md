@@ -4,7 +4,11 @@ This plan describes how the repository is organized today and how improvements s
 
 ## Current Architecture
 
-Azure From Zero To Hero is a folder-per-lesson Terraform curriculum. Each `CLZ-*` folder is independently deployable, has its own provider configuration, variables, outputs, example values, and README, and uses the root scripts for validation.
+Azure From Zero To Hero is a folder-per-lesson Terraform curriculum. Each
+`CLZ-*` folder has focused configuration, inputs, outputs, example values, and a
+README. Local-only and readiness lessons declare no Azure provider/resources;
+deployable lessons normally own their Azure lifecycle. CLZ-320 intentionally
+consumes the backend outputs produced by CLZ-310.
 
 | Layer | Current role |
 |---|---|
@@ -35,12 +39,14 @@ The repository has two validation paths:
 
 | Path | Purpose |
 |---|---|
-| Local script | `scripts/Test-AzureFromZeroToHeroTerraform.ps1` runs format, validate, optional safe plans, and JSON report output |
-| CI workflow | `.github/workflows/terraform-validate.yml` runs Terraform validation and repository quality checks on pull requests and `main` |
+| Local script | `scripts/Test-AzureFromZeroToHeroTerraform.ps1` runs formatting, readonly initialization, validation, and mock-provider tests with JSON report output |
+| CI workflow | `.github/workflows/terraform-validate.yml` runs credential-free Terraform validation/tests and repository quality checks on pull requests and `main` |
 
-The default CI path remains validation-only and does not require Azure apply credentials. Optional safe plan checks are available for manual workflow runs and local checks when Azure CLI authentication is available.
-
-Safe plan checks exclude lessons that depend on owned public DNS or an existing remote-state backend. Those lessons should be validated with targeted local context instead of generic CI assumptions.
+The default CI path remains credential-free and never runs Azure plans or
+applies. Cloud planning is a deliberate local action with Azure CLI and an
+explicit subscription ID, or the separately documented manual OIDC example in
+CLZ-370. Owned public DNS and remote-state consumers require their documented
+targeted context rather than generic CI assumptions.
 
 ## Security Architecture
 
@@ -58,12 +64,15 @@ Direct RDP examples exist to teach the resource model. They are not the mature e
 
 ## Reproducibility Architecture
 
-Each lesson should remain independently runnable from its own folder. Runtime Terraform files stay local and ignored:
+Every lesson remains independently readable from its own folder. Azure
+deployments are self-contained except for explicit cataloged dependencies such
+as the CLZ-310 backend and CLZ-320 consumer. Runtime Terraform files stay local
+and ignored:
 
 | File or folder | Policy |
 |---|---|
 | `.terraform/` | Generated locally or in CI, not committed |
-| `.terraform.lock.hcl` | Generated per lesson, not committed in this curriculum repo |
+| `.terraform.lock.hcl` | Committed for every Terraform root with Windows and Linux AMD64 checksums |
 | `terraform.tfvars` | Local-only user values, not committed |
 | `terraform.tfvars.example` | Safe committed defaults |
 | `*.tfplan` and state files | Local runtime data, not committed |

@@ -1,57 +1,104 @@
-# CLZ-110 - Windows Workstation Setup
+# CLZ-110 - Azure CLI and Subscription Readiness
 
-![Windows Workstation Setup architecture](../assets/diagrams/terraform-workflow.svg)
+![Azure CLI and Subscription Readiness architecture](../assets/diagrams/workstation-toolchain.svg)
 
-## Overview
-A verified local toolchain for running the whole curriculum.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Prove that the intended Azure account, tenant, subscription, region, permissions, and compute quota are ready before Terraform is allowed to deploy anything.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-100.
+- An Azure account with access to a disposable learning subscription.
+- Permission to read subscription metadata and regional usage; do not register providers in this lesson.
+
+## Architecture
+
+Terraform only emits a checklist of Azure CLI commands and declares no provider or resources. You execute read-only Azure CLI queries explicitly, inspect their results, and select a subscription by immutable ID.
+
+## Resources And Cost
+
+**Relative cost: None.** Account, location, role-assignment, and quota reads do not deploy billable resources.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | Terraform, Azure CLI, VS Code, Git, and PowerShell |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz110-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Local readiness outputs | Commands and safety-boundary text produced by Terraform. |
+| Azure control-plane reads | Subscription, tenant, location, role, and quota metadata only. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Confirm tool versions; sign in to Azure CLI; select the intended subscription.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `lab.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Optional for the local output; set `$env:ARM_SUBSCRIPTION_ID` when you must select one exact subscription. |
+| `location` | Region to check for availability and VM-family quota; default is `eastus2`. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz110`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-110-windows-workstation-setup
+terraform init -backend=false -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -out tfplan
+terraform apply tfplan
+az login
+az account list --output table
+$env:ARM_SUBSCRIPTION_ID = '<subscription-id>'
+az account set --subscription $env:ARM_SUBSCRIPTION_ID
+```
+
+`terraform apply` records local outputs only. The Azure CLI commands query Azure but create, update, register, and delete nothing.
+
+## Validate
+
+```powershell
+az account show --query '{tenant:tenantId,subscription:id,state:state,user:user.name}' --output table
+az account list-locations --query "[?name=='eastus2'].{name:name,displayName:displayName}" --output table
+az vm list-usage --location eastus2 --output table
+az role assignment list --assignee (az account show --query user.name -o tsv) --all --output table
+terraform output deployment_behavior
+```
+
+Expected result:
+
+- The selected subscription state is `Enabled` and its tenant and ID are the intended values.
+- The target region is returned and the required VM family has nonzero remaining quota.
+- A suitable role is visible at the intended scope; `deployment_behavior` confirms that Terraform declares no Azure provider or resources.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| The wrong tenant or subscription is active | Set the subscription by ID, not display name, and rerun `az account show`. |
+| Quota shows zero available cores | Choose another supported region/size or request quota before a compute lesson. |
+| Role assignments are empty | Ask the subscription owner for an appropriate learning scope; do not elevate your own access. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Run the Terraform workflow end to end.
+```powershell
+Remove-Item tfplan -ErrorAction SilentlyContinue
+Remove-Item Env:ARM_SUBSCRIPTION_ID -ErrorAction SilentlyContinue
+terraform state list
+```
+
+Only local plan/output state is removed. No Azure resource exists to destroy.
+
+## Production Delta
+
+- Use least-privilege groups and workload identities instead of personal owner credentials.
+- Add policy, budgets, diagnostic settings, and an approved region/quota review to the platform onboarding process.
+
+## Exercises
+
+1. Repeat the checks against a second accessible subscription and identify every changed identifier.
+2. Find the regional quota row for the VM family used in CLZ-190 without requesting or changing quota.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-100 - Terraform Foundations](../CLZ-100-foundations/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-120 - First Azure Deployment and Terraform Workflow &rarr;](../CLZ-120-terraform-core-workflow/README.md)
+<!-- lesson-navigation:end -->

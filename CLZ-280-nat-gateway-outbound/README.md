@@ -2,56 +2,104 @@
 
 ![NAT Gateway Outbound architecture](../assets/diagrams/network-foundation.svg)
 
-## Overview
-A subnet with stable outbound access through NAT Gateway.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Make private-subnet Internet egress explicit and stable by associating a NAT Gateway and Standard public IP with the web subnet.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-270.
+- Understand the difference between inbound access and outbound source translation.
+
+## Architecture
+
+The web subnet has no public workload or inbound service. A NAT Gateway association makes its future outbound connections use one allocated Standard public IPv4. Other subnets are not associated, making the scope visible.
+
+## Resources And Cost
+
+**Relative cost: Moderate.** NAT Gateway has an hourly charge and per-GB processing charge; the Standard public IP is also billable.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | NAT Gateway for private Windows workloads |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz280-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| NAT Gateway | Subnet-level outbound source NAT; hourly and data-processing cost. |
+| Standard public IP | Stable outbound identity. |
+| VNet and subnets | Only the web subnet is associated in this lesson. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Attach a NAT Gateway; understand egress identity; keep inbound access separate.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `nat-gateway.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for Azure plan, apply, and destroy; use the exact subscription GUID. |
+| `environment` | Keep `dev` for the lab unless testing another environment boundary. |
+| `location` | Select a supported region with sufficient quota. |
+| `name_prefix` | Use a short lowercase prefix. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, domains, endpoint names, and secrets in untracked local files or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz280`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-280-nat-gateway-outbound
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+$natIp = terraform output -raw nat_gateway_public_ip
+az network nat gateway list --resource-group $resourceGroup --query '[].{name:name,state:provisioningState,publicIps:publicIpAddresses[].id}' --output json
+az network vnet subnet show --resource-group $resourceGroup --vnet-name (az network vnet list -g $resourceGroup --query '[0].name' -o tsv) --name web-snet --query natGateway.id --output tsv
+$natIp
+```
+
+Expected result:
+
+- The NAT Gateway provisioning state is `Succeeded` and it references the output public IP.
+- The web subnet has a NAT Gateway ID.
+- This control-plane-only lesson does not claim a data-plane egress test because it creates no workload.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| A workload still uses another source IP | Confirm its NIC is in the associated subnet and no higher-level egress path overrides the design. |
+| The public IP cannot attach | Use a compatible Standard, static public IP in the same region. |
+| Costs appear with no VM in the lesson | NAT Gateway is billed while provisioned even without workload traffic. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Add private DNS names.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+az group exists --name $resourceGroup
+```
+
+The hourly NAT Gateway and public-IP resources are deleted.
+
+## Production Delta
+
+- Scale public IP prefixes and SNAT ports to the expected connection volume.
+- NAT Gateway provides stable egress, not filtering; add Azure Firewall or another inspection/control layer when policy requires it.
+
+## Exercises
+
+1. Associate the app subnet in a temporary branch and identify the single new Terraform relationship.
+2. Explain why NAT Gateway does not open an inbound route to a private VM.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-270 - Windows VMSS Autoscaling](../CLZ-270-windows-vmss-autoscaling/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-290 - Private DNS &rarr;](../CLZ-290-private-dns/README.md)
+<!-- lesson-navigation:end -->

@@ -1,23 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="420" viewBox="0 0 1100 420" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="515" viewBox="0 0 1100 515" role="img" aria-labelledby="title desc">
   <title id="title">Terraform workflow</title>
   <desc id="desc">A visual flow from authoring Terraform files to initialization, validation, planning, applying, and cleanup.</desc>
-  <style>.bg{fill:#f7fafc}.box{fill:#ffffff;stroke:#1f6feb;stroke-width:3}.accent{fill:#dbeafe}.text{font:600 24px Arial,sans-serif;fill:#111827}.small{font:17px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
-  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
-  <rect class="bg" width="1100" height="420" rx="18"/>
+  <metadata>{"preserves": "labels, coordinates, resource shapes, and service connections", "sourceSha256": "caea1d0db96ad83e9b2575412b1b253fb8cf9e292d0cff0fbca872210fe38279"}</metadata><style>.bg{fill:#080e1b}.box{fill:#101d32;stroke:#61caff;stroke-width:3}.accent{fill:#172747}.text{font:600 24px "Segoe UI",Arial,sans-serif;fill:#eff5ff}.small{font:17px "Segoe UI",Arial,sans-serif;fill:#bcd0eb}.arrow{stroke:#60e0e5;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#60e0e5" /></marker></defs>
+  <rect class="bg" width="1100" height="420" rx="18" />
   <text class="text" x="40" y="55">Azure From Zero To Hero Terraform Workflow</text>
   <g transform="translate(55 115)">
-    <rect class="box" width="160" height="110" rx="12"/><text class="text" x="32" y="45">Write</text><text class="small" x="24" y="78">.tf files</text>
-    <line class="arrow" x1="180" y1="55" x2="245" y2="55"/>
-    <rect class="box accent" x="270" width="160" height="110" rx="12"/><text class="text" x="318" y="45">Init</text><text class="small" x="300" y="78">providers</text>
-    <line class="arrow" x1="450" y1="55" x2="515" y2="55"/>
-    <rect class="box" x="540" width="160" height="110" rx="12"/><text class="text" x="574" y="45">Check</text><text class="small" x="568" y="78">fmt + validate</text>
-    <line class="arrow" x1="720" y1="55" x2="785" y2="55"/>
-    <rect class="box accent" x="810" width="160" height="110" rx="12"/><text class="text" x="860" y="45">Plan</text><text class="small" x="840" y="78">review change</text>
+    <rect class="box" width="160" height="110" rx="12" /><text class="text" x="32" y="45">Write</text><text class="small" x="24" y="78">.tf files</text>
+    <line class="arrow" x1="180" y1="55" x2="245" y2="55" />
+    <rect class="box accent" x="270" width="160" height="110" rx="12" /><text class="text" x="318" y="45">Init</text><text class="small" x="300" y="78">providers</text>
+    <line class="arrow" x1="450" y1="55" x2="515" y2="55" />
+    <rect class="box" x="540" width="160" height="110" rx="12" /><text class="text" x="574" y="45">Check</text><text class="small" x="568" y="78">fmt + validate</text>
+    <line class="arrow" x1="720" y1="55" x2="785" y2="55" />
+    <rect class="box accent" x="810" width="160" height="110" rx="12" /><text class="text" x="860" y="45">Plan</text><text class="small" x="840" y="78">review change</text>
   </g>
   <g transform="translate(225 285)">
-    <rect class="box" width="220" height="80" rx="12"/><text class="text" x="75" y="50">Apply</text>
-    <line class="arrow" x1="245" y1="40" x2="365" y2="40"/>
-    <rect class="box accent" x="390" width="220" height="80" rx="12"/><text class="text" x="452" y="50">Destroy</text>
+    <rect class="box" width="220" height="80" rx="12" /><text class="text" x="75" y="50">Apply</text>
+    <line class="arrow" x1="245" y1="40" x2="365" y2="40" />
+    <rect class="box accent" x="390" width="220" height="80" rx="12" /><text class="text" x="452" y="50">Destroy</text>
   </g>
-</svg>
-
+<g><rect y="420.0" width="1100.0" height="95" fill="#080e1b" /><g transform="translate(25 433.0) scale(0.75)" fill="none" stroke="#60e0e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 60h39c25 0 25-34 2-37-8-24-40-22-46 1C-3 30 0 60 24 60Z" /><path d="m30 40 12 12 15-22" /></g><g transform="translate(112 433.0) scale(0.75)" fill="none" stroke="#b39bff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="29" y="29" width="26" height="26" rx="5" /><path d="M42 29V12m0 43v17M29 42H12m43 0h17" /><circle cx="42" cy="9" r="5" /><circle cx="42" cy="75" r="5" /><circle cx="9" cy="42" r="5" /><circle cx="75" cy="42" r="5" /></g><text x="210" y="462.0" fill="#eaf2ff" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="500">Azure + Terraform learning architecture</text><text x="210" y="490.0" fill="#bdd0ec" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Follow the lesson for exact resource settings and deployment mode.</text></g></svg>

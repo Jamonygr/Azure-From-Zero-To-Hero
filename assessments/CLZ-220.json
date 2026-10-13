@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-220",
+  "questions": [
+    {
+      "id": "CLZ220-Q01",
+      "learningObjective": "Distinguish network load balancing from application routing",
+      "stem": "A team wants CLZ-220 to route /images to one pool and /api to another. Why is the deployed Standard Load Balancer insufficient?",
+      "options": {
+        "A": "It requires every backend to have a public IP",
+        "B": "It only supports a single Windows backend",
+        "C": "It distributes TCP flows without inspecting HTTP URL paths",
+        "D": "It must install IIS on the frontend"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Private NICs are valid backends; adding public IPs does not provide URL routing.",
+        "B": "The lesson associates two backends with its pool.",
+        "C": "This lesson's Layer 4 service needs a separate application-aware delivery tier for path routing.",
+        "D": "The frontend is a network service; IIS runs inside the backends."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q02",
+      "learningObjective": "Identify the public frontend",
+      "stem": "Which CLZ-220 resource supplies the public address used in load_balancer_url?",
+      "options": {
+        "A": "The Standard public IP attached to the load balancer frontend",
+        "B": "The dynamic private address on the first VM NIC",
+        "C": "The web subnet's address prefix",
+        "D": "The generated Windows administrator password"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The URL uses azurerm_public_ip.lb.ip_address.",
+        "B": "Private backend addresses are not the public HTTP endpoint.",
+        "C": "A subnet prefix identifies an address range, not a public endpoint.",
+        "D": "A credential is unrelated to the frontend address."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q03",
+      "learningObjective": "Explain backend membership",
+      "stem": "A second IIS VM is healthy locally but receives no frontend traffic. Its NIC has no backend-pool association. What must be corrected?",
+      "options": {
+        "A": "Change the VM's administrator username",
+        "B": "Increase the public IP's DNS TTL",
+        "C": "Mark the Terraform password output nonsensitive",
+        "D": "Associate its intended NIC IP configuration with the backend pool"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Guest identity does not register a NIC in a backend pool.",
+        "B": "DNS caching does not establish backend membership.",
+        "C": "Secret display settings do not change network relationships.",
+        "D": "The rule can select only associated pool members."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q04",
+      "learningObjective": "Interpret the TCP probe",
+      "stem": "CLZ-220 configures a TCP probe on port 80. IIS accepts TCP connections but returns an application error page. What does a successful probe prove?",
+      "options": {
+        "A": "The lesson page contains the correct backend identity",
+        "B": "TCP port 80 accepts the probe connection",
+        "C": "Every application dependency is healthy",
+        "D": "HTTPS certificates are trusted"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Only an HTTP content test can demonstrate the expected page.",
+        "B": "A TCP probe checks connection acceptance rather than the page's content.",
+        "C": "A listening port can coexist with failed downstream dependencies.",
+        "D": "The configured probe is TCP on port 80, not certificate validation."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q05",
+      "learningObjective": "Understand flow-based distribution",
+      "stem": "Four HTTP requests all show backend 1 while both backends are healthy. Which explanation should be investigated before declaring failure?",
+      "options": {
+        "A": "The requests may reuse a TCP flow that stays on one backend",
+        "B": "The load balancer always selects the lowest VM index",
+        "C": "The probe necessarily deleted backend 2",
+        "D": "The outbound rule duplicates backend 1's page"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The service distributes flows, so successive requests need not alternate servers.",
+        "B": "Its distribution is not based on Terraform's numeric index.",
+        "C": "A repeated page does not prove deletion or failed health.",
+        "D": "SNAT rules do not rewrite HTTP content."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q06",
+      "learningObjective": "Predict probe failure behavior",
+      "stem": "A backend stops accepting the configured probe. What is the intended effect on new load-balanced flows after failure is detected?",
+      "options": {
+        "A": "They are redirected to the backend's public IP",
+        "B": "They automatically reinstall IIS",
+        "C": "They are sent to other healthy pool members",
+        "D": "They make Terraform destroy the VM"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "These VMs have private NICs, and unhealthy targets are not bypassed this way.",
+        "B": "Health probes do not remediate the guest configuration.",
+        "C": "Probe health controls eligibility for new flows.",
+        "D": "A probe result does not execute Terraform."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q07",
+      "learningObjective": "Separate inbound and outbound SNAT",
+      "stem": "Why does CLZ-220 set disable_outbound_snat = true on its HTTP load-balancing rule?",
+      "options": {
+        "A": "To block return packets for every HTTP request",
+        "B": "To make the separately declared outbound rule responsible for egress SNAT",
+        "C": "To remove every public frontend address",
+        "D": "To enable URL-based backend routing"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Responses to allowed inbound flows still return normally.",
+        "B": "The design avoids implicit outbound SNAT from the inbound rule.",
+        "C": "The public HTTP frontend remains in the configuration.",
+        "D": "SNAT configuration does not add Layer 7 routing."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q08",
+      "learningObjective": "Trace the explicit outbound path",
+      "stem": "The backends need to initiate an Internet connection. Which declared resource provides their explicit egress translation in CLZ-220?",
+      "options": {
+        "A": "The TCP health probe",
+        "B": "The Windows administrator credential",
+        "C": "The data-snet declaration alone",
+        "D": "azurerm_lb_outbound_rule.web using the backend pool and public frontend"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A probe measures reachability; it does not create general egress.",
+        "B": "Guest authentication does not supply a network path.",
+        "C": "A subnet without an egress service is not explicit outbound connectivity.",
+        "D": "The outbound rule maps the pool's private source flows to the frontend IP."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q09",
+      "learningObjective": "Avoid implicit outbound assumptions",
+      "stem": "web-snet disables default outbound access in CLZ-220. Why is the explicit outbound rule still important?",
+      "options": {
+        "A": "The flag disables all private VNet communication",
+        "B": "Private backends need an intentional path for new Internet-bound flows",
+        "C": "The flag automatically creates NAT Gateway",
+        "D": "Only public HTTP clients use the outbound rule"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Private communication is separate from default Internet egress.",
+        "B": "Disabling default outbound access removes reliance on implicit egress.",
+        "C": "It creates no NAT Gateway resource.",
+        "D": "The rule handles connections initiated by backends."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q10",
+      "learningObjective": "Protect probe reachability",
+      "stem": "A custom NSG redesign blocks the AzureLoadBalancer service tag on the probe port. What can happen even though client HTTP is allowed?",
+      "options": {
+        "A": "The load balancer switches automatically to DNS probes",
+        "B": "The backend pool becomes an Internet DNS zone",
+        "C": "Terraform starts using round-robin HTTP routing",
+        "D": "The probe can mark otherwise reachable servers unhealthy"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The configured TCP probe does not become a DNS probe.",
+        "B": "NSGs cannot create DNS resources.",
+        "C": "Network filtering does not change the service's routing layer.",
+        "D": "Probe traffic must reach the backend as well as client traffic."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q11",
+      "learningObjective": "Interpret the client source address",
+      "stem": "A backend NSG must allow Internet HTTP clients in CLZ-220. Why is allowing only the public frontend IP as the source insufficient?",
+      "options": {
+        "A": "IIS replaces all packet source IPs with its hostname",
+        "B": "The probe grants all clients NSG access",
+        "C": "The load balancer preserves the client source IP on inbound flows",
+        "D": "The backend pool assigns every client a VM administrator account"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Application content does not replace packet source addresses.",
+        "B": "Health checks do not override NSG policy.",
+        "C": "Rules should account for the original client source, not assume proxy source addresses.",
+        "D": "Network forwarding does not create guest accounts."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q12",
+      "learningObjective": "Diagnose all unhealthy backends",
+      "stem": "The HTTP frontend times out and every probe reports unhealthy. Which investigation is most relevant?",
+      "options": {
+        "A": "Check backend power, IIS readiness, port 80 rules, and pool associations",
+        "B": "Change the Role tag on the public IP",
+        "C": "Disable state locking to force HTTP responses",
+        "D": "Rotate the load balancer resource group name without inspecting health"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "These are the configured path's essential components.",
+        "B": "Tags do not fix a failed TCP path.",
+        "C": "Terraform locking is unrelated to packet forwarding.",
+        "D": "Renaming resources adds risk without diagnosing the failure."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q13",
+      "learningObjective": "Distinguish provisioning from service readiness",
+      "stem": "Terraform has created both VMs, but the IIS extensions are still running. What should a learner do before treating the endpoint as ready?",
+      "options": {
+        "A": "Assume VM creation guarantees the lesson page exists",
+        "B": "Remove the probe to make extension installation finish",
+        "C": "Add public IPs to bypass all validation",
+        "D": "Inspect extension status and then verify probe health and HTTP content"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The page is installed by a separate extension.",
+        "B": "The probe does not control script execution.",
+        "C": "Bypassing the intended topology does not verify it.",
+        "D": "Guest bootstrap and network health can lag resource creation."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Custom Script Extension for Windows",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-windows"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q14",
+      "learningObjective": "Separate control-plane and data-plane evidence",
+      "stem": "Azure CLI lists the HTTP rule, pool, and probe. What additional evidence proves usable web delivery?",
+      "options": {
+        "A": "terraform fmt reports no formatting differences",
+        "B": "The public IP resource has a Project tag",
+        "C": "An HTTP request through the frontend returns the intended lesson page",
+        "D": "The local tfvars filename matches the lesson"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Formatting does not test a deployed endpoint.",
+        "B": "Tags do not show an application response.",
+        "C": "Resource listings describe configuration, while a request exercises the path.",
+        "D": "A local filename is not service evidence."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q15",
+      "learningObjective": "Match frontend and backend ports",
+      "stem": "A learner changes the rule's backend_port to 8080 while IIS still listens on 80. What result should they expect?",
+      "options": {
+        "A": "The frontend's forwarded traffic will not reach the intended IIS listener",
+        "B": "The load balancer silently changes the IIS binding",
+        "C": "The frontend begins serving HTTPS automatically",
+        "D": "The Terraform count changes to 8080 VMs"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The backend port must match the guest listener.",
+        "B": "Network rules do not configure IIS.",
+        "C": "Port changes do not add TLS termination.",
+        "D": "The port is unrelated to resource cardinality."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q16",
+      "learningObjective": "Keep application errors distinct from transport failures",
+      "stem": "A client receives an HTTP 502 through CLZ-220. Which conclusion is sound?",
+      "options": {
+        "A": "Standard Load Balancer generated its own IIS error page",
+        "B": "An HTTP component produced the status; the Layer 4 load balancer does not generate HTTP error pages",
+        "C": "A 502 proves Terraform state is corrupted",
+        "D": "A 502 always means both Windows VMs are deallocated"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The service forwards transport flows rather than serving IIS pages.",
+        "B": "Inspect the backend or another HTTP intermediary as well as transport health.",
+        "C": "The status alone gives no evidence about Terraform state.",
+        "D": "An HTTP response indicates an HTTP component answered."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q17",
+      "learningObjective": "Explain TLS responsibilities",
+      "stem": "A production team wants HTTPS using the lesson's Standard Load Balancer. Which additional responsibility remains?",
+      "options": {
+        "A": "Store the certificate only in the backend pool name",
+        "B": "Change the health probe to TCP 443 and assume certificates are installed",
+        "C": "Configure TLS at the application or use an approved TLS-terminating delivery service",
+        "D": "Mark the HTTP URL output sensitive"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Resource names cannot configure TLS.",
+        "B": "A TCP probe does not install or validate a certificate.",
+        "C": "Layer 4 forwarding does not manage HTTP certificates for IIS.",
+        "D": "Output visibility does not encrypt traffic."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q18",
+      "learningObjective": "Assess actual resource cost",
+      "stem": "Which part of CLZ-220's implementation is most likely to dominate its ongoing lab cost?",
+      "options": {
+        "A": "The local terraform show command",
+        "B": "The two allocated Windows VMs and their managed OS disks",
+        "C": "The Terraform resource labels",
+        "D": "The numeric indexes in state"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Inspecting a local plan does not create a running service.",
+        "B": "Multiple Windows compute instances and disks dominate the described topology.",
+        "C": "Labels are identifiers, not billable Azure resources.",
+        "D": "Indexes do not themselves incur cloud charges."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q19",
+      "learningObjective": "Plan for backend quota",
+      "stem": "A learner has quota for only one VM of the selected size, but CLZ-220 declares two. What is the prudent next step?",
+      "options": {
+        "A": "Remove the health probe so quota checks stop",
+        "B": "Set the public IP allocation to Dynamic",
+        "C": "Apply repeatedly with state locking disabled",
+        "D": "Resolve quota or choose an approved available size before apply"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Health probes do not govern compute quota.",
+        "B": "IP allocation does not increase VM quota.",
+        "C": "Disabling locks cannot create missing quota and risks state races.",
+        "D": "The deployment must fit regional VM capacity and subscription limits."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q20",
+      "learningObjective": "Protect generated credentials",
+      "stem": "The Windows password output is sensitive in CLZ-220. Which artifact still requires protection?",
+      "options": {
+        "A": "Terraform state that can retain the generated password",
+        "B": "The public lesson title alone",
+        "C": "The subnet's RFC1918 address prefix alone",
+        "D": "The CSS theme preference"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Sensitive display controls do not remove secrets from state.",
+        "B": "The public title is not an administrator credential.",
+        "C": "A private prefix is not the generated password.",
+        "D": "A theme choice is unrelated to guest secrets."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform sensitive state",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q21",
+      "learningObjective": "Recognize probe coverage limits",
+      "stem": "The TCP probe is healthy but the page cannot reach its database. What improvement belongs in a production design?",
+      "options": {
+        "A": "Add meaningful application health checks and dependency monitoring",
+        "B": "Assume a healthy TCP socket proves every dependency",
+        "C": "Increase the public IP's name length",
+        "D": "Replace backend content with the resource-group ID"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Transport reachability is narrower than end-to-end application health.",
+        "B": "It does not execute the application's dependency paths.",
+        "C": "Naming does not expand health coverage.",
+        "D": "Page text does not repair dependency health."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Load Balancer health probes",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q22",
+      "learningObjective": "Choose scalable governed egress",
+      "stem": "The application grows and needs scalable outbound connectivity instead of the lesson's LB outbound rule. Which candidate matches the production guidance?",
+      "options": {
+        "A": "An inbound NAT rule for HTTP only",
+        "B": "An additional IIS homepage file",
+        "C": "Removing all explicit outbound configuration",
+        "D": "NAT Gateway or a governed firewall egress architecture"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Inbound forwarding is not a general outbound design.",
+        "B": "Guest content does not provide egress SNAT.",
+        "C": "That makes the path less intentional, not more scalable.",
+        "D": "Choose an explicit egress design suited to scale and inspection needs."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q23",
+      "learningObjective": "Interpret the shared web NSG",
+      "stem": "Which lesson traffic does allow-http explicitly permit to the Windows backends?",
+      "options": {
+        "A": "All inbound ports from the Internet",
+        "B": "Inbound TCP traffic to destination port 80 from Internet sources",
+        "C": "Only outbound TCP to destination port 3389",
+        "D": "Only probe traffic from every private subnet"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The rule's destination port is limited to 80.",
+        "B": "The rule matches the intended public HTTP teaching path.",
+        "C": "Its direction is Inbound and its destination is HTTP.",
+        "D": "Its source is Internet, not a list of private subnet prefixes."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q24",
+      "learningObjective": "Read dependency references",
+      "stem": "Each backend association references a NIC ID and backend pool ID. What does Terraform infer?",
+      "options": {
+        "A": "Every association can be created before both resources exist",
+        "B": "All NICs automatically join every load balancer in the subscription",
+        "C": "The association must use the corresponding created NIC and pool",
+        "D": "The public frontend installs Windows on the NIC"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Required identities come from those resources.",
+        "B": "Membership is explicitly declared.",
+        "C": "References establish graph dependencies and pass the correct resource identities.",
+        "D": "The relationship is networking, not guest deployment."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q25",
+      "learningObjective": "Maintain consistent load balancer component references",
+      "stem": "The frontend IP configuration is renamed from public to edge, but CLZ-220's rules still reference public. What must be corrected?",
+      "options": {
+        "A": "Rename the Windows administrator to edge",
+        "B": "Update the rules' frontend_ip_configuration_name references consistently",
+        "C": "Replace the TCP probe with a DNS record",
+        "D": "Attach a public IP directly to every backend instead"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Guest usernames do not identify load balancer frontend configurations.",
+        "B": "The HTTP and outbound rules must reference the existing named frontend configuration.",
+        "C": "DNS records do not repair a missing frontend reference.",
+        "D": "Changing the intended topology is unnecessary; correct the component references."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q26",
+      "learningObjective": "Verify egress separately from ingress",
+      "stem": "HTTP requests through the frontend work, but a backend-initiated download fails. What should be checked next?",
+      "options": {
+        "A": "Outbound rule configuration and that backend's pool membership",
+        "B": "Only the frontend HTTP page wording",
+        "C": "Only the browser's dark theme setting",
+        "D": "Remove the HTTP rule permanently"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Inbound delivery does not by itself prove the explicit egress path.",
+        "B": "Text content does not establish outbound connectivity.",
+        "C": "The browser theme cannot affect backend SNAT.",
+        "D": "Destroying ingress does not diagnose outbound failure."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q27",
+      "learningObjective": "Validate backend variety without requiring alternation",
+      "stem": "What is an appropriate success criterion for CLZ-220's repeated frontend HTTP requests?",
+      "options": {
+        "A": "Every successive request must alternate between backend 1 and backend 2",
+        "B": "Exactly one backend must answer until Terraform is restarted",
+        "C": "Successful responses can show multiple healthy backend identities across distinct flows",
+        "D": "The load balancer must return the generated administrator password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The service does not promise per-request round robin.",
+        "B": "Terraform is not a traffic scheduler.",
+        "C": "Flow distribution can expose both identities without strict alternation.",
+        "D": "Secrets must never be web validation content."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q28",
+      "learningObjective": "Capture cleanup verification context",
+      "stem": "Why does the cleanup sequence save resource_group_name before terraform destroy?",
+      "options": {
+        "A": "Saving the name prevents all resource deletion",
+        "B": "The name contains the load balancer's packet routing table",
+        "C": "Terraform destroy needs the HTTP page content as its password",
+        "D": "Outputs may disappear, so the name remains available for the Azure absence check"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A PowerShell variable has no deletion lock.",
+        "B": "It identifies a resource group.",
+        "C": "Deletion uses provider authentication, not page content.",
+        "D": "Retaining the target identity supports a precise post-destroy check."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q29",
+      "learningObjective": "Avoid incomplete cleanup",
+      "stem": "A learner stops IIS and closes the browser after finishing CLZ-220. What remains to be done?",
+      "options": {
+        "A": "Destroy the managed lab resources and verify the resource group is absent",
+        "B": "Only clear browser cookies",
+        "C": "Only run terraform fmt again",
+        "D": "Delete the local README while leaving Azure running"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Stopping a service does not remove VMs, disks, IPs, or the load balancer.",
+        "B": "Cookies do not delete Azure resources.",
+        "C": "Formatting is not cleanup.",
+        "D": "Removing documentation leaves the billable footprint intact."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ220-Q30",
+      "learningObjective": "Distinguish a public endpoint from public backend NICs",
+      "stem": "Which topology matches the actual CLZ-220 implementation?",
+      "options": {
+        "A": "One public IP attached to each backend NIC and no load balancer",
+        "B": "One public load balancer frontend with two private Windows backend NICs",
+        "C": "A private DNS A record acting as a Layer 7 proxy",
+        "D": "A Bastion host terminating every HTTP request"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That is not the declared topology.",
+        "B": "The public IP belongs to the frontend; pool members use private NIC addresses.",
+        "C": "DNS is not the lesson's web distribution component.",
+        "D": "Bastion is a management service and is not created here."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure Load Balancer overview",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

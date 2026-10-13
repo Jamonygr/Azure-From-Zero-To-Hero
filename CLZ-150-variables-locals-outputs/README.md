@@ -1,57 +1,105 @@
-# CLZ-150 - Variables Locals Outputs
+# CLZ-150 - Variables, Locals, and Outputs
 
-![Variables Locals Outputs architecture](../assets/diagrams/resource-naming.svg)
+![Variables, Locals, and Outputs architecture](../assets/diagrams/resource-naming.svg)
 
-## Overview
-A configurable lesson folder with safe example values.
+## Goal
 
-This lesson is part of the Windows-only Azure From Zero To Hero path. It keeps the configuration readable, uses the shared naming model, and avoids hidden prerequisites beyond Azure CLI authentication and Terraform.
+Separate learner-controlled inputs, derived naming logic, and observable outputs so a small Terraform configuration remains understandable and reusable.
 
-## What You Build
-| Item | Description |
+## Prerequisites
+
+- Complete CLZ-140.
+- Understand the difference between configuration source and untracked local values.
+
+## Architecture
+
+Typed variables define the public interface, locals derive the immutable CLZ-150 naming and tags, one resource group consumes the derived values, and outputs expose only validation-friendly results.
+
+## Resources And Cost
+
+**Relative cost: Low.** The empty resource group has no direct charge.
+
+| Component | Purpose and principal cost driver |
 |---|---|
-| Main topic | Variables, locals, outputs, and tfvars examples |
-| Azure scope | One resource group tagged for this lesson |
-| Default region | `eastus2` |
-| Naming style | `clz-dev-clz150-*` |
-| Cleanup path | `terraform destroy` from this folder |
+| Variables | The small public interface: subscription, environment, location, and prefix. |
+| Locals | Fixed lesson ID plus derived names/tags. |
+| Resource group and outputs | A managed example and observable, nonsensitive results. |
 
-## Cost Awareness
+## Inputs
 
-This lab can create billable Azure resources. Review `terraform plan` before apply, keep defaults small unless the lesson asks you to scale, and run `terraform destroy` from this folder when you finish validation.
-## Learning Outcomes
-Change behavior with variables; keep derived names in locals; expose useful outputs.
-
-## Files In This Lab
-| File | Purpose |
+| Input | Required substitution or decision |
 |---|---|
-| `versions.tf` | Terraform and provider constraints |
-| `providers.tf` | AzureRM provider configuration |
-| `variables.tf` | Inputs shared across the curriculum |
-| `locals.tf` | Naming and tag composition |
-| `resource-group.tf` | Lesson resource group |
-| `lab.tf` | Lesson-specific Azure resources |
-| `outputs.tf` | Values used for validation |
-| `terraform.tfvars.example` | Safe example inputs |
+| `subscription_id` | Required for Azure plan, apply, and destroy; copy the exact ID returned by Azure CLI. |
+| `environment` | Keep `dev` for the lab or choose `test`/`prod` only to study the naming boundary. |
+| `location` | Use a region where your subscription has access and sufficient quota. |
+| `name_prefix` | Use a short lowercase prefix; resource names derive from it. |
 
-## Runbook
-1. Open this folder in PowerShell.
-2. Copy `terraform.tfvars.example` to `terraform.tfvars` only if you need local overrides.
-3. Run `terraform init`.
-4. Run `terraform fmt -check`.
-5. Run `terraform validate`.
-6. Run `terraform plan -out tfplan`.
-7. Review the plan, then run `terraform apply tfplan`.
-8. Capture `terraform output` values needed for validation.
+Keep real subscription IDs, CIDRs, and secrets in untracked `terraform.tfvars` or environment variables.
 
-## Validation Checklist
-- Resource names start with `clz-dev-clz150`.
-- Tags include `Project`, `Environment`, `ManagedBy`, and `Lab`.
-- Outputs match the resources created by the plan.
-- No local secrets are committed.
+## Deploy
+
+Run from the repository root in PowerShell 7:
+
+```powershell
+Set-Location CLZ-150-variables-locals-outputs
+if (-not (Test-Path terraform.tfvars)) {
+  Copy-Item terraform.tfvars.example terraform.tfvars
+}
+$subscriptionId = az account show --query id --output tsv
+terraform init -lockfile=readonly
+terraform fmt -check
+terraform validate
+terraform plan -var "subscription_id=$subscriptionId" -out tfplan
+terraform show tfplan
+terraform apply tfplan
+```
+
+## Validate
+
+```powershell
+terraform output -json | ConvertFrom-Json | Format-List
+terraform console
+local.prefix
+local.tags
+exit
+```
+
+Expected result:
+
+- Outputs match the selected location and derived resource-group name.
+- `local.prefix` includes the fixed `clz150` code.
+- The tag map is derived once rather than repeated across resources.
+
+## Troubleshooting
+
+| Symptom | Resolution |
+|---|---|
+| Terraform rejects an environment | Use one of the values allowed by the variable validation. |
+| A local value cannot be overridden | Change its source input; locals intentionally are not public inputs. |
+| An output is marked unknown during plan | The value depends on an Azure result that is known only after apply. |
 
 ## Cleanup
-Run `terraform destroy` from this folder. If the lab created shared values for the next lesson, record the outputs first.
 
-## Next Lesson
-Learn what Terraform records in state.
+```powershell
+$resourceGroup = terraform output -raw resource_group_name
+terraform destroy -var "subscription_id=$subscriptionId"
+az group exists --name $resourceGroup
+```
+
+Azure CLI returns `false`, and `terraform state list` is empty.
+
+## Production Delta
+
+- Treat module inputs and outputs as versioned interfaces; document breaking changes.
+- Mark secret outputs sensitive, but remember that sensitive values can still exist in state.
+
+## Exercises
+
+1. Add a validation for a deliberately constrained prefix and test one invalid value.
+2. Create a new nonsensitive output from existing locals without duplicating naming logic.
+
+## Navigation
+
+<!-- lesson-navigation:start -->
+[&larr; CLZ-140 - Resource Groups and Tags](../CLZ-140-resource-groups-tags/README.md) | [Curriculum](../README.md#curriculum) | [CLZ-160 - State and Locking Basics &rarr;](../CLZ-160-state-and-locking-basics/README.md)
+<!-- lesson-navigation:end -->

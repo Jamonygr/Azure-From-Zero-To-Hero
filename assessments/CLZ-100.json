@@ -1,0 +1,805 @@
+{
+  "lessonId": "CLZ-100",
+  "questions": [
+    {
+      "id": "CLZ100-Q01",
+      "learningObjective": "Identify local-only infrastructure code",
+      "stem": "A learner opens CLZ-100 without an Azure account. Which result matches its declared configuration?",
+      "options": {
+        "A": "Initialization creates an Azure resource group.",
+        "B": "A subscription must be selected before formatting.",
+        "C": "Naming and tagging previews can be evaluated locally.",
+        "D": "The preview incurs VM charges."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "There is no resource block to create that group.",
+        "B": "Formatting does not require cloud authentication.",
+        "C": "No resources, providers, or data sources contact Azure.",
+        "D": "No VM is declared."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q02",
+      "learningObjective": "Distinguish plan from execution",
+      "stem": "CLZ-100 saves tfplan. Which statement describes what has happened to the proposed output values?",
+      "options": {
+        "A": "They have automatically become Azure tags.",
+        "B": "They are now readable from newly applied state in every case.",
+        "C": "They were sent to a remote backend.",
+        "D": "They are recorded in a plan, not necessarily in applied state."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "This lesson has no Azure resource.",
+        "B": "Planning alone does not persist new output values as an apply does.",
+        "C": "No remote backend is configured.",
+        "D": "A plan proposes changes without applying them."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q03",
+      "learningObjective": "Choose a safe formatting check",
+      "stem": "You want CI to report inconsistent Terraform formatting without rewriting source. Which command fits?",
+      "options": {
+        "A": "terraform fmt -check",
+        "B": "terraform fmt",
+        "C": "terraform apply",
+        "D": "terraform destroy"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The check flag reports formatting differences without changing files.",
+        "B": "Without -check, fmt may rewrite files.",
+        "C": "Apply executes changes rather than checking formatting.",
+        "D": "Destroy removes managed objects, not formatting errors."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform formatting command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/fmt"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q04",
+      "learningObjective": "Validate configuration structure",
+      "stem": "After initialization, a misspelled Terraform argument appears in a file. Which command checks configuration consistency before planning?",
+      "options": {
+        "A": "terraform output",
+        "B": "terraform validate",
+        "C": "az account show",
+        "D": "terraform state list"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Output reads stored results rather than validating configuration.",
+        "B": "Validate checks the configuration against language and provider schemas.",
+        "C": "Azure account metadata does not validate Terraform source.",
+        "D": "Listing addresses does not check configuration syntax."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform configuration validation",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q05",
+      "learningObjective": "Interpret initialization boundaries",
+      "stem": "Why does the CLZ-100 command include -backend=false when running terraform init?",
+      "options": {
+        "A": "To skip every syntax check forever.",
+        "B": "To disable all variable validation.",
+        "C": "To skip backend initialization for this local exercise.",
+        "D": "To create an Azure Storage backend silently."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Validation remains a separate available command.",
+        "B": "Variable checks still occur during relevant evaluation.",
+        "C": "The flag suppresses backend initialization; it does not apply infrastructure.",
+        "D": "The flag skips, rather than creates, a backend."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform initialization",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q06",
+      "learningObjective": "Read planned values",
+      "stem": "A fresh CLZ-100 run has only been planned. You need to inspect configuration_preview now. What is the reliable choice?",
+      "options": {
+        "A": "terraform output -json alone",
+        "B": "az group show",
+        "C": "terraform state rm configuration_preview",
+        "D": "terraform show tfplan"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Output reads applied state and may have no new outputs yet.",
+        "B": "The preview is not an Azure resource group.",
+        "C": "Outputs are not resource addresses to remove this way.",
+        "D": "The saved plan contains the proposed output changes."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform show command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/show"
+        },
+        {
+          "title": "Terraform output command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/output"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q07",
+      "learningObjective": "Use supported input values",
+      "stem": "The environment input is set to staging. Why does this lesson reject it?",
+      "options": {
+        "A": "Its validation permits only dev, test, and prod.",
+        "B": "Terraform never accepts string variables.",
+        "C": "Azure requires every environment to be prod.",
+        "D": "The name prefix must equal the environment."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The configured contains check limits the accepted labels.",
+        "B": "String variables are supported.",
+        "C": "The restriction comes from local configuration, not Azure.",
+        "D": "Those inputs have different purposes."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q08",
+      "learningObjective": "Predict derived names",
+      "stem": "With name_prefix=team and environment=test, what resource-group name does CLZ-100 preview?",
+      "options": {
+        "A": "team-test-clz110-rg",
+        "B": "team-test-clz100-rg",
+        "C": "CLZ-100-team-test",
+        "D": "team-rg"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The lesson code is clz100, not clz110.",
+        "B": "The prefix combines the two inputs with the fixed lesson code.",
+        "C": "The expression orders prefix, environment, and normalized lesson code.",
+        "D": "The expression also includes environment and lesson identity."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q09",
+      "learningObjective": "Understand local value references",
+      "stem": "In Terraform console, which expression evaluates the naming value defined in locals.tf?",
+      "options": {
+        "A": "var.prefix",
+        "B": "output.prefix",
+        "C": "local.prefix",
+        "D": "azurerm.prefix"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "No input variable named prefix defines this value.",
+        "B": "Outputs do not form this expression namespace.",
+        "C": "Local values are referenced through the local namespace.",
+        "D": "Provider names are not namespaces for local values."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        },
+        {
+          "title": "Terraform console",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/console"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q10",
+      "learningObjective": "Recognize ownership metadata",
+      "stem": "Which CLZ-100 tag records the tooling intended to manage later Azure resources?",
+      "options": {
+        "A": "Environment = Terraform",
+        "B": "Lab = Terraform",
+        "C": "Project = Terraform",
+        "D": "ManagedBy = Terraform"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Environment holds dev, test, or prod.",
+        "B": "Lab holds CLZ-100.",
+        "C": "Project holds the curriculum name.",
+        "D": "The fixed tag map identifies Terraform as the management source."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q11",
+      "learningObjective": "Understand location validation limits",
+      "stem": "The location input accepts a lowercase string that resembles an Azure region. What does successful CLZ-100 validation prove?",
+      "options": {
+        "A": "The string passes the configured pattern only.",
+        "B": "The subscription can deploy in that region.",
+        "C": "Every VM size is available there.",
+        "D": "The region has unlimited quota."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "This credential-free lesson performs no regional Azure API lookup.",
+        "B": "Subscription eligibility is not queried.",
+        "C": "VM availability is not inspected.",
+        "D": "Quota is unrelated to this local pattern."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q12",
+      "learningObjective": "Apply naming constraints",
+      "stem": "Which proposed name_prefix satisfies this lesson's 2–8 character lowercase pattern?",
+      "options": {
+        "A": "7lab",
+        "B": "lab7",
+        "C": "Lab7",
+        "D": "lab-prefix"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The first character must be a letter.",
+        "B": "It starts with a lowercase letter and uses permitted characters.",
+        "C": "The pattern rejects uppercase characters.",
+        "D": "The hyphen is outside the permitted character set."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q13",
+      "learningObjective": "Separate data from resources",
+      "stem": "configuration_preview contains a resource_group_name field. Why does that field not create a resource group?",
+      "options": {
+        "A": "Every output creates a hidden resource.",
+        "B": "The resource is waiting for az login.",
+        "C": "It is an output object, not a resource declaration.",
+        "D": "The group is created but omitted from state."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Outputs expose values rather than create arbitrary objects.",
+        "B": "No Azure resource or provider exists in this module.",
+        "C": "Terraform creates managed objects from resource blocks, not arbitrary output keys.",
+        "D": "There is no creation action for a group."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q14",
+      "learningObjective": "Inspect planned resource changes",
+      "stem": "The CLZ-100 plan contains output changes but no resource changes. What conclusion is appropriate?",
+      "options": {
+        "A": "The plan must be corrupt.",
+        "B": "The network was created outside Terraform automatically.",
+        "C": "The Azure provider has hidden the resource group.",
+        "D": "There is no managed Azure object proposed by this module."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Output-only plans are valid.",
+        "B": "No network creation follows from this plan.",
+        "C": "No Azure provider is required.",
+        "D": "Its output-only configuration can change values without creating resources."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q15",
+      "learningObjective": "Understand current working directories",
+      "stem": "Terraform unexpectedly requests Azure credentials during CLZ-100. Which check should come first?",
+      "options": {
+        "A": "Verify the current folder and inspect unexpected .tf files.",
+        "B": "Grant Owner access immediately.",
+        "C": "Remove all variable validations.",
+        "D": "Run destroy against every subscription."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Terraform loads the root module from its working directory.",
+        "B": "Permissions cannot explain an unintended provider declaration.",
+        "C": "Those validations do not add an Azure provider.",
+        "D": "That would cross the lesson's safety boundary."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q16",
+      "learningObjective": "Use variable assignments intentionally",
+      "stem": "You want to experiment with environment=test without editing the variable default. Which command supplies that input to a plan?",
+      "options": {
+        "A": "terraform output -var='environment=test'",
+        "B": "terraform plan -var='environment=test'",
+        "C": "terraform state list environment=test",
+        "D": "az account set --subscription test"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Output is not a planning input-assignment command.",
+        "B": "The -var option supplies an input value for that command.",
+        "C": "State listing does not assign configuration inputs.",
+        "D": "An environment label is not a subscription selector."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q17",
+      "learningObjective": "Interpret output interfaces",
+      "stem": "Why does outputs.tf expose configuration_preview as one object?",
+      "options": {
+        "A": "It grants subscription access automatically.",
+        "B": "It creates a provider dependency lock.",
+        "C": "It groups related derived values for inspection.",
+        "D": "It encrypts every input in memory and state."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "An output does not grant RBAC roles.",
+        "B": "Provider locks come from initialization and provider selection.",
+        "C": "An output can expose a structured value, including a map of results.",
+        "D": "Output grouping is not an encryption control."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform output values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q18",
+      "learningObjective": "Distinguish locals and inputs",
+      "stem": "A learner tries -var='lab_id=CLZ-999' in CLZ-100. Why is that not the intended way to change lesson identity?",
+      "options": {
+        "A": "Local values can only be changed in Azure Portal.",
+        "B": "All local values are immutable Azure resources.",
+        "C": "Terraform uses any -var name without a declaration.",
+        "D": "lab_id is a local value, not a declared input."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "They are computed in Terraform configuration.",
+        "B": "They are expressions, not Azure objects.",
+        "C": "Undeclared variable assignments are not a valid input interface.",
+        "D": "Command-line variable assignments target declared input variables."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        },
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q19",
+      "learningObjective": "Avoid provider assumptions",
+      "stem": "Which output from terraform providers is expected for the supplied CLZ-100 files?",
+      "options": {
+        "A": "No Azure provider requirement.",
+        "B": "AzureRM must appear because the location says eastus2.",
+        "C": "Random must appear because the prefix varies.",
+        "D": "AzureRM and Kubernetes must both appear."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The configuration uses Terraform language features without an Azure provider.",
+        "B": "A string value does not declare a provider.",
+        "C": "Input-derived strings do not require the random provider.",
+        "D": "Neither is declared."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q20",
+      "learningObjective": "Recognize harmless cleanup",
+      "stem": "After this local-only lesson, which cleanup targets its optional saved plan?",
+      "options": {
+        "A": "az group delete --name configuration_preview",
+        "B": "Remove-Item tfplan -ErrorAction SilentlyContinue",
+        "C": "Delete the complete repository.",
+        "D": "Revoke every Azure account role."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The output name is not an Azure group.",
+        "B": "The file is a local artifact; removing it creates no Azure deletion.",
+        "C": "Only generated local artifacts need cleanup.",
+        "D": "This lesson does not require or create Azure role assignments."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q21",
+      "learningObjective": "Understand empty state inventories",
+      "stem": "A learner lists state after the supplied CLZ-100 exercise. Which managed-resource inventory is expected?",
+      "options": {
+        "A": "One address for each of the four tags.",
+        "B": "One Windows VM address.",
+        "C": "No managed resource addresses.",
+        "D": "A storage account for the plan file."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Tag map entries are not resources.",
+        "B": "No VM is declared.",
+        "C": "There are no resource declarations in this module.",
+        "D": "A local plan does not create storage infrastructure."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform state list",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/list"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q22",
+      "learningObjective": "Use expression inspection",
+      "stem": "Which tool is designed for interactively evaluating local.tags during the exercise?",
+      "options": {
+        "A": "terraform destroy",
+        "B": "az tag create",
+        "C": "terraform init -upgrade",
+        "D": "terraform console"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Destroy plans removal of managed resources.",
+        "B": "That command changes Azure tags rather than evaluates local expressions.",
+        "C": "Initialization updates dependencies, not an interactive expression session.",
+        "D": "Console evaluates Terraform expressions in the current module context."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform console",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/console"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q23",
+      "learningObjective": "Separate display values from authentication",
+      "stem": "A resource-group preview contains the word prod. What security permission does that label grant?",
+      "options": {
+        "A": "None.",
+        "B": "Owner on all production subscriptions.",
+        "C": "Contributor on the displayed region.",
+        "D": "Permission to bypass provider authentication."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "An environment string influences derived data, not Azure authorization.",
+        "B": "Labels do not create RBAC assignments.",
+        "C": "RBAC scope is not granted by output text.",
+        "D": "Authentication remains necessary for later Azure deployments."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "title": "Azure RBAC overview",
+          "url": "https://learn.microsoft.com/en-us/azure/role-based-access-control/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q24",
+      "learningObjective": "Use validation failure feedback",
+      "stem": "A name_prefix is rejected before any resources are planned. What should the learner do?",
+      "options": {
+        "A": "Disable Terraform checks for all later lessons.",
+        "B": "Adjust the input to the documented naming constraint.",
+        "C": "Choose a larger VM.",
+        "D": "Request additional subscription quota."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Removing checks loses useful safeguards.",
+        "B": "The variable error identifies a local input problem.",
+        "C": "No VM exists in this lesson.",
+        "D": "Quota is unrelated to the input pattern."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q25",
+      "learningObjective": "Protect reproducible initialization",
+      "stem": "What does -lockfile=readonly communicate when initialization uses an existing dependency lock file?",
+      "options": {
+        "A": "Make all future Terraform operations read-only.",
+        "B": "Encrypt the local state file.",
+        "C": "Do not rewrite provider selections in that file.",
+        "D": "Require an Azure blob lease."
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The flag applies to dependency lock-file handling.",
+        "B": "Provider dependency locking is not state encryption.",
+        "C": "Readonly initialization respects committed provider selections instead of updating them.",
+        "D": "A dependency lock file is different from backend state locking."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform dependency lock file",
+          "url": "https://developer.hashicorp.com/terraform/language/files/dependency-lock"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q26",
+      "learningObjective": "Evaluate code additions carefully",
+      "stem": "Someone adds an Azure resource block to CLZ-100 and says it is still credential-free because the title is unchanged. What determines the deployment behavior?",
+      "options": {
+        "A": "The README title alone.",
+        "B": "The presence of a tfplan file alone.",
+        "C": "The environment tag value.",
+        "D": "The loaded configuration and its dependencies."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A title cannot suppress resource actions.",
+        "B": "A saved plan proposes changes; loaded resource declarations determine managed infrastructure.",
+        "C": "A tag is metadata, not an execution boundary.",
+        "D": "The actual resource/provider declarations control what Terraform can manage."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform provider configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/configuration"
+        },
+        {
+          "title": "Terraform execution plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q27",
+      "learningObjective": "Understand validation versus deployment",
+      "stem": "terraform validate succeeds in CLZ-100. What should that result be taken to mean?",
+      "options": {
+        "A": "The configuration is internally valid for the checks performed.",
+        "B": "An Azure deployment has completed.",
+        "C": "A subscription's billing has been verified.",
+        "D": "All naming policies in an organization are satisfied."
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Validation is not a guarantee about future cloud deployment eligibility.",
+        "B": "Validation does not apply changes.",
+        "C": "No subscription query is part of this module.",
+        "D": "Those external policies are not evaluated here."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform configuration validation",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q28",
+      "learningObjective": "Prepare production naming standards",
+      "stem": "Which change fits the lesson's Production Delta before the previews become shared infrastructure?",
+      "options": {
+        "A": "Remove ownership metadata everywhere.",
+        "B": "Agree on naming and tagging standards and enforcement.",
+        "C": "Reuse the same name for every environment.",
+        "D": "Hardcode personal credentials beside the names."
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That weakens operational identification.",
+        "B": "The lesson recommends conventions and policy before shared deployment.",
+        "C": "It erases a useful environment boundary.",
+        "D": "Secrets are not naming inputs."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Tag Azure resources",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q29",
+      "learningObjective": "Distinguish file inspection modes",
+      "stem": "Which command shows the saved CLZ-100 plan as machine-readable JSON for PowerShell inspection?",
+      "options": {
+        "A": "terraform fmt -json tfplan",
+        "B": "terraform console -json tfplan",
+        "C": "terraform show -json tfplan",
+        "D": "az group show -json tfplan"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Formatting is not plan JSON inspection.",
+        "B": "Console evaluates expressions rather than serializes a saved plan.",
+        "C": "Show can serialize a specified plan for analysis.",
+        "D": "Azure CLI does not interpret Terraform plan files."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform show command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/show"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ100-Q30",
+      "learningObjective": "Assess a repeat local plan",
+      "stem": "After changing only environment from dev to test, what CLZ-100 changes should be reviewed?",
+      "options": {
+        "A": "A newly deployed VM image.",
+        "B": "The Azure tenant selected by login.",
+        "C": "A remote storage container's lease.",
+        "D": "The derived preview name and Environment tag."
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "No VM exists in the module.",
+        "B": "The local string does not change CLI authentication.",
+        "C": "No remote backend is configured.",
+        "D": "Both expressions depend on the environment input."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform local values",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

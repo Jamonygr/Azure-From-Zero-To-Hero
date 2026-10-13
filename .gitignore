@@ -1,13 +1,21 @@
 # Terraform runtime data
 **/.terraform/*
-# Lesson lock files are generated during local and CI validation instead of being committed.
-.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfplan
+.terraform.tfstate.lock.info
 crash.log
 crash.*.log
 artifacts/
+
+# Generated documentation and Python development files
+.site-docs/
+.site-docs.tmp/
+/site/
+.venv/
+venv/
+**/__pycache__/
+*.pyc
 
 # Local values and overrides
 terraform.tfvars
@@ -16,6 +24,10 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# Runtime backend bootstrap files created by CLZ-310
+/CLZ-310-remote-state-storage/backend.tf
+/CLZ-310-remote-state-storage/backend.hcl
 
 # Local editor and OS noise
 .vscode/*
@@ -26,3 +38,4 @@ override.tf.json
 Thumbs.db
 .DS_Store
 
+.check-tools/

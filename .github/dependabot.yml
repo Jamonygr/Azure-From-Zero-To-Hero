@@ -33,3 +33,4 @@ updates:
         patterns:
           - "hashicorp/azurerm"
           - "hashicorp/random"
+        group-by: dependency-name

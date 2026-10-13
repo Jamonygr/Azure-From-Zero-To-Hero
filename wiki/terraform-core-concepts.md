@@ -130,14 +130,15 @@ Locals are derived values. They keep expressions in one place and make resources
 
 ~~~hcl
 locals {
-  lab_code = lower(replace(var.lab_id, "CLZ-", "clz"))
+  lab_id   = "CLZ-150"
+  lab_code = lower(replace(local.lab_id, "CLZ-", "clz"))
   prefix   = lower("${var.name_prefix}-${var.environment}-${local.lab_code}")
 
   tags = {
     Project     = "Azure From Zero To Hero"
     Environment = var.environment
     ManagedBy   = "Terraform"
-    Lab         = var.lab_id
+    Lab         = local.lab_id
   }
 }
 ~~~

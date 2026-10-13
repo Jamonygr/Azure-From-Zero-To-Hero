@@ -17,6 +17,11 @@ output "key_vault_name" {
   value       = azurerm_key_vault.lab.name
 }
 
+output "web_network_security_group_name" {
+  description = "Network security group protecting the capstone web subnet."
+  value       = azurerm_network_security_group.web.name
+}
+
 output "windows_admin_password" {
   description = "Generated Windows admin password."
   value       = random_password.windows_admin.result

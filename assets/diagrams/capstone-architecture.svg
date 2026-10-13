@@ -1,18 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="715" viewBox="0 0 1200 715" role="img" aria-labelledby="title desc">
   <title id="title">Capstone Windows reference architecture</title>
   <desc id="desc">The capstone combines network, Windows VMSS, load balancing, Bastion, Key Vault, and monitoring.</desc>
-  <style>.bg{fill:#f8fafc}.vnet{fill:#fff;stroke:#2563eb;stroke-width:4}.box{fill:#fff;stroke:#0f766e;stroke-width:3}.sec{fill:#ffe4e6;stroke:#be123c;stroke-width:3}.obs{fill:#fef3c7;stroke:#ca8a04;stroke-width:3}.net{fill:#dbeafe;stroke:#2563eb;stroke-width:3}.text{font:700 24px Arial,sans-serif;fill:#111827}.small{font:18px Arial,sans-serif;fill:#374151}.arrow{stroke:#0f766e;stroke-width:4;marker-end:url(#arrow)}</style>
-  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
-  <rect class="bg" width="1200" height="620" rx="18"/>
+  <metadata>{"preserves": "labels, coordinates, resource shapes, and service connections", "sourceSha256": "e161d9b7171213602af5ba789d710696c6966f0f0d50235858ca1a5505104995"}</metadata><style>.bg{fill:#080e1b}.vnet{fill:#101d32;stroke:#61caff;stroke-width:4}.box{fill:#101d32;stroke:#60e0e5;stroke-width:3}.sec{fill:#271b3f;stroke:#b39bff;stroke-width:3}.obs{fill:#262137;stroke:#b39bff;stroke-width:3}.net{fill:#172747;stroke:#61caff;stroke-width:3}.text{font:700 24px "Segoe UI",Arial,sans-serif;fill:#eff5ff}.small{font:18px "Segoe UI",Arial,sans-serif;fill:#bcd0eb}.arrow{stroke:#60e0e5;stroke-width:4;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#60e0e5" /></marker></defs>
+  <rect class="bg" width="1200" height="620" rx="18" />
   <text class="text" x="40" y="55">CLZ-390 Windows Reference Architecture</text>
-  <rect class="vnet" x="70" y="95" width="1060" height="410" rx="18"/>
+  <rect class="vnet" x="70" y="95" width="1060" height="410" rx="18" />
   <text class="small" x="100" y="130">Azure From Zero To Hero VNet</text>
-  <rect class="net" x="120" y="165" width="220" height="120" rx="12"/><text class="text" x="165" y="215">Bastion</text><text class="small" x="150" y="248">private RDP path</text>
-  <rect class="box" x="455" y="145" width="260" height="160" rx="12"/><text class="text" x="497" y="205">Standard LB</text><text class="small" x="505" y="240">HTTP frontend</text>
-  <line class="arrow" x1="735" y1="225" x2="815" y2="225"/>
-  <rect class="box" x="835" y="135" width="240" height="180" rx="12"/><text class="text" x="884" y="200">Windows</text><text class="text" x="882" y="235">IIS VMSS</text>
-  <rect class="sec" x="120" y="340" width="260" height="110" rx="12"/><text class="text" x="165" y="405">Key Vault</text>
-  <rect class="obs" x="455" y="340" width="260" height="110" rx="12"/><text class="text" x="498" y="405">Monitoring</text>
-  <rect class="net" x="835" y="340" width="240" height="110" rx="12"/><text class="text" x="880" y="405">Modules</text>
-</svg>
-
+  <rect class="net" x="120" y="165" width="220" height="120" rx="12" /><text class="text" x="165" y="215">Bastion</text><text class="small" x="150" y="248">private RDP path</text>
+  <rect class="box" x="455" y="145" width="260" height="160" rx="12" /><text class="text" x="497" y="205">Standard LB</text><text class="small" x="505" y="240">HTTP frontend</text>
+  <line class="arrow" x1="735" y1="225" x2="815" y2="225" />
+  <rect class="box" x="835" y="135" width="240" height="180" rx="12" /><text class="text" x="884" y="200">Windows</text><text class="text" x="882" y="235">IIS VMSS</text>
+  <rect class="sec" x="120" y="340" width="260" height="110" rx="12" /><text class="text" x="165" y="405">Key Vault</text>
+  <rect class="obs" x="455" y="340" width="260" height="110" rx="12" /><text class="text" x="498" y="405">Monitoring</text>
+  <rect class="net" x="835" y="340" width="240" height="110" rx="12" /><text class="text" x="880" y="405">Modules</text>
+<g><rect y="620.0" width="1200.0" height="95" fill="#080e1b" /><g transform="translate(25 633.0) scale(0.75)" fill="none" stroke="#60e0e5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 60h39c25 0 25-34 2-37-8-24-40-22-46 1C-3 30 0 60 24 60Z" /><path d="m30 40 12 12 15-22" /></g><g transform="translate(112 633.0) scale(0.75)" fill="none" stroke="#b39bff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="29" y="29" width="26" height="26" rx="5" /><path d="M42 29V12m0 43v17M29 42H12m43 0h17" /><circle cx="42" cy="9" r="5" /><circle cx="42" cy="75" r="5" /><circle cx="9" cy="42" r="5" /><circle cx="75" cy="42" r="5" /></g><text x="210" y="662.0" fill="#eaf2ff" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="500">Azure + Terraform learning architecture</text><text x="210" y="690.0" fill="#bdd0ec" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Follow the lesson for exact resource settings and deployment mode.</text></g></svg>

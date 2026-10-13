@@ -68,10 +68,20 @@ resource "azurerm_network_security_rule" "allow_admin_rdp" {
   network_security_group_name = azurerm_network_security_group.web.name
 }
 
-resource "azurerm_subnet_network_security_group_association" "web" {
-  subnet_id                 = azurerm_subnet.web.id
-  network_security_group_id = azurerm_network_security_group.web.id
+resource "azurerm_network_security_rule" "deny_other_rdp" {
+  name                        = "deny-other-rdp"
+  priority                    = 120
+  direction                   = "Inbound"
+  access                      = "Deny"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "3389"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.lab.name
+  network_security_group_name = azurerm_network_security_group.web.name
 }
+
 resource "random_password" "windows_admin" {
   length           = 20
   special          = true
@@ -90,6 +100,9 @@ resource "azurerm_public_ip" "web" {
   tags                = local.tags
 }
 
+# The public IP is intentional in this first-access teaching lesson. Later
+# lessons replace direct exposure with load-balancing or Azure Bastion.
+#trivy:ignore:AZU-0076
 resource "azurerm_network_interface" "web" {
   name                = "${local.prefix}-web-nic"
   location            = azurerm_resource_group.lab.location
@@ -105,12 +118,17 @@ resource "azurerm_network_interface" "web" {
   tags = local.tags
 }
 
+resource "azurerm_network_interface_security_group_association" "web" {
+  network_interface_id      = azurerm_network_interface.web.id
+  network_security_group_id = azurerm_network_security_group.web.id
+}
+
 resource "azurerm_windows_virtual_machine" "web" {
   name                = "${local.prefix}-web-winvm"
   computer_name       = "clz${local.lab_number}"
   location            = azurerm_resource_group.lab.location
   resource_group_name = azurerm_resource_group.lab.name
-  size                = "Standard_B2s"
+  size                = var.vm_size
   admin_username      = var.admin_username
   admin_password      = random_password.windows_admin.result
   network_interface_ids = [

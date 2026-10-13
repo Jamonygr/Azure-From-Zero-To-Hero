@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-280",
+  "questions": [
+    {
+      "id": "CLZ280-Q01",
+      "learningObjective": "Distinguish outbound NAT from inbound access",
+      "stem": "What network capability does CLZ-280's NAT Gateway association provide to a future workload in web-snet?",
+      "options": {
+        "A": "An unsolicited inbound RDP endpoint on every private NIC",
+        "B": "HTTP path-based load balancing across two Windows VMs",
+        "C": "Explicit outbound Internet connectivity using the configured public IP",
+        "D": "Automatic guest authentication through Microsoft Entra ID"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "NAT Gateway does not publish inbound port forwarding.",
+        "B": "That is not the purpose of NAT Gateway.",
+        "C": "NAT Gateway supplies source translation for connections initiated from the associated subnet.",
+        "D": "The service handles networking rather than guest identity."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q02",
+      "learningObjective": "Identify the stable egress address",
+      "stem": "Which Terraform output is intended for an external system's egress-IP allowlist?",
+      "options": {
+        "A": "nat_gateway_public_ip",
+        "B": "resource_group_name",
+        "C": "location",
+        "D": "The web subnet's private address prefix"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It exposes the Standard public IP associated with the NAT Gateway.",
+        "B": "A logical container name is not the translated source IP.",
+        "C": "The region name does not identify the egress endpoint.",
+        "D": "External Internet services see the translated public source, not the private subnet range."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q03",
+      "learningObjective": "Interpret the deployed scope",
+      "stem": "Which subnet is associated with NAT Gateway in the current CLZ-280 configuration?",
+      "options": {
+        "A": "Every subnet in every VNet in the subscription",
+        "B": "web-snet only",
+        "C": "AzureBastionSubnet only",
+        "D": "The local contributor's Wi-Fi network"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Association is explicit and limited.",
+        "B": "The code declares azurerm_subnet_nat_gateway_association.web.",
+        "C": "This lesson does not create that Bastion subnet.",
+        "D": "Azure subnet association does not attach the workstation LAN."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q04",
+      "learningObjective": "Keep validation claims within evidence",
+      "stem": "Why does CLZ-280 report control-plane configuration rather than claiming a successful workload egress test?",
+      "options": {
+        "A": "A NAT Gateway can never support real outbound traffic",
+        "B": "Terraform state already contains a captured Internet packet trace",
+        "C": "The lesson creates no workload to originate a data-plane connection",
+        "D": "The public IP output secretly runs a Windows browser"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Supporting outbound traffic is its purpose.",
+        "B": "State does not provide that network test.",
+        "C": "Resource existence and subnet association are verifiable, but runtime egress needs a client.",
+        "D": "Printing an IP does not create a guest workload."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q05",
+      "learningObjective": "Validate both required associations",
+      "stem": "Which relationships complete the lesson's explicit NAT design?",
+      "options": {
+        "A": "Only a Role tag on the public IP",
+        "B": "A public-IP association and a web-subnet association to the NAT Gateway",
+        "C": "Only a Windows administrator password output",
+        "D": "Only a health probe attached to a private DNS zone"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Tags do not establish either relationship.",
+        "B": "The gateway needs both its public source identity and the subnet scope.",
+        "C": "No guest credential is needed by this control-plane-only topology.",
+        "D": "Neither object provides the declared NAT associations."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q06",
+      "learningObjective": "Diagnose an unassociated workload",
+      "stem": "A future VM in app-snet uses another egress path while web-snet has NAT Gateway. What is the first scope check?",
+      "options": {
+        "A": "Whether the VM's computer name includes web",
+        "B": "Whether the current public IP output has enough characters",
+        "C": "Whether the book has been downloaded",
+        "D": "Whether the VM's NIC is actually in a subnet associated with the NAT Gateway"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Names do not determine subnet NAT association.",
+        "B": "String length does not define scope.",
+        "C": "Book access has no effect on Azure routing.",
+        "D": "The configured web association does not cover app-snet."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q07",
+      "learningObjective": "Explain why inbound administration stays absent",
+      "stem": "A learner tries to open RDP to nat_gateway_public_ip from the Internet. Why is this not the lesson's administration path?",
+      "options": {
+        "A": "NAT Gateway does not accept unsolicited inbound connections to private workloads",
+        "B": "The gateway requires the Windows password in its DNS label",
+        "C": "All public IPv4 addresses support RDP automatically",
+        "D": "Changing the client port to 80 creates RDP forwarding"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Use an approved management path such as Bastion or VPN instead.",
+        "B": "The service does not authenticate guests that way.",
+        "C": "An address alone does not publish a listener.",
+        "D": "No inbound rule is created by a different client port."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q08",
+      "learningObjective": "Understand return traffic",
+      "stem": "How can an Internet service return data for a connection initiated by a private VM through NAT Gateway?",
+      "options": {
+        "A": "The service tracks the outbound flow and permits matching response traffic",
+        "B": "The service temporarily opens all inbound ports to everyone",
+        "C": "The administrator creates an inbound NAT rule for every download packet",
+        "D": "The private VM must attach a second public IP after sending each request"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Return packets are associated with the initiated flow.",
+        "B": "Matching return traffic does not imply universal inbound exposure.",
+        "C": "Established-flow responses do not need per-download inbound rules.",
+        "D": "That is not required for subnet NAT egress."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q09",
+      "learningObjective": "Separate source translation from filtering",
+      "stem": "An organization needs to block outbound connections to unapproved destinations. What is the limitation of this NAT-only lesson?",
+      "options": {
+        "A": "NAT Gateway automatically blocks every destination not listed in Terraform tags",
+        "B": "The public IP encrypts destination names and makes policy unnecessary",
+        "C": "Changing the source IP always proves the destination is safe",
+        "D": "NAT Gateway provides egress translation rather than a destination-inspection firewall"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Tags do not create a destination allowlist.",
+        "B": "An egress IP is not a substitute for policy.",
+        "C": "Source translation does not assess destination trust.",
+        "D": "Use appropriate filtering and inspection controls in the production design."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q10",
+      "learningObjective": "Respect explicit outbound policy",
+      "stem": "A VM in the associated web subnet has an outbound NSG deny for its target service. Does NAT Gateway bypass that deny?",
+      "options": {
+        "A": "Yes; every associated subnet becomes exempt from NSGs",
+        "B": "No; source translation does not override the effective security policy",
+        "C": "Yes; a Standard public IP always permits all protocols",
+        "D": "No; because NAT Gateway never supports TCP"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Association does not remove NSG enforcement.",
+        "B": "The traffic still needs an allowed network path.",
+        "C": "Public addressing is not an unconditional policy allow.",
+        "D": "TCP outbound connectivity is supported."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q11",
+      "learningObjective": "Account for route overrides",
+      "stem": "A production subnet has a 0.0.0.0/0 user-defined route to a virtual appliance. What should be checked when observed egress differs from the NAT IP?",
+      "options": {
+        "A": "Only whether the NAT public IP is printed in the README",
+        "B": "Only whether the Project tag uses title case",
+        "C": "The effective route and the appliance's outbound design",
+        "D": "Only whether the Terraform output is marked sensitive"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Documentation text does not control effective routing.",
+        "B": "Tag casing is unrelated to the chosen next hop.",
+        "C": "A custom default route to an appliance can override the direct Internet path.",
+        "D": "Output redaction does not determine routing."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q12",
+      "learningObjective": "Distinguish DNS resolution from egress identity",
+      "stem": "An Internet name fails to resolve inside a future VM. Does the NAT IP alone prove DNS is configured correctly?",
+      "options": {
+        "A": "Yes; NAT Gateway automatically hosts every public DNS zone",
+        "B": "No; resolver configuration and name-resolution tests are separate",
+        "C": "Yes; a Standard public IP creates an A record for every name",
+        "D": "No; because DNS can only run from public VMs"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "It does not provide that DNS hosting function.",
+        "B": "Source NAT is not an authoritative DNS or resolver service.",
+        "C": "An IP resource does not create arbitrary DNS records.",
+        "D": "Private clients can use DNS with an appropriate resolver path."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q13",
+      "learningObjective": "Choose a compatible public IP",
+      "stem": "Which IP resource matches CLZ-280's declared Standard NAT Gateway design?",
+      "options": {
+        "A": "A Standard static public IPv4 in the intended region",
+        "B": "A Basic dynamic public IP from another region",
+        "C": "A private /24 subnet prefix without a public IP",
+        "D": "A Windows administrator username formatted as an IP label"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The lesson declares Standard SKU and Static allocation.",
+        "B": "That does not match the supported Standard association.",
+        "C": "The declared translation design needs a public source identity.",
+        "D": "A username is not a compatible public IP resource."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q14",
+      "learningObjective": "Read association state",
+      "stem": "Which Azure CLI observation most directly confirms the web subnet association?",
+      "options": {
+        "A": "The Windows VM's power state is running",
+        "B": "The resource group has four tags",
+        "C": "web-snet's natGateway.id references the expected NAT resource",
+        "D": "The local terraform directory contains a README"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "This lesson creates no VM, and VM power does not identify subnet association.",
+        "B": "Tags are not the NAT relationship.",
+        "C": "That field describes the subnet's configured gateway relationship.",
+        "D": "Local documentation does not prove Azure association."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q15",
+      "learningObjective": "Distinguish provisioned state from workload testing",
+      "stem": "NAT Gateway is Succeeded and references the expected public IP. Which statement is accurate?",
+      "options": {
+        "A": "Every possible destination has been tested successfully",
+        "B": "The gateway has installed IIS on an unseen VM",
+        "C": "The private DNS record web.clz.internal is now guaranteed to resolve",
+        "D": "The configured control-plane resources are present; a workload test would provide additional egress evidence"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "No workload test has exercised destinations.",
+        "B": "No VM or IIS deployment exists in this lesson.",
+        "C": "Private DNS is taught separately.",
+        "D": "Provisioning success is narrower than an observed data-plane connection."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q16",
+      "learningObjective": "Understand idle service cost",
+      "stem": "Why can CLZ-280 incur charges even though it creates no VM and sends no workload traffic?",
+      "options": {
+        "A": "NAT Gateway has a provisioned-service hourly charge and its public IP is billable",
+        "B": "Terraform charges for every plan command sent to Azure",
+        "C": "The VNet's private address count is the hourly charge",
+        "D": "Each README view launches an Azure VM"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Idle configuration is not necessarily free.",
+        "B": "Planning is not the declared billable NAT service.",
+        "C": "Private address-space size is not this service's main cost driver.",
+        "D": "The static learning site does not create compute."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q17",
+      "learningObjective": "Separate hourly and usage charges",
+      "stem": "Which traffic change can increase NAT Gateway's usage-based cost in addition to its provisioned hourly cost?",
+      "options": {
+        "A": "Changing the Terraform resource label from main to web",
+        "B": "More processed outbound and return data",
+        "C": "Choosing the browser's light theme",
+        "D": "Adding a paragraph to the lesson README"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Local labels do not meter network data.",
+        "B": "Data-processing charges vary with traffic volume.",
+        "C": "Site appearance does not add Azure NAT processing.",
+        "D": "Documentation size is not workload traffic through this NAT Gateway."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q18",
+      "learningObjective": "Extend subnet scope deliberately",
+      "stem": "The exercise associates app-snet with the existing NAT Gateway. What new Terraform relationship is required?",
+      "options": {
+        "A": "An inbound RDP rule for every app subnet address",
+        "B": "A second administrator password generated by the gateway",
+        "C": "A subnet-to-NAT-Gateway association for app-snet",
+        "D": "A load-balancer health probe on port 53"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Inbound administration is not required for outbound subnet association.",
+        "B": "The gateway does not need a Windows guest credential.",
+        "C": "One gateway can serve multiple appropriate subnets in the same VNet.",
+        "D": "A health probe is not a NAT association."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q19",
+      "learningObjective": "Understand per-subnet gateway exclusivity",
+      "stem": "Can one subnet be directly associated with two NAT Gateway resources simultaneously?",
+      "options": {
+        "A": "No; a subnet can have one NAT Gateway association",
+        "B": "Yes; every new outbound flow alternates between all gateways",
+        "C": "Yes; but only when both public IPs are dynamic",
+        "D": "No; because NAT Gateway can serve only one VM"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Choose the intended gateway for that subnet.",
+        "B": "The association does not provide that multi-gateway pool.",
+        "C": "That is not a supported basis for multiple gateway association.",
+        "D": "It can serve many private workloads in associated subnets."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q20",
+      "learningObjective": "Keep VNet scope explicit",
+      "stem": "Can the same Standard NAT Gateway be directly associated with subnets in two different VNets?",
+      "options": {
+        "A": "Yes; every subnet sharing the same name is automatically covered",
+        "B": "Yes; a common Project tag makes all VNets one network",
+        "C": "No; because NAT Gateway cannot associate with any subnet",
+        "D": "No; its subnet associations must be within one VNet"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Subnet names do not join scope across VNets.",
+        "B": "Tags do not merge network boundaries.",
+        "C": "Subnet association is its core configuration.",
+        "D": "Cross-VNet egress requires an appropriate routing architecture rather than direct spanning."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q21",
+      "learningObjective": "Avoid confusing capacity mechanisms",
+      "stem": "Why is NAT Gateway's dynamic SNAT-port allocation different from CLZ-270 autoscaling?",
+      "options": {
+        "A": "It creates a new VM for every allocated SNAT port",
+        "B": "It scales outbound connection translation capacity rather than the number of Windows VMs",
+        "C": "It changes autoscale CPU thresholds automatically",
+        "D": "It replaces the VMSS operating system with a network appliance"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Translation ports do not represent VM instances.",
+        "B": "The service manages network flows, not this lesson's compute fleet.",
+        "C": "Those rules target the VMSS independently.",
+        "D": "The service does not transform guest compute."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q22",
+      "learningObjective": "Recognize connection-volume planning",
+      "stem": "A workload will open many simultaneous outbound connections. What belongs in the NAT design review?",
+      "options": {
+        "A": "Connection demand, SNAT capacity, destinations, and public IP or prefix sizing",
+        "B": "Only the number of letters in the resource-group name",
+        "C": "Only the desired IIS page title",
+        "D": "Only the VM administrator's surname"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Network connection scale can require a deliberate capacity design.",
+        "B": "Name length does not describe connection demand.",
+        "C": "Page text is not a translation-capacity measure.",
+        "D": "Guest naming does not determine SNAT capacity."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q23",
+      "learningObjective": "Distinguish source identity from content confidentiality",
+      "stem": "Does a stable NAT public IP encrypt all application traffic automatically?",
+      "options": {
+        "A": "Yes; a static address always implies HTTPS",
+        "B": "Yes; Terraform tags act as network encryption keys",
+        "C": "No; applications still need suitable transport encryption such as TLS",
+        "D": "No; because private workloads cannot use HTTPS"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "An IP allocation method does not enable TLS.",
+        "B": "Tags are metadata.",
+        "C": "Source translation changes addressing, not application encryption.",
+        "D": "Private clients can initiate TLS connections through appropriate egress."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q24",
+      "learningObjective": "Explain explicit egress for private Windows workloads",
+      "stem": "Why would a later private Windows workload need a declared egress path for updates or activation?",
+      "options": {
+        "A": "Bastion automatically supplies all Internet downloads for guest processes",
+        "B": "Private Internet-bound services require an allowed explicit outbound method",
+        "C": "Private VMs never need network communication",
+        "D": "The lesson's resource-group tags reserve update bandwidth"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Management connectivity is not a general guest egress promise.",
+        "B": "NAT Gateway is one option for that path.",
+        "C": "Private workloads can need updates, activation, and dependencies.",
+        "D": "Tags do not establish connectivity."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q25",
+      "learningObjective": "Understand separate lesson deployments",
+      "stem": "Does completing CLZ-280 automatically attach its NAT Gateway to the VMSS deployed in CLZ-270's separate VNet?",
+      "options": {
+        "A": "Yes; sequential lesson numbers automatically connect Azure resources",
+        "B": "Yes; all resources with the same environment tag share a subnet",
+        "C": "No; because NAT Gateway cannot work with VMSS",
+        "D": "No; the lesson declares its own VNet and subnet association"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Navigation order does not create networking relationships.",
+        "B": "Tags do not attach NICs to networks.",
+        "C": "It can serve scale-set instances in appropriately associated subnets.",
+        "D": "Previous deployments are not implicitly modified by this new configuration."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q26",
+      "learningObjective": "Interpret public-IP lifecycle",
+      "stem": "An external partner allowlists the NAT public IP. What must be considered if the lab is destroyed and recreated?",
+      "options": {
+        "A": "The partner's policy automatically follows the Terraform variable name",
+        "B": "The public address may change, so the partner's allowlist must be reviewed",
+        "C": "The resource-group tag permanently reserves the IP forever",
+        "D": "The gateway retains every previous public IP after destroy"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "External systems do not watch local Terraform names.",
+        "B": "Destroying and recreating IP resources does not guarantee the same allocated address.",
+        "C": "Tags do not reserve deleted public IPs.",
+        "D": "Destroyed resources are not retained by that assumption."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q27",
+      "learningObjective": "Compare translation methods",
+      "stem": "A subnet has both NAT Gateway and a load-balancer outbound rule without an overriding appliance route. Which method normally handles new outbound flows?",
+      "options": {
+        "A": "The load-balancer inbound HTTP rule always wins",
+        "B": "The Terraform output printed most recently",
+        "C": "Whichever guest has the shorter computer name",
+        "D": "The associated NAT Gateway"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Inbound HTTP forwarding is not the priority rule for new egress flows.",
+        "B": "Printing order does not control Azure routing.",
+        "C": "Guest naming does not choose the egress mechanism.",
+        "D": "NAT Gateway takes precedence over the other explicit Internet egress method for new flows."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q28",
+      "learningObjective": "Distinguish shared egress identity from workload attribution",
+      "stem": "A partner sees the same NAT public IP for requests from two private clients. Can that source IP alone identify which VM initiated each request?",
+      "options": {
+        "A": "Yes; NAT Gateway gives every private client a different public IP automatically",
+        "B": "Yes; the public IP embeds the VM's Terraform resource address",
+        "C": "No; shared egress requires application identity and appropriate logs for attribution",
+        "D": "No; NAT Gateway removes every application authentication header"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Multiple clients can share the configured NAT public address.",
+        "B": "A translated address does not embed a Terraform identity.",
+        "C": "The shared source identifies an egress path, not a unique guest or application principal.",
+        "D": "Source translation does not remove application authentication; use it alongside operational logs."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure NAT Gateway overview",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q29",
+      "learningObjective": "Avoid incomplete cost cleanup",
+      "stem": "A learner removes only the subnet association and leaves NAT Gateway and its public IP provisioned. What cost concern remains?",
+      "options": {
+        "A": "The provisioned gateway and public IP can still incur charges",
+        "B": "No charges are possible without an associated VM",
+        "C": "Only the local Terraform state file becomes billable",
+        "D": "The VNet automatically deletes the unattached gateway"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Removing scope is not the same as deleting billable resources.",
+        "B": "Idle gateways can still be billable.",
+        "C": "The charges belong to Azure services.",
+        "D": "Do not assume automatic deletion of separate resources."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "NAT Gateway resources",
+          "url": "https://learn.microsoft.com/en-us/azure/nat-gateway/nat-gateway-resource"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ280-Q30",
+      "learningObjective": "Complete control-plane-only teardown",
+      "stem": "Which final evidence is appropriate after CLZ-280's documented terraform destroy?",
+      "options": {
+        "A": "A failed RDP connection to the NAT public IP alone",
+        "B": "A private DNS lookup returns NXDOMAIN",
+        "C": "The browser gallery shows a NAT icon",
+        "D": "az group exists returns false for the captured lesson group"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The gateway never promised inbound RDP, so that is not cleanup evidence.",
+        "B": "Private DNS is unrelated to this lesson's NAT cleanup.",
+        "C": "A visual explains topology but does not show live resource absence.",
+        "D": "The check confirms the managed gateway, IP, and group footprint is gone."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

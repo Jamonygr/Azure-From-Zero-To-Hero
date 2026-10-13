@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-240",
+  "questions": [
+    {
+      "id": "CLZ240-Q01",
+      "learningObjective": "Identify positional Terraform identity",
+      "stem": "Which Terraform address refers to the first counted Windows VM in CLZ-240?",
+      "options": {
+        "A": "azurerm_windows_virtual_machine.web[0]",
+        "B": "azurerm_windows_virtual_machine.web[1]",
+        "C": "azurerm_windows_virtual_machine.web[\"first\"]",
+        "D": "azurerm_windows_virtual_machine.web[*].first"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Counted resource indexes start at zero.",
+        "B": "Index 1 identifies the second instance.",
+        "C": "String keys belong to for_each, not this count pattern.",
+        "D": "A wildcard collection expression is not an individual resource address."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q02",
+      "learningObjective": "Trace matched network dependencies",
+      "stem": "Why does the counted VM use azurerm_network_interface.web[count.index].id?",
+      "options": {
+        "A": "To assign every VM the first NIC simultaneously",
+        "B": "To make the NIC's public IP become the VM password",
+        "C": "To sort VMs according to current CPU usage",
+        "D": "To pair each VM with the NIC at the same positional index"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The expression selects each current index rather than always zero.",
+        "B": "Networking identities are unrelated to passwords.",
+        "C": "Count indexes are configuration identities, not runtime metrics.",
+        "D": "The indexed reference aligns corresponding resource instances."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q03",
+      "learningObjective": "Predict increased cardinality",
+      "stem": "instance_count increases from two to three with existing values otherwise unchanged. What should the plan normally show for the indexed compute pattern?",
+      "options": {
+        "A": "Replacement of every existing VM merely because the count changes",
+        "B": "Only an additional Role tag on the resource group",
+        "C": "New third VM, NIC, public IP, and related association at index 2",
+        "D": "An Azure Monitor autoscale rule without new VMs"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Unchanged earlier indexes need not be replaced.",
+        "B": "The variable controls counted resource instances.",
+        "C": "Increasing cardinality adds the new highest index and its dependencies.",
+        "D": "This lesson uses count and does not declare autoscaling."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q04",
+      "learningObjective": "Predict decreased cardinality",
+      "stem": "Three counted VMs exist and instance_count becomes two. Which indexed VM is no longer described by configuration?",
+      "options": {
+        "A": "web[2]",
+        "B": "web[0]",
+        "C": "Whichever VM has the oldest Windows login",
+        "D": "Whichever VM has the least CPU usage"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The remaining indexes are 0 and 1; the highest index falls outside the new count.",
+        "B": "The first index remains part of a count of two.",
+        "C": "Terraform uses addresses, not guest login history.",
+        "D": "Runtime CPU does not determine count identity."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q05",
+      "learningObjective": "Validate whole-number inputs",
+      "stem": "A learner supplies instance_count = 2.5. Why is this not a valid instance count?",
+      "options": {
+        "A": "Terraform silently rounds every count up to three",
+        "B": "Resource cardinality must be a whole number and the lesson validates it",
+        "C": "Windows VMs always require an even count",
+        "D": "The decimal automatically selects a VM size"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The lesson rejects fractions rather than rounding them.",
+        "B": "Fractional resource instances cannot be created.",
+        "C": "Odd whole-number counts are valid within the lesson bounds.",
+        "D": "Cardinality and size are separate inputs."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q06",
+      "learningObjective": "Distinguish lesson bounds from Terraform capability",
+      "stem": "Terraform count can be zero in some configurations. Why does instance_count = 0 fail in CLZ-240?",
+      "options": {
+        "A": "Terraform never supports zero instances",
+        "B": "Azure requires exactly two VMs in every resource group",
+        "C": "The lesson validates instance_count from one through five",
+        "D": "A /32 NSG source requires at least one VM"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Count can conditionally omit resources with zero.",
+        "B": "That is not an Azure resource-group requirement.",
+        "C": "The lesson's educational and cost limits are narrower than generic count syntax.",
+        "D": "The prefix length does not define instance cardinality."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q07",
+      "learningObjective": "Use plan-time cardinality",
+      "stem": "Can count depend on a new resource attribute that will be unknown until apply?",
+      "options": {
+        "A": "Yes; it can create an arbitrary number and sort them later",
+        "B": "No; Terraform needs the count before remote resource creation",
+        "C": "Yes; only the output list must be known in advance",
+        "D": "No; because count can contain only literal numbers"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Terraform cannot plan an unknown cardinality that way.",
+        "B": "The graph requires a known number of instances during planning.",
+        "C": "Resource cardinality itself must be known.",
+        "D": "Known numeric expressions are also supported."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q08",
+      "learningObjective": "Recognize homogeneous sizing",
+      "stem": "Which CLZ-240 expression makes all counted Windows VMs use the same selected size?",
+      "options": {
+        "A": "size = each.value.vm_size",
+        "B": "size = count.index",
+        "C": "size = azurerm_public_ip.web[count.index].ip_address",
+        "D": "size = var.vm_size"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "This lesson uses count, not a per-key object value.",
+        "B": "A numeric identity is not a valid VM SKU.",
+        "C": "An IP address is not a VM size.",
+        "D": "The resource repeats a single shared size input for every index."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q09",
+      "learningObjective": "Understand a shared resource",
+      "stem": "Does count on the Windows VM block automatically duplicate the VNet and resource group?",
+      "options": {
+        "A": "No; only resource blocks with count are multiplied",
+        "B": "Yes; every referenced resource inherits the same count",
+        "C": "Yes; each disk requires an independent subscription",
+        "D": "No; because counted VMs cannot use a VNet"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The VNet and resource group are separately declared shared resources.",
+        "B": "Meta-arguments do not propagate to other blocks.",
+        "C": "A disk does not require its own subscription.",
+        "D": "They use the shared subnet through their NICs."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q10",
+      "learningObjective": "Interpret name and index differences",
+      "stem": "The first counted VM name contains a suffix 1 while its state address ends [0]. Why is this consistent?",
+      "options": {
+        "A": "The name uses count.index + 1 while the Terraform index remains zero-based",
+        "B": "Terraform changed the VM index after deployment",
+        "C": "Azure always adds one to every Terraform resource address",
+        "D": "The state is corrupt because names and indexes must match exactly"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Display naming can add one without changing the resource's state address.",
+        "B": "The naming expression does not renumber state.",
+        "C": "Azure names and Terraform addresses are different identifiers.",
+        "D": "There is no requirement for identical suffix and index."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q11",
+      "learningObjective": "Inspect positional addresses",
+      "stem": "Which lesson command directly lists Terraform's tracked indexed resource addresses?",
+      "options": {
+        "A": "az account show",
+        "B": "Test-NetConnection",
+        "C": "terraform fmt",
+        "D": "terraform state list"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "That reports account context rather than Terraform resource addresses.",
+        "B": "That tests network reachability.",
+        "C": "That formats configuration and does not list tracked objects.",
+        "D": "It displays addresses such as the VM, NIC, and public IP indexes."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q12",
+      "learningObjective": "Check the public-IP output shape",
+      "stem": "CLZ-240 reports windows_vm_public_ips as one address per counted instance. What verification aligns with the goal?",
+      "options": {
+        "A": "Require all addresses to be identical",
+        "B": "Confirm the output's cardinality matches instance_count and Azure's actual VM count",
+        "C": "Require keys named web and ops",
+        "D": "Treat the length of the resource-group name as the VM count"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Each counted public IP is a separate resource.",
+        "B": "The output and deployed inventory should agree.",
+        "C": "Those are named-map identities from the next lesson.",
+        "D": "A name's character length is unrelated to deployed instances."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q13",
+      "learningObjective": "Recognize positional list risks",
+      "stem": "A future count-based pattern gets VM names from a list. Removing the first list item shifts later items. Why can this be risky?",
+      "options": {
+        "A": "Terraform automatically recognizes names as immutable map keys",
+        "B": "All count resources automatically become VMSS instances",
+        "C": "Values can move to different numeric identities and cause unintended changes",
+        "D": "Azure denies every changed list permanently"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Count uses indexes rather than names as keys.",
+        "B": "Count does not convert standalone VMs into a scale set.",
+        "C": "Positions remain the identities even when the associated list values shift.",
+        "D": "The risk is unintended changes, not a universal Azure prohibition."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q14",
+      "learningObjective": "Choose durable named identities",
+      "stem": "The VM set evolves into distinct web, batch, and operations servers with different sizes. Which pattern is preferable?",
+      "options": {
+        "A": "count over a frequently reordered name list",
+        "B": "for_each over a stable named map",
+        "C": "One public IP resource with no VM definitions",
+        "D": "Changing the global username after every insertion"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Reordering can change the values associated with indexes.",
+        "B": "Named identities suit distinct per-instance attributes and reduce positional churn.",
+        "C": "An IP resource cannot describe named server configurations.",
+        "D": "Usernames do not provide stable Terraform identity."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q15",
+      "learningObjective": "Explain public IP teaching scope",
+      "stem": "Why does CLZ-240 intentionally assign a Standard public IP to each counted NIC?",
+      "options": {
+        "A": "To keep independently reachable instances and explicit teaching egress while focusing on count",
+        "B": "Because Terraform count cannot work with private NICs",
+        "C": "Because every Windows VM must have an Internet-facing IP",
+        "D": "Because public IPs eliminate the need for NSG rules"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The README labels this a teaching exception rather than the production management design.",
+        "B": "Count can repeat resources with private networking.",
+        "C": "Windows guests can operate with private NICs.",
+        "D": "Network policy remains necessary."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Explicit outbound connectivity",
+          "url": "https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q16",
+      "learningObjective": "Maintain narrowly scoped administration",
+      "stem": "Which admin_cidr value fits the lesson's intended RDP access policy?",
+      "options": {
+        "A": "0.0.0.0/0 to avoid updating an IP",
+        "B": "One VM's private subnet /24 for Internet administration",
+        "C": "The learner's current real public IPv4 /32",
+        "D": "The Windows administrator username"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "The universal source is intentionally rejected.",
+        "B": "That neither represents the real external administrator nor follows /32 scoping.",
+        "C": "The rule permits a single administrator source.",
+        "D": "A guest username is not a CIDR."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q17",
+      "learningObjective": "Read the repeated NSG association",
+      "stem": "Why is the NIC-to-NSG association also counted with instance_count?",
+      "options": {
+        "A": "The NSG itself must have a different public IP for every rule",
+        "B": "Windows disks require NSGs on their storage accounts",
+        "C": "Counted VMs ignore subnet and NIC security policies",
+        "D": "Every counted NIC needs the shared policy attached to its corresponding instance"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "An NSG is not a public endpoint.",
+        "B": "This resource associates network interfaces, not disks.",
+        "C": "Count is a Terraform repetition mechanism and does not bypass Azure policy.",
+        "D": "The repeated association applies the common NSG consistently."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Network security group behavior",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q18",
+      "learningObjective": "Evaluate cost growth",
+      "stem": "Why does adding another CLZ-240 instance increase more than just VM compute cost?",
+      "options": {
+        "A": "The pattern also adds a managed disk and a Standard public IP",
+        "B": "Terraform charges a subscription fee per index",
+        "C": "Every new instance duplicates the entire repository in Azure",
+        "D": "The resource-group tag incurs an hourly charge"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Each counted set includes multiple billable Azure components.",
+        "B": "Terraform indexes are not billable Azure components.",
+        "C": "Repository files are not deployed as resource copies.",
+        "D": "Tags do not have their own hourly charge."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q19",
+      "learningObjective": "Respect provider validation limits",
+      "stem": "A vm_size string passes the lesson's regular expression. What still needs verification?",
+      "options": {
+        "A": "Only that the README contains the same text",
+        "B": "Regional availability, subscription quota, and budget for the full count",
+        "C": "That the chosen size appears in the public IP address",
+        "D": "Nothing; a regular expression reserves Azure capacity"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Documentation text does not establish capacity.",
+        "B": "A valid-looking SKU string does not guarantee deployability.",
+        "C": "Public IPs do not encode VM size.",
+        "D": "Input syntax validation does not reserve resources."
+      },
+      "remediationAnchor": "#prerequisites",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q20",
+      "learningObjective": "Handle partial deployment safely",
+      "stem": "Apply fails after creating part of the counted set because of quota. What should the learner do?",
+      "options": {
+        "A": "Delete the state immediately so Terraform forgets the failure",
+        "B": "Assume failed apply rolled back every Azure object",
+        "C": "Inspect state and the failure, then use the documented cleanup or a reviewed corrective plan",
+        "D": "Increase count without checking quota"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That can orphan already created resources.",
+        "B": "Terraform does not guarantee automatic rollback of earlier creations.",
+        "C": "Partial creation must remain tracked and be handled deliberately.",
+        "D": "That worsens the capacity problem."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q21",
+      "learningObjective": "Separate Terraform count from autoscale",
+      "stem": "Traffic rises after CLZ-240 is deployed. Does count automatically add VMs?",
+      "options": {
+        "A": "No; its configured value changes only through Terraform configuration and apply",
+        "B": "Yes; count reads CPU metrics by default",
+        "C": "Yes; each public IP triggers one new server per request",
+        "D": "No; Azure forbids scaling Windows VMs"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "No demand-driven autoscale setting is declared here.",
+        "B": "Count has no default CPU policy.",
+        "C": "Public IPs do not manage compute scaling.",
+        "D": "Azure supports scaling; this specific pattern is manual."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q22",
+      "learningObjective": "Review correlated additions",
+      "stem": "When the count is increased, what should the saved plan be reviewed for besides new VM entries?",
+      "options": {
+        "A": "Only the number of blank lines in the configuration",
+        "B": "Only whether the browser theme remains dark",
+        "C": "Only whether the administrator username is hidden in the lesson title",
+        "D": "Matching NICs, public IPs, associations, costs, and unexpected replacements"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Formatting is not the proposed Azure footprint.",
+        "B": "Theme state is unrelated to deployment.",
+        "C": "The title does not describe the full resource graph.",
+        "D": "The repeated resource graph should change coherently."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q23",
+      "learningObjective": "Choose repetition within one resource block",
+      "stem": "Can a Windows VM resource declare both count and for_each to get numeric and named identities simultaneously?",
+      "options": {
+        "A": "Yes; Terraform multiplies the two values automatically",
+        "B": "No; the two repetition meta-arguments are mutually exclusive on one block",
+        "C": "Yes; but only for Windows Server 2022",
+        "D": "No; because neither meta-argument can apply to Azure resources"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Terraform rejects the combination rather than multiplying it.",
+        "B": "Choose one instance identity model for that resource.",
+        "C": "The rule is Terraform syntax, not an operating-system feature.",
+        "D": "Both can apply individually to Azure resource blocks."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q24",
+      "learningObjective": "Do not confuse OS provisioning with IIS configuration",
+      "stem": "CLZ-240's compute-count.tf creates Windows VMs without an IIS extension resource. What should a learner conclude?",
+      "options": {
+        "A": "Windows VM creation alone does not prove the IIS lesson page is installed",
+        "B": "The Windows Server image guarantees the CLZ-200 page exists",
+        "C": "The Standard public IP automatically installs IIS",
+        "D": "The count index is an IIS site binding"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Guest web configuration requires an additional mechanism.",
+        "B": "The prior lesson's bootstrap is not inherited across separate configurations.",
+        "C": "Network addressing does not install guest roles.",
+        "D": "An index identifies a Terraform instance."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Custom Script Extension for Windows",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-windows"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q25",
+      "learningObjective": "Protect the generated shared password",
+      "stem": "The counted set shares a generated administrator password. What remains essential?",
+      "options": {
+        "A": "Commit the password because there is more than one VM",
+        "B": "Write the password into the public-IP output list",
+        "C": "Protect state and explicit secret exports even when output is marked sensitive",
+        "D": "Treat count.index as a substitute password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Repetition does not reduce credential sensitivity.",
+        "B": "Output lists should not publish credentials.",
+        "C": "Terraform state can retain credentials for the entire set.",
+        "D": "An index is not an authentication credential."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform sensitive state",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q26",
+      "learningObjective": "Recognize address collection references",
+      "stem": "What is the difference between web and web[1] for a counted Terraform resource?",
+      "options": {
+        "A": "They always refer to the same first instance",
+        "B": "The first refers to the repeated resource collection; the second selects one instance",
+        "C": "web[1] is the second Azure subscription",
+        "D": "web is a private DNS zone while web[1] is a public record"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The index selects a distinct instance.",
+        "B": "Individual counted instances have numeric addresses.",
+        "C": "The index identifies a resource instance, not a subscription.",
+        "D": "These are resource references in the count lesson."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Terraform count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q27",
+      "learningObjective": "Verify resource removal independently",
+      "stem": "After terraform destroy, state is empty. Why also run az group exists for the captured group name?",
+      "options": {
+        "A": "To recreate the VMs if the group is missing",
+        "B": "To automatically restore the last public IPs",
+        "C": "To prove the VM size was available before apply",
+        "D": "To verify the managed Azure resource group is gone, not only that local tracking is empty"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The command only reports existence.",
+        "B": "An existence query allocates nothing.",
+        "C": "The query is a cleanup check, not quota evidence.",
+        "D": "Cloud absence is separate evidence from local state contents."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform destroy",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/destroy"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q28",
+      "learningObjective": "Choose the right scalable workload abstraction",
+      "stem": "The counted servers are interchangeable members serving one application. Which later pattern can better manage one scalable fleet?",
+      "options": {
+        "A": "One new subscription per count index",
+        "B": "A Virtual Machine Scale Set",
+        "C": "A Private DNS A record without compute",
+        "D": "Renaming NICs after every web request"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Splitting subscriptions is not the fleet abstraction.",
+        "B": "VMSS is designed around a common instance model and scalable capacity.",
+        "C": "DNS can name endpoints but cannot manage a compute fleet.",
+        "D": "Dynamic naming does not provide fleet management."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Virtual Machine Scale Sets overview",
+          "url": "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q29",
+      "learningObjective": "Understand state deletion risk",
+      "stem": "A learner wants to remove the highest-index VM by deleting terraform.tfstate rather than changing count. Why is that unsafe?",
+      "options": {
+        "A": "The state file is the Azure VM's operating-system disk",
+        "B": "Deleting state is identical to terraform destroy",
+        "C": "Deleting state can only affect CSS preferences",
+        "D": "It loses resource tracking without necessarily deleting the Azure objects"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "State is metadata and values, not the guest OS disk.",
+        "B": "Destroy calls provider deletion operations; deleting a file does not.",
+        "C": "Terraform state is unrelated to the site's theme.",
+        "D": "Use a reviewed configuration change or destroy to manage infrastructure removal."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform sensitive state",
+          "url": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ240-Q30",
+      "learningObjective": "Confirm no changes during planning",
+      "stem": "A learner runs the count-reduction exercise using terraform plan only. What happens to the existing Azure VMs?",
+      "options": {
+        "A": "The highest-index VM is immediately deleted by the plan",
+        "B": "Every VM automatically restarts to read the plan",
+        "C": "They remain unchanged until the reviewed plan is applied",
+        "D": "The NSG temporarily opens all ports during planning"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Deletion requires an apply or destroy operation.",
+        "B": "The local planning command does not restart guests.",
+        "C": "Planning proposes deletions but does not execute them.",
+        "D": "Planning does not modify network rules."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform saved plans",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}

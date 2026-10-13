@@ -41,6 +41,18 @@ resource "azurerm_lb_rule" "http" {
   frontend_ip_configuration_name = "public"
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.web.id]
   probe_id                       = azurerm_lb_probe.http.id
+  disable_outbound_snat          = true
+}
+
+resource "azurerm_lb_outbound_rule" "web" {
+  name                    = "web-outbound"
+  loadbalancer_id         = azurerm_lb.web.id
+  protocol                = "All"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.web.id
+
+  frontend_ip_configuration {
+    name = "public"
+  }
 }
 
 resource "azurerm_windows_virtual_machine_scale_set" "web" {
@@ -48,7 +60,7 @@ resource "azurerm_windows_virtual_machine_scale_set" "web" {
   computer_name_prefix = "clzwin"
   location             = var.location
   resource_group_name  = var.resource_group_name
-  sku                  = "Standard_B2s"
+  sku                  = var.vm_size
   instances            = var.instance_count
   admin_username       = var.admin_username
   admin_password       = var.admin_password
@@ -89,7 +101,7 @@ resource "azurerm_virtual_machine_scale_set_extension" "iis" {
   auto_upgrade_minor_version   = true
 
   settings = jsonencode({
-    commandToExecute = "powershell -ExecutionPolicy Unrestricted -Command \"Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -Path C:\\inetpub\\wwwroot\\index.html -Value '${var.site_message}'\""
+    commandToExecute = "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$message = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${base64encode(var.site_message)}')); Install-WindowsFeature -Name Web-Server -IncludeManagementTools; Set-Content -LiteralPath 'C:\\inetpub\\wwwroot\\index.html' -Value $message -Encoding UTF8\""
   })
 }
 

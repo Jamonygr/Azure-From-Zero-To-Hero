@@ -1,0 +1,785 @@
+{
+  "lessonId": "CLZ-300",
+  "questions": [
+    {
+      "id": "CLZ300-Q01",
+      "learningObjective": "Safe optional DNS",
+      "stem": "What does the default CLZ-300 configuration manage?",
+      "options": {
+        "A": "A public zone and registrar",
+        "B": "Only the lesson resource group",
+        "C": "A Private DNS zone",
+        "D": "A Traffic Manager profile"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Neither is enabled by default.",
+        "B": "Zone creation defaults to false.",
+        "C": "This lesson models public DNS.",
+        "D": "That belongs to CLZ-330."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q02",
+      "learningObjective": "Explicit opt-in",
+      "stem": "Which pair of inputs enables an owned public zone?",
+      "options": {
+        "A": "create_public_dns_zone=false and any name",
+        "B": "location=global and environment=prod",
+        "C": "Only a new name_prefix",
+        "D": "create_public_dns_zone=true and the owned dns_zone_name"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "False leaves the zone absent.",
+        "B": "These do not enable the zone.",
+        "C": "The prefix is not domain ownership.",
+        "D": "Both intent and domain are required."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q03",
+      "learningObjective": "Domain ownership",
+      "stem": "A learner has no domain. Which exercise remains appropriate?",
+      "options": {
+        "A": "Review the default no-zone plan",
+        "B": "Delegate another company's domain",
+        "C": "Replace registrar servers at random",
+        "D": "Enable example.com for deployment"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "It needs no registrar change.",
+        "B": "The learner lacks ownership.",
+        "C": "Delegation requires deliberate coordination.",
+        "D": "The reserved placeholder is unsuitable."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q04",
+      "learningObjective": "External delegation",
+      "stem": "An owned zone exists in Azure but still resolves elsewhere. What is missing?",
+      "options": {
+        "A": "A VM inside the zone",
+        "B": "Terraform's location set to global",
+        "C": "Correct delegation at the domain registrar",
+        "D": "A Key Vault password"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "A zone is not a VM network.",
+        "B": "The resource-group region does not delegate DNS.",
+        "C": "Azure zone creation does not update it.",
+        "D": "DNS delegation does not use that secret."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q05",
+      "learningObjective": "Name-server evidence",
+      "stem": "Which output identifies the servers used for delegation?",
+      "options": {
+        "A": "resource_group_name",
+        "B": "location",
+        "C": "public_dns_name_servers",
+        "D": "A guessed Azure server list"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "This identifies the management container.",
+        "B": "This is the resource-group region.",
+        "C": "This exposes the zone's authoritative servers.",
+        "D": "Use the actual assigned servers."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q06",
+      "learningObjective": "Default evidence",
+      "stem": "Why is the default public_dns_name_servers value empty?",
+      "options": {
+        "A": "No public DNS zone was created",
+        "B": "All DNS servers are unavailable",
+        "C": "The registrar has been deleted",
+        "D": "Azure DNS requires a VM"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The conditional output returns an empty list.",
+        "B": "An empty optional output is expected.",
+        "C": "The configuration does not manage registrars.",
+        "D": "The DNS service does not require one."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q07",
+      "learningObjective": "Terraform conditional resources",
+      "stem": "What does count=0 on azurerm_dns_zone.public mean?",
+      "options": {
+        "A": "Create a zone with zero records",
+        "B": "Create one free zone",
+        "C": "Hide the zone from output only",
+        "D": "No instances of that resource are planned"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Zero count removes the resource instance.",
+        "B": "Count is not a pricing setting.",
+        "C": "It affects the resource itself.",
+        "D": "Count controls resource instance creation."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q08",
+      "learningObjective": "Plan review",
+      "stem": "Before applying an enabled zone, what should the learner inspect?",
+      "options": {
+        "A": "Only the terminal color scheme",
+        "B": "The saved plan and exact owned zone name",
+        "C": "Only the number of Terraform files",
+        "D": "An unrelated subscription's portal"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "It provides no change evidence.",
+        "B": "Review intended changes before applying.",
+        "C": "File count does not describe the plan.",
+        "D": "It does not verify this deployment."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q09",
+      "learningObjective": "Hosting versus registration",
+      "stem": "Which statement correctly separates Azure DNS from a registrar?",
+      "options": {
+        "A": "Azure DNS hosts records; registration is separate",
+        "B": "Azure DNS purchases every hosted domain",
+        "C": "A registrar runs Terraform state locking",
+        "D": "Creating a zone grants domain ownership"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Hosting does not purchase domain ownership.",
+        "B": "A zone is not a domain purchase.",
+        "C": "That is a backend function.",
+        "D": "Ownership remains with the registrant."
+      },
+      "remediationAnchor": "#goal",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q10",
+      "learningObjective": "Authoritative ownership",
+      "stem": "Two Azure zones share a domain name in different resource groups. What decides Internet authority?",
+      "options": {
+        "A": "The shortest resource-group name",
+        "B": "The newest Terraform provider",
+        "C": "The parent or registrar delegation",
+        "D": "Both automatically become authoritative globally"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "DNS does not rank resource-group names.",
+        "B": "Provider age does not control delegation.",
+        "C": "Creation alone does not select an authority.",
+        "D": "They have separately assigned servers."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q11",
+      "learningObjective": "DNS caching",
+      "stem": "Delegation was corrected, but some clients show old results. What should be considered?",
+      "options": {
+        "A": "VM disk caching mode",
+        "B": "Cached records and DNS TTL",
+        "C": "Resource-group location replication",
+        "D": "Recreating all unrelated resources"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "It is unrelated to DNS caches.",
+        "B": "Old answers can persist until cache expiry.",
+        "C": "That does not flush recursive caches.",
+        "D": "That does not correct cached delegation."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q12",
+      "learningObjective": "Domain apex",
+      "stem": "What does the zone name represent in this optional lesson?",
+      "options": {
+        "A": "A URL including https and a path",
+        "B": "An Azure subscription display name",
+        "C": "A Windows computer password",
+        "D": "The owned domain's DNS zone apex"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "A DNS zone name is not a URL.",
+        "B": "Subscription selection is separate.",
+        "C": "DNS names are not credentials.",
+        "D": "Records are hosted beneath that zone."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q13",
+      "learningObjective": "No external mutation",
+      "stem": "Which change is outside this Terraform configuration?",
+      "options": {
+        "A": "Creating the lesson resource group",
+        "B": "Creating an enabled Azure zone",
+        "C": "Deleting the managed Azure zone",
+        "D": "Changing registrar name servers"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "The lesson explicitly manages it.",
+        "B": "The conditional resource manages it.",
+        "C": "Terraform destroy handles managed resources.",
+        "D": "Delegation is managed separately."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q14",
+      "learningObjective": "Rollback planning",
+      "stem": "Before moving production delegation, which evidence is valuable?",
+      "options": {
+        "A": "Only a screenshot of Terraform's logo",
+        "B": "The previous name servers and rollback procedure",
+        "C": "A deleted state file",
+        "D": "A randomly chosen zone in another tenant"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "It cannot restore DNS.",
+        "B": "Rollback must restore external authority.",
+        "C": "Deletion loses management information.",
+        "D": "It is not an approved rollback target."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q15",
+      "learningObjective": "DNS cleanup boundary",
+      "stem": "After destroying this lab, what might still need a separate action?",
+      "options": {
+        "A": "Destroying CLZ-310's state account automatically",
+        "B": "Deleting all subscription DNS zones",
+        "C": "Restoring registrar delegation if it was changed",
+        "D": "Stopping Azure's global DNS service"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That belongs to a separate lesson.",
+        "B": "Cleanup must remain within ownership.",
+        "C": "Terraform does not own that external setting.",
+        "D": "Learners do not own the service."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q16",
+      "learningObjective": "Cost interpretation",
+      "stem": "Which cost is external to Azure DNS zone hosting?",
+      "options": {
+        "A": "Domain registration or renewal charges",
+        "B": "Azure DNS hosted-zone charges",
+        "C": "Azure DNS query charges",
+        "D": "The zone's resource tags"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "The registrar bills domain ownership separately.",
+        "B": "These belong to the DNS service.",
+        "C": "Queries are a service cost driver.",
+        "D": "Tags are metadata, not registrar fees."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q17",
+      "learningObjective": "Low cost is not no cost",
+      "stem": "Why should enabled public DNS still be included in a lab budget?",
+      "options": {
+        "A": "Every zone creates a Windows VM",
+        "B": "Hosted zones and queries can incur charges",
+        "C": "DNS always requires Bastion",
+        "D": "The lab buys a new domain automatically"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "The lesson creates no VM.",
+        "B": "Low relative cost does not mean free.",
+        "C": "Bastion is unrelated here.",
+        "D": "It does not manage registration."
+      },
+      "remediationAnchor": "#resources-and-cost",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q18",
+      "learningObjective": "Read-only verification",
+      "stem": "Which action inspects the managed zone without changing delegation?",
+      "options": {
+        "A": "List DNS zones in the lesson resource group",
+        "B": "Replace registrar name servers",
+        "C": "Apply a new unrelated zone",
+        "D": "Delete all DNS records"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Azure inspection does not mutate registrar settings.",
+        "B": "That changes public DNS authority.",
+        "C": "That mutates Azure resources.",
+        "D": "Deletion changes hosted content."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q19",
+      "learningObjective": "Saved plan purpose",
+      "stem": "What does terraform apply tfplan apply?",
+      "options": {
+        "A": "Any file named README.md",
+        "B": "A registrar delegation request",
+        "C": "All zones in the subscription",
+        "D": "The reviewed changes in the saved plan"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Markdown is not a Terraform plan.",
+        "B": "This configuration has no registrar resource.",
+        "C": "It is scoped to this configuration/state.",
+        "D": "A saved plan carries its planned actions."
+      },
+      "remediationAnchor": "#deploy",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q20",
+      "learningObjective": "Placeholder intent",
+      "stem": "Why is example.com inappropriate for enabled learning deployment?",
+      "options": {
+        "A": "All .com zones are unsupported",
+        "B": "It would create a private endpoint",
+        "C": "It is a documentation placeholder, not the learner's domain",
+        "D": "It selects a special free Azure tier"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Azure DNS supports public .com zones.",
+        "B": "A public zone does not create endpoints.",
+        "C": "The lesson requires deliberate domain ownership.",
+        "D": "The name is not a pricing tier."
+      },
+      "remediationAnchor": "#inputs",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q21",
+      "learningObjective": "Environment separation",
+      "stem": "What production design reduces accidental DNS cross-environment changes?",
+      "options": {
+        "A": "Separate approved zones or subdomains with clear ownership",
+        "B": "One shared administrator account without logs",
+        "C": "Guessing delegation during an incident",
+        "D": "Sharing unreviewed state files publicly"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Each authority has a reviewed boundary.",
+        "B": "That weakens accountability.",
+        "C": "Delegation needs documented recovery.",
+        "D": "State exposure is unnecessary and unsafe."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q22",
+      "learningObjective": "Least privilege DNS",
+      "stem": "Who should be able to modify a production zone?",
+      "options": {
+        "A": "Every visitor who resolves the domain",
+        "B": "Anyone who knows the zone name",
+        "C": "Every repository fork automatically",
+        "D": "Authorized identities at the required scope"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Resolving records grants no management rights.",
+        "B": "A name is not authorization.",
+        "C": "Repository access is not Azure RBAC.",
+        "D": "Scoped permissions limit accidental changes."
+      },
+      "remediationAnchor": "#production-delta",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q23",
+      "learningObjective": "Zone deletion impact",
+      "stem": "What happens to records inside a Terraform-managed zone when the zone is destroyed?",
+      "options": {
+        "A": "They transfer to the registrar automatically",
+        "B": "They become Private DNS records",
+        "C": "They are removed with the zone",
+        "D": "They remain authoritative permanently"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "Terraform provides no such transfer.",
+        "B": "Public and private zones are distinct.",
+        "C": "The zone owns its hosted records.",
+        "D": "Deleted hosting cannot continue serving them."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q24",
+      "learningObjective": "Manage existing authorities",
+      "stem": "An organization's domain already uses another DNS provider. What is the safe first step?",
+      "options": {
+        "A": "Change delegation immediately to finish the lab",
+        "B": "Coordinate ownership and migration with its DNS administrator",
+        "C": "Delete the existing provider first",
+        "D": "Use another owner's domain instead"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "That risks live service disruption.",
+        "B": "Avoid conflicting delegation and missing records.",
+        "C": "That removes the rollback path.",
+        "D": "Ownership is still required."
+      },
+      "remediationAnchor": "#troubleshooting",
+      "sources": [
+        {
+          "title": "Azure DNS delegation overview",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-domain-delegation"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q25",
+      "learningObjective": "Proof of skipped zone",
+      "stem": "Which plan evidence demonstrates the default optional path?",
+      "options": {
+        "A": "A browser opens the repository",
+        "B": "An NS lookup of an unrelated domain succeeds",
+        "C": "No azurerm_dns_zone instance is proposed",
+        "D": "A subscription has a friendly name"
+      },
+      "correctOption": "C",
+      "optionExplanations": {
+        "A": "That does not inspect Terraform actions.",
+        "B": "It says nothing about the lesson plan.",
+        "C": "The enabled count remains zero.",
+        "D": "Names are not resource-change evidence."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q26",
+      "learningObjective": "Public versus private DNS",
+      "stem": "What distinguishes this zone from CLZ-290's Private DNS zone?",
+      "options": {
+        "A": "It must be attached to every VNet",
+        "B": "It is hosted for public domain delegation",
+        "C": "It stores Terraform state blobs",
+        "D": "It grants all clients Azure RBAC"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Public hosting does not require VNet links.",
+        "B": "Private zones serve linked network resolution.",
+        "C": "That is Storage, not DNS.",
+        "D": "DNS resolution does not grant authorization."
+      },
+      "remediationAnchor": "#architecture",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q27",
+      "learningObjective": "Record planning",
+      "stem": "After delegation, what is needed for a new www hostname to resolve to an IPv4 address?",
+      "options": {
+        "A": "An appropriate A record in the hosted zone",
+        "B": "A Key Vault secret named www",
+        "C": "A new resource-group region",
+        "D": "A backend state migration"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "An A record maps the name to IPv4.",
+        "B": "Secrets do not provide DNS records.",
+        "C": "Region changes do not define hostname records.",
+        "D": "Terraform backend location is unrelated."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q28",
+      "learningObjective": "Zone content and service health",
+      "stem": "A hostname resolves, but HTTP fails. What does DNS success prove?",
+      "options": {
+        "A": "The web application's TLS and health are correct",
+        "B": "All NSGs allow the application's port",
+        "C": "Terraform has completed cleanup",
+        "D": "Name resolution worked, not application availability"
+      },
+      "correctOption": "D",
+      "optionExplanations": {
+        "A": "Those require separate application tests.",
+        "B": "DNS does not test network rules.",
+        "C": "A lookup is not cleanup evidence.",
+        "D": "DNS does not validate the web service."
+      },
+      "remediationAnchor": "#validate",
+      "sources": [
+        {
+          "title": "Azure DNS zones and records",
+          "url": "https://learn.microsoft.com/en-us/azure/dns/dns-zones-records"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q29",
+      "learningObjective": "Safe planning exercise",
+      "stem": "A learner owns a domain but does not want any Azure zone yet. Which exercise fits?",
+      "options": {
+        "A": "Review an enabled owned-domain plan without applying it",
+        "B": "Run apply automatically after any plan",
+        "C": "Change registrar delegation before planning",
+        "D": "Remove domain ownership checks"
+      },
+      "correctOption": "A",
+      "optionExplanations": {
+        "A": "Planning permits review without deployment.",
+        "B": "That creates the zone.",
+        "C": "That is an external production change.",
+        "D": "That weakens the lesson boundary."
+      },
+      "remediationAnchor": "#exercises",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    },
+    {
+      "id": "CLZ300-Q30",
+      "learningObjective": "Cleanup evidence",
+      "stem": "Which command confirms the managed resource group is absent after destroy?",
+      "options": {
+        "A": "terraform fmt -check",
+        "B": "az group exists --name $resourceGroup",
+        "C": "Resolve-DnsName example.com",
+        "D": "Get-Content README.md"
+      },
+      "correctOption": "B",
+      "optionExplanations": {
+        "A": "Formatting does not inspect Azure deletion.",
+        "B": "A false result checks Azure absence.",
+        "C": "That queries an unrelated public domain.",
+        "D": "Reading documentation is not deletion evidence."
+      },
+      "remediationAnchor": "#cleanup",
+      "sources": [
+        {
+          "title": "Terraform plan command",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ],
+      "lastVerified": "2026-10-13"
+    }
+  ]
+}
